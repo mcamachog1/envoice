@@ -1,0 +1,200 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background-image: -webkit-linear-gradient(180deg, #36485F 0%, #18212C 100%);
+  background-image: -moz-linear-gradient(180deg, #36485F 0%, #18212C 100%);
+  background-image: -o-linear-gradient(180deg, #36485F 0%, #18212C 100%);
+  background-image: linear-gradient(180deg, #36485F 0%, #18212C 100%);
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+}
+.bigContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.containerBox {
+  background: #F8F8F8;
+  width: 417px;
+  border-radius: 30px;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+}
+#btnDisabled {
+  background: #8a898a;
+  cursor: no-drop;
+}
+.noShow {
+  visibility: hidden;
+}
+.noShowD {
+  display: none;
+}
+
+.show{
+  display:inherit;
+}
+
+#hidePwd {
+  visibility: hidden;
+}
+
+.pwd {
+  position: relative;
+}
+.icon {
+  color: #D7D7D7;
+  position: absolute;
+  cursor: pointer;
+  top: 40px;
+  left: 280px;
+  transition: all ease 300ms;
+}
+.icon:hover {
+  color: #161717;
+  opacity: 0.5;
+}
+.logoSect {
+  height: 150px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+}
+.logoSect .logo{
+  width: 150px;
+  height: 80px;
+}
+
+
+.stdLabel {
+  color: #161717;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13px;
+  opacity: 0.5;
+  text-align: left;
+  margin: 16px 6px 10px;
+}
+.stdLabel.mid {
+  font-size: 14px;
+}
+
+.stdLabel.big {
+  font-size: 16px;
+  text-align: center;
+  margin: 30px 0 25px;
+  color: #24293b;
+}
+
+#lostPass {
+  text-align: center;
+  cursor: pointer;
+  transition: all ease 300ms;
+}
+#lostPass:hover {
+  color: #5190e1;
+}
+.stdInpCont {
+  width: 320px;
+  margin: 0 auto;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="date"]::placeholder {
+  color: #adadad;
+  padding-left: 5px;
+  opacity: 1; /* Firefox */
+}
+
+input[type="text"],
+[type="password"],
+[type="date"] {
+  font-family: "Montserrat", sans-serif;
+  border: 1px solid #D7D7D7;
+  border-radius: 6px;
+  width: 96%;
+  height: 45px;
+  background-color: #ffffff !important;
+  font-size: 16px;
+  padding-left: 8px;
+}
+[type="button"] {
+  font-family: "Montserrat", sans-serif;
+  outline: none;
+}
+input:focus {
+  outline: none;
+}
+
+.badPwd,.badPwd:focus {
+  border: 1px solid #F52626!important;
+}
+
+input:disabled {
+  color: #828182;
+  cursor: default;
+  border: 1px solid #383837;
+  background-color: #383837;
+}
+#btnChangeMessage,
+#btnMessageUser, #btnMessagePwd, #btnMessageEmail {
+  color: #d0021b;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  margin: 10px auto ;
+  font-size: 13px;
+}
+
+
+.stdbtnSubmit {
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #0033A0;
+  height: 45px;
+  width: 320px;
+  border: none;
+  margin-bottom: 35px;
+  transition: all ease 300ms;
+}
+
+.stdbtnSubmit:hover {
+  background-color: #5190e1;
+}
+input.stdbtnSubmit {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  outline: none;
+}
+
+
+.footer {
+  font-size: 12px;
+  color: #ffffff;
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+  margin-top: 60px;
+}
+
+@media screen and (max-width: 1045px) {
+  .stdbtnSubmit {
+    margin-top: 6%;
+  }
+}
+
+

@@ -1,0 +1,5 @@
+RewriteBase /~envoice
+RewriteRule ^dev/app/api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ dev/app/api/$1/$2.php
+RewriteRule ^dev/cms/api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ dev/cms/api/$1/$2.php
+RewriteRule ^prd/app/api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ prd/app/api/$1/$2.php
+RewriteRule ^prd/cms/api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ prd/cms/api/$1/$2.php

@@ -1,0 +1,14 @@
+.icon{
+  top: 56%;
+  right: -30px;
+}
+.stdLabel.big {
+  margin: 20px 0 10px;
+}
+
+.emailPwd{
+  background-color: #E6E6EA;
+  border-radius: 10px;
+  padding: 6px 0;
+  color: #4A4A4A;
+}

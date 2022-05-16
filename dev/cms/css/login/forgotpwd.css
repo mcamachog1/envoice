@@ -1,0 +1,27 @@
+.stdbtnCancelar {
+    border-radius: 10px;
+    margin-top: -5%;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #0033A0;
+    height: 45px;
+    width: 320px;
+    margin-bottom: 40px;
+    transition: all ease 300ms;
+  }
+  
+  .stdbtnCancelar:hover {
+    border: 1px solid #5190e1;
+    color:#5190e1;
+  }
+  input.stdbtnCancelar {
+    color:#0033A0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+    outline: none;
+  }
+
+.stdbtnSubmit{
+  margin-top:5%;
+}

@@ -1,0 +1,816 @@
+#clients{
+      background-color: #5EB746;
+      padding: 5px 25px;
+      box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.5);
+  }
+  .headerCon{
+      display: table;
+      width: 100%;
+      margin-bottom: 20px;
+  }
+  .headerCol {
+    display: table-cell;
+    vertical-align: middle;
+    width: 25%;    
+    position:relative;
+  }
+  .paddingTitle {
+    padding-top: 10px;
+    width: 30%;
+    font-family:'Montserrat';
+  }
+  .prdSearch {
+    max-width: 360px;
+    height: 40px;
+    width: 95%;
+    font-size: 13px !important;
+  }
+  .prdSearch::placeholder{
+    color:#D7D7D7;
+  }
+  #iconSearch{
+    color: #ACACAC;
+    font-size: 15px;
+    line-height: 40px;
+    position: absolute;
+    top: 2px;
+    right: 15px;
+  }
+  .centerSect{
+      margin: 40px auto;
+  }
+  .noShowD {
+    display: none;
+  }
+  .clientArea{
+    width: 100%;
+    background-color: #E1E1E1;
+    border-radius: 4px;
+    height: 34px;
+    color: #4A4A4A;
+    font-family: Montserrat;
+    font-size: 16px;
+    line-height: 30px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+
+  .btnMessage{
+    color: #d0021b;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: left;
+    margin: 10px auto ;
+    font-size: 13px;
+  }
+
+  .inputError {
+    border: 1px solid #F52626!important;
+  }
+  
+  #centerTable{
+      width: 100%;
+      font-size: 14px;
+      border-spacing: 0px;
+  }
+
+  th{
+    width:18%;
+  }
+
+  /* .thAction{
+      width: 10%;
+  } */
+
+  .whiteSpace{
+    position: absolute;
+    height: 50px;
+    bottom: -5%;
+    width: 100%;
+  }
+
+
+  .modalContent {
+    width: 50%;
+    padding:40px 40px;
+    left: 22%;
+    top: 5%;
+    margin: auto;
+    position: absolute;
+  }
+
+  #myModalDelete  .modalContent {
+    width: 20%;
+    padding:40px 40px;
+    left: 37%;
+    top: 15%;
+  }
+
+  #detailsClient  .modalContent {
+    width: 23%;
+    padding:40px 40px;
+    left: 35%;
+    top: 15%;
+  }
+
+  #detailsClient .modalContent p{
+    color: #535353;
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 17px;
+    width: 382px;
+    text-align: left;
+  }
+
+  #ftpClientDetail{
+    color:#0033A0!important;
+  }
+
+  .stdbtnSubmit {
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #0033A0;
+    height: 42px;
+    width: 160px;
+    border: none;
+    transition: all ease 300ms;
+    color:white;
+    font-weight: bold;
+  }
+
+  .stdbtnSubmitCreateSave{
+    width: 48.5%;
+    height: 48px;
+    margin: 10px auto;
+    font-size:14px;
+  }
+
+  .stdbtn .stdbtnSubmit {
+    margin: 0px;
+  }
+
+  .stdbtnSubmit.cancel{
+    margin-right: 17px;
+  }
+
+  .stdbtnOutline {
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #0033A0;
+    transition: all ease 300ms;
+    color:#0033A0;
+    font-weight: bold;
+  }
+
+  #myModalDelete .stdbtnSubmitCreateSave {
+    width: 96%;
+  }
+
+  #confirmModal .modalContent{
+    width: 30%;
+    left: 33%;
+  }
+
+#tabs{
+    margin-top:10px;
+}
+
+#tabs .tab {
+    display: inline-block;
+    width:25%;
+    padding: 10px 20px;
+    cursor: pointer;
+    position: relative;
+    z-index:5;
+    color: #868787;
+    font-family: Montserrat;
+    font-size: 16px;
+    letter-spacing: -0.6px;
+    line-height: 19px;
+    text-align: left;
+    font-weight: 500;
+}
+
+
+#tabs .blueborder {
+    color:#0033A0;
+    font-weight: 600;
+    border-bottom: 5px solid #0033A0;
+    border-radius: 3px 3px 0  0;
+}
+#tabs .tabContent {
+    width: 96.5%;
+    border: 1px solid #868787;
+    position: relative;
+    top: -1px;
+    z-index:1;
+    padding: 0px 10px;
+    border-radius: 0 0 3px 3px;
+    min-height:470px;
+    margin-bottom: 15px;
+}
+#tabs .hide {
+    display: none;
+}
+#tabs .show {
+    display: block;
+}
+
+.stdSect.width50{
+    width: 45%;
+    display:inline-table;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding-top:0px;
+    min-height: 273px;
+}
+
+.mTop0{
+  margin-top:0px;
+}
+
+.mBot0{
+  margin-bottom: 0px;
+}
+
+.estatusLabel{
+  padding-right:45px;
+  color: #161717;
+  font-family: Montserrat;
+  font-size: 13px;
+  line-height: 13px;
+  opacity: 0.5;
+  font-weight: 500;
+  text-align: right;
+}
+
+input[type=text], [type=password], [type=date], select {
+  width: 97%;
+}
+
+.mLeft50{
+  margin-left:3%;
+}
+  
+#btnMessageGeneral{
+  text-align:center;
+}
+
+.accLogo {
+  cursor: pointer;
+  height: 170px;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  margin: 0 auto;
+  background-color: #FFFFFF;
+  border: 1px solid #D7D7D7;
+  border-radius: 6px;
+  display:flex;
+  justify-content: center;
+  align-content: center;
+  align-items:center;
+  position:relative;
+}
+
+#innerFile {
+  /* width: 200px; */
+  /* height: 150px; */
+  display: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-content: end;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+}
+
+#innerFileText{
+  align-items: center;
+  justify-items: center;
+  flex-flow: column;
+  color: #868787;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+  padding:0 50px;
+}
+
+#innerFileText .nubeIcon{
+  font-size:32px;
+  margin-bottom: 5px;
+}
+
+.accFormLogoImg,#accLogoImg{
+  display: none;
+}
+
+.divIconFile{
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  margin-left:5px;
+}
+
+#imgClientDetail{
+  width:150px;
+  height: 120px;
+  display:none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+/*NEW MODEL CREATE*/
+.page{
+  display:none;
+  transition:all .3s;
+  opacity:0;
+  min-height: calc(100% - 150px);
+}
+.pageFrm{
+  font-size:90%;
+}
+.headAddFrm {
+  display: table;
+  width: 100%;
+}
+
+.titCellFrm {
+  display: table-cell;
+  width: 50%;
+  font-family: 'Montserrat';
+  font-size: 115%;
+  font-weight: 600;
+  color:#0033A0;
+}
+
+.btnsCellFrm {
+  display: table-cell;
+}
+
+.btnsLeftCnt {
+  width: 80%;
+  position: relative;
+  margin-left: auto;
+  text-align:right;
+}
+
+.btnsLeftCnt input {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  width: calc(50% - 7px);
+  height: 40px;
+  line-height: 40px;
+  font-family: 'Montserrat' !important;
+  font-weight: 600 !important;
+  font-size: 78% !important;
+  max-width: 160px;
+}
+.btnsLeftCnt .cancel{
+  margin-right:10px;
+}
+.subTitSect{
+  width:100%;
+  color:#0033A0;
+  font-family:'Montserrat';
+  font-weight:600;
+  font-size:95%;
+  border-bottom:2px solid #0033A0;
+  padding-bottom: 3px;
+  margin-top:5px;
+  padding-top:5px;
+}
+.taxFirst,.taxSwitch{
+  display: table;
+  width: 100%;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.accessSect {
+  display: table;
+  width: 100%;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.taxFirstCell{
+  display:table-cell;
+  width:65%;
+}
+.invoiceRow{
+  display:table;
+  width:100%;
+  padding-top:10px;
+}
+.invoiceCell{
+  display:table-cell;
+  padding-right:15px;
+}
+.cell2Mid{
+  width:2.5%;
+}
+.cell5{
+  width:5%;
+}
+.cell7Mid{
+  width: 7.5%;
+}
+.cell10{
+  width: 10%;
+}
+.cell15{
+  width: 15%;
+}
+.cell17Mid{
+  width: 17.5%;
+}
+.cell20{
+  width: 20%;
+}
+.cell25 {
+  width: 25%;
+}
+.cell30 {
+  width: 30%;
+}
+.cell35 {
+  width: 35%;
+}
+.cell33{
+  width: 33%;
+}
+.cell40 {
+  width: 40%;
+}
+.cell80 {
+  width: 80%;
+}
+.cell100 {
+  width: 100%;
+}
+.inptLbl {
+  font-family: 'Lato';
+  font-weight: 400;
+  color: rgb(22 23 23 / 55%);
+  font-size: 63%;
+  text-transform: uppercase;
+  margin: 0px 3px 5px;
+  position: relative;
+}
+.inptLbl span{
+  font-size: 85%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  text-transform: lowercase;
+}
+.lblOpt{
+  text-transform: none;
+}
+.inptFrmCnt{
+  background-color: #FFFFFF;
+  border: 1px solid #D7D7D7;
+  border-radius: 5px;
+  height: 29px;  
+  padding: 3px 0px;
+  position: relative;
+}
+.inptFrm{
+  outline:none !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding:0 !important;
+  margin:0 !important;
+  width:100% !important;
+  height: 100% !important;
+  font-size: 80% !important;
+  text-indent: 5px !important;
+  font-family: 'Lato' !important;
+  font-weight: 300 !important;
+  color:#4A4A4A !important;
+}
+.inptFrm::placeholder{
+  color:#AEBECA !important;
+  padding-left:0 !important;
+}
+.itemsListCnt .inptFrm{
+  font-size: 100%;
+  text-align:left;
+}
+.stdLabel {
+  margin: 0px 6px 5px !important;
+}
+.taxFrm,  .accessSect{
+  padding-top: 10px;
+}
+/*Añadir item*/
+/*Items a cargar de la factura*/
+.invoiceTbl {
+  width: 100%;
+  margin-right: auto;
+  display: table;
+  padding-left: 0;
+  max-width: 980px;
+  margin-left: auto;
+}
+.tblItems {
+  margin-top: 25px;
+  display: table;
+  width: 70%;
+  border-bottom: 1px solid #D7D7D7;
+}
+.itemsTblHead {
+  padding-right: 50px;display: table;
+  width: calc(100% - 50px);
+  font-size:85%;
+  color:#0033A0;
+  font-family: 'Lato';
+  font-weight: 300;
+  border-bottom: 2px solid;
+  padding-bottom:2px;
+}
+.itemHead {
+  padding: 3px 9px;
+  display: table-cell;
+}
+.itemHdNum{
+  text-align:right;
+}
+.inptNum{
+  padding-right:5px;
+  width:calc(100% - 5px);
+  text-align:right;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.itemsRow{
+  padding-right: 50px;
+  display: table;
+  width: calc(100% - 50px);
+  font-size:85%;
+  font-family: 'Lato';
+  font-weight: 300;
+  position: relative;
+}
+.itemCell{
+  padding: 5px 8px;
+  display: table-cell;
+  position:relative;
+}
+.totCell{
+  background-color: #F8FAFB;
+}
+.totCell .inptFrm{
+  color:#AEBECA;
+}
+
+.itemBtn{
+  position:absolute;  
+  width:35px;
+  height:40px;
+  border-radius:5px;
+  color:#0033A0;
+  font-size:100%;  
+  line-height: 29px;
+  background-color: #FFFFFF;
+  border: 1px solid #D7D7D7;
+  border-radius: 5px;
+  height: 29px;
+  padding: 3px 0px;
+  text-align:center;
+  left: calc(100% - 37px);
+  cursor:pointer;
+  top:17px;
+}
+.lblSubTbl{
+  width: 100%;
+  font-size: 74.5%;
+  font-family: 'Lato';
+  text-align: center;
+  font-weight: 400;
+  position: relative;
+  margin: 0;
+}
+.lblSubTbl span{
+  font-size: 85%;
+  position:absolute;
+  bottom:0;
+  right:0;
+}
+.lineRight{
+  position: absolute;
+  height: 38px;
+  line-height: 38px;
+  top: 17px;
+  width: 18px;
+  right: -9px;
+  text-align: center;
+}
+.switchNew{
+  position: relative;
+  width: 100px;
+  display: table;
+  height: 18px;
+  top: auto;
+  right: auto;
+}
+/*switch*/
+.statusCell{
+  vertical-align:middle;
+  width:auto;
+  padding-right:10px;
+  padding-left:3px;
+}
+.statusCell .inptLbl{
+  margin: 0;
+  display: table;
+  height: auto;
+}
+.switchCell{
+  width: 8%;
+  min-width: 35px;
+  max-width:45px;
+  text-align:left;
+  vertical-align:middle;
+}
+.switchCont{
+  max-width: none;
+  width: 28px;
+  height: 15px;
+  margin-right:auto;
+}
+.switchBox {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: all .3s ;
+}
+.switchBal {
+  background-color: #FFF;
+  border-radius: 100%;
+  width: 11px;
+  height: 11px;
+  position: absolute;
+  transition: all .3s;
+  left: 2px;
+  top: 2px;
+}
+.balActive{
+  left: 15px;
+}
+.active{
+  background-color: #0033A0;
+}
+.inptErr{
+  border-color:#F52626;
+}
+.inptErr input{  
+  color:#F52626;
+}
+.msgErrInpt {
+  color: #F52626;
+  font-size: 70%;
+  padding-left:3px;
+  width:calc(100% - 3px);
+  padding-top:1px;
+}
+.errAbs{
+  width: 300%;
+}
+.itemsRow .msgErrInpt{
+  font-size: 75%;
+}
+.thAction {
+  min-width: 55px;
+  width: 5%;
+}
+.thStatus{
+  width:15%;
+  text-align:right;
+}
+.thEmail{
+  width:auto;
+}
+
+@media(min-width: 1000px){
+
+  #serieClient{
+    width: 15%;
+    margin-right: 1%;
+  }
+
+  #numSeniatClient {
+    width: 68%;
+  }
+
+  .modalContent {
+    width: 55%;
+    left:19%;
+  }
+
+  #confirmModal .modalContent{
+    width: 30%;
+    left: 33%;
+  }
+}
+
+
+/*
+@media (min-width: 1440px) {
+  .prdSearch{
+      margin-right: -20%;
+  }
+
+  #iconSearch{
+      right: 29%;
+  }
+
+}
+
+@media (min-width: 1500px) {
+  .prdSearch{
+      margin-right: -25%;
+  }
+
+  #iconSearch{
+      right: 29%;
+  }
+
+  #numSeniatClient {
+    width: 70%;
+  }
+}
+
+@media (min-width: 1780px) {
+  .prdSearch{
+      margin-right: -30%;
+  }
+
+  #iconSearch{
+      right: 29%;
+  }
+
+}*/
+/*
+
+@media(min-width: 1919px){
+  .prdSearch{
+    margin-right: -40%;
+}
+
+#iconSearch{
+    right: 27%;
+}
+
+#serieClient{
+  width: 15%;
+  margin-right: 10px;
+}
+
+#numSeniatClient {
+  width: 70%;
+  margin-left: 10px;
+}
+
+input[type=text], [type=password], [type=date], select {
+  width: 97%;
+}
+}*/
+
+  /* @media (max-width: 1919px){
+    #serieClient{
+      width: 15%;
+      margin-right: 10px;
+    }
+    
+    #numSeniatClient {
+      width: 64%;
+      margin-left: 10px;
+    }
+
+    input[type=text], [type=password], [type=date], select {
+      width: 96%;
+    }
+  } */
