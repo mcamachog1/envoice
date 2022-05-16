@@ -100,6 +100,10 @@ function callWS(type, service, params, response, extra = "") {
   spin.classList.add("spinChar");
   spin.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
   wait.appendChild(spin);
+  setTimeout(function(){    
+    var waitScreen = document.getElementById("waitScreen");
+    waitScreen.style.opacity = "1";
+  },300);
   document.body.appendChild(wait);
   WS_waitscreen = true;
 
@@ -113,9 +117,15 @@ function callWS(type, service, params, response, extra = "") {
       } else {
         response(this.status, this.responseText, extra);
       }
-      var waitScreen = document.getElementById("waitScreen");
-      document.body.removeChild(waitScreen);
-      WS_waitscreen = false;
+      setTimeout(function(){        
+        var waitScreen = document.getElementById("waitScreen");
+        waitScreen.style.opacity = "";
+        setTimeout(function(){
+          var waitScreen = document.getElementById("waitScreen");
+          document.body.removeChild(waitScreen);
+          WS_waitscreen = false;
+        },300);
+      },500);
     }
   };
   switch (type) {

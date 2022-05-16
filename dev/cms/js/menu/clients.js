@@ -697,7 +697,7 @@ function clientsUpdate() {
     serieClient: "Ingrese el núm de serie del Seniat",
     numSeniatClient: "Ingrese el núm de control del Seniat",*/
     contactoClient: "Ingrese el nombre de contacto",
-    emailClient: "Ingrese el correo eletrónico con el que accederá en la aplicación",
+    emailClient: "Ingrese el correo electrónico con el que accederá en la aplicación",
   };
 
 
@@ -1204,16 +1204,18 @@ function init() {
     control = document.getElementById("newControl").value;
     initnum = document.getElementById("newInitnum").value;
     idname = document.getElementById("newIdname").value;
+    /*
     var failserie = false;
-    if(serie==""||serie==null)failserie = true;
+    if(serie==""||serie==null)failserie = true;*/
     var failcontrol = false;
     if(control==""||control==null)failcontrol = true;
     var failinitnum = false;
     if(initnum==""||initnum==null)failinitnum = true;
-    if(failserie || failcontrol || failinitnum){
+    if(failcontrol || failinitnum){
+      /*
       if(failserie){
         inptError(document.getElementById("newSerie"),"Ingrese una serie");
-      }
+      }*/
       if(failcontrol){
         inptError(document.getElementById("newControl"),"Ingrese número de control");
       }
@@ -1223,7 +1225,7 @@ function init() {
       return false;
     }else{
       removeErr(document.getElementById("newSerie"));
-      removeErr(document.getElementById("newControl"));
+      removeErr(document.getElementById("newControl"))
       removeErr(document.getElementById("newInitnum"));
     }
     //Validar que no exista una serie + nro de control ya existente

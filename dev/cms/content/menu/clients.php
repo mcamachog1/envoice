@@ -377,7 +377,7 @@
 <div id="confirmModal" class="modal">
     <div class="modalContent">
         <span id="closeModalConfirm" class="close">&times;</span>
-        <p id="modalTitleConfirm">¿Está seguro que desea cancelar sin guardar los cambios realizado?</p>
+        <p id="modalTitleConfirm">¿Está seguro que desea cancelar sin guardar los cambios realizados?</p>
         <div class="stdbtn ">
             <input id="stdbtnYesConfirm" class="stdbtnSubmit updateModal stdbtnSubmitCreateSave" type="button" value="CONFIRMAR">
             <input id="stdbtnNoConfirm" class="cancel stdbtnOutline stdbtnSubmitCreateSave" type="button" value="CANCELAR">

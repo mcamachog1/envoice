@@ -9,7 +9,7 @@
         <a class="itemMenu itemMenuReady" id="clients"><b>Clientes</b></a>
         <a class="itemMenu itemMenuDisabled" id="operations"><b>Operaciones</b></a>
         <a class="itemMenu itemMenuReady" id="users"><b>Usuarios</b></a>
-        <div class="leaveSect"><span id="usernameMenu"></span><img class="logoMenu" id="logOut" src="./img/logout.svg"></div>
+        <div class="leaveSect"><span id="usernameMenu"></span><i style="margin-left:5px" id="logOut" class="fa-solid fa-right-from-bracket"></i></div>
     </div>
 </div>
 
