@@ -21,7 +21,7 @@ if($_FILES["invoicesfile"]["size"] <= 0)
 
 // (A) OPEN FILE
 $handle = fopen($_FILES["invoicesfile"]["tmp_name"], "r") or die("Error reading file!");
-echo "Abrió el archivo\n";     
+ 
 // (B) READ LINE BY LINE
 // La primera linea debe ser la de TOTALES
 if ($line = fgets($handle))
@@ -54,34 +54,6 @@ while (($getLine = fgetcsv($handle , 10000, ",")) !== FALSE)    {
 
   }
 }
-
-
-/*
-while (($line = fgets($handle)) !== false) {
-  echo "\n";
-  echo "$line";
-  echo "\n";
-  if (substr($line,0,1)<>"E" && substr($line,0,1)<>"D")
-    badEnd("400", array("msg"=>"Formato Incorrecto: se espera linea de ENCABEZADO o DETALLE"));
-  // Caso linea de ENCABEZADO
- 
-  // Caso linea de DETALLE
-
-    
-    if (substr_count($line,"Procesado por el banco") == 0 && substr($line,0,2)=="02")  {
-        $referencia = substr($line,12,20);
-        $cedula = substr($line,2,9);
-        $err = substr($line,252,5);
-        $motive = substr($line,256,20);
-        //$print = $cedula."|".$referencia."\n";
-        //echo nl2br($print);
-        $sql = "INSERT INTO fileupload (originalid, contractid, err, motive, type, amount, number, expiration, dsc) SELECT $referencia, contractid, '$err', TRIM('$motive'), 'DEV', amount*(-1), number, expiration, CONCAT('Error enviado por el banco: ','$err','$motive',' correspondiente al contrato: ',contractid,' Tipo de cobro: ',dsc)  FROM movements WHERE id = 116 ";
-        if (!$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));            
-    }
-*/
-  
-
 // (C) CLOSE FILE
 fclose($handle);
 
