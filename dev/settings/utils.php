@@ -282,6 +282,54 @@ function series_validate($serie, $initial){
     else
         return false;
 }
-
+function getSeries($customerid,$db){
+    $sql = "SELECT serie FROM customers WHERE id=$customerid ";
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    if ($row = $rs->fetch_assoc()) 
+        return explode("-",$row['serie']);
+    else
+        return null;
+}
+function getInitialControls($customerid,$db){
+    $sql = "SELECT initialcontrol FROM customers WHERE id=$customerid ";
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    if ($row = $rs->fetch_assoc()) 
+        return explode("-",$row['initialcontrol']);
+    else
+        return null;        
+}
+function getNextControls($customerid,$db){
+    $sql = "SELECT nextcontrol FROM customers WHERE id=$customerid ";
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    if ($row = $rs->fetch_assoc()) 
+        return explode("-",$row['nextcontrol']);
+    else
+        return null;        
+} 
+function getNextControl($serie,$customerid,$db){
+    $sql = "SELECT serie, nextcontrol FROM customers WHERE id=$customerid ";
+    if (!$rs = $db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
+    $records=array();
+    if ($row = $rs->fetch_assoc()){
+        $series = explode("-",$row['serie']);
+        $nexts = explode("-",$row['nextcontrol']);
+        for ($i = 0; $i < count($series); $i++) {
+            $record = new stdClass();
+            $record->serie = $series[$i];
+            $record->nextcontrol = $nexts[$i];
+            $records[] = $record;
+        }
+    }
+    foreach ($records as $record) {
+       
+        if ($record->serie == "$serie" )
+           return $record->nextcontrol;
+    }    
+    return null;
+} 
 
 ?>

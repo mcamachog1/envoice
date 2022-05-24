@@ -47,6 +47,7 @@ while (($getLine = fgetcsv($handle , 10000, ",")) !== FALSE)    {
   }
   elseif ($firstLine && substr($getLine[0],-1) == 'T') {
     $firstLine = false;
+    $serie = $getLine[3];
     storageTotals($getLine);
     continue;
   }
@@ -57,10 +58,10 @@ while (($getLine = fgetcsv($handle , 10000, ",")) !== FALSE)    {
     $err = $resp["err"];
     $errmsg = $resp["msg"];    
     $sql = "INSERT INTO loadinvoiceheader ".
-      " (id, customerid, type, issuedate, duedate, refnumber, clientrif, clientname, clientaddress, mobilephone, ".
+      " (id, customerid, type, serie, issuedate, duedate, refnumber, clientrif, clientname, clientaddress, mobilephone, ".
       " otherphone,  clientemail, obs, currency, currencyrate, ctrref, discount, totaltax, total, err, errmsg ) ". 
       " VALUES ( 0, ". 
-      $customerid.",'".$getLine[1]."','".$getLine[2]."','".$getLine[3]."','".$getLine[4]."','".$getLine[5]."','".$getLine[6]."','".$getLine[7]."','".$getLine[8]."','".
+      $customerid.",'".$getLine[1]."','".$serie."','".$getLine[2]."','".$getLine[3]."','".$getLine[4]."','".$getLine[5]."','".$getLine[6]."','".$getLine[7]."','".$getLine[8]."','".
       $getLine[9]."','".$getLine[10]."','".$getLine[11]."','".$getLine[12]."',".$getLine[13].",'".$getLine[14]."',".$getLine[15].",".$getLine[16].",".$getLine[17].",".
       $err.",'".$errmsg."'".
       ") ";

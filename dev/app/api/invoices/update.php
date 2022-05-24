@@ -3,34 +3,8 @@
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
-    
-    function getSeries($customerid,$db){
-        $sql = "SELECT serie FROM customers WHERE id=$customerid ";
-        if (!$rs=$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        if ($row = $rs->fetch_assoc()) 
-            return explode("-",$row['serie']);
-        else
-            return null;
-    }
-    function getInitialControls($customerid,$db){
-        $sql = "SELECT initialcontrol FROM customers WHERE id=$customerid ";
-        if (!$rs=$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        if ($row = $rs->fetch_assoc()) 
-            return explode("-",$row['initialcontrol']);
-        else
-            return null;        
-    }
-    function getNextControls($customerid,$db){
-        $sql = "SELECT nextcontrol FROM customers WHERE id=$customerid ";
-        if (!$rs=$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        if ($row = $rs->fetch_assoc()) 
-            return explode("-",$row['nextcontrol']);
-        else
-            return null;        
-    }   
+
+  
     function existsInvoice($ctrref,$db){
         return true;
     }
@@ -72,7 +46,9 @@
     $discount=avoidInjection($data->discount,'float');
     $arraydetails = $data->details;
 
+
     // Si id de la factura es 0, es un insert de factura con header y detalle
+    // Esto debería ser una transaccion (try)
     if ($id == 0){
         // Se calcula el numero de control del cliente para la nueva factura
         // Obtener index de la serie (no contempla series repetidas)
@@ -80,13 +56,16 @@
         $index=array_search($serie, $series);
         if (is_null($index))
             badEnd("400", array("msg"=>"Serie no existe para este cliente"));
+        
+        
         // Obtener el nextcontrol actual
+        $ctrnumber = getNextControl($serie,$customerid,$db);
+        // Ubicar el next control
         $nexts=getNextControls($customerid,$db);
         $next = $nexts[$index];
         // Construir nextcontrol en string
         $nexts[$index] = $next + 1;
         $str_nextcontrol = implode("-",$nexts);
-
         // Se actualiza el nextcontrol del cliente
         $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
         if (!$db->query($update)) 
@@ -96,9 +75,8 @@
         $sql="INSERT INTO `invoiceheader` (`id`, `type`,`customerid`, `issuedate`, `duedate`, `refnumber`, `ctrnumber`,`ctrref`, `clientrif`, " .
             " `clientname`, `clientaddress`, `mobilephone`, `otherphone`, " .
             " `obs`, `clientemail`, `creationdate`, `currencyrate`, `currency`, `discount`) " .
-            " VALUES (NULL, '$type',$customerid, '$issuedate', '$duedate', '$refnumber', '$ctrnumber', '$ctrref','$clientrif', '$clientname', '$clientaddress', " .
+            " VALUES (NULL, '$type',$customerid, '$issuedate', '$duedate', '$refnumber', CONCAT('$serie',LPAD($ctrnumber,10,'0')), '$ctrref','$clientrif', '$clientname', '$clientaddress', " .
             " '$mobilephone', '$otherphone', '$obs', '$clientemail', CURRENT_TIMESTAMP, $currencyrate, '$currency',  $discount)";
-
         if (!$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         $invoiceid = $db->insert_id;
@@ -118,7 +96,7 @@
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
             
-            }
+        }
     }
     // Si id de la factura es <> 0 es un update. 
     else {
