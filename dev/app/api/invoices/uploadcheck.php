@@ -126,10 +126,10 @@
     if (!$rs=$db->query($sql))
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     $row = $rs->fetch_assoc();
-    $errors = array(array("err"=>(integer)$row["ERR0"], "errmsg"=>"Sin error"),
-            array("err"=>(integer)$row["ERR1"], "errmsg"=>"Cantidad de campos requeridos incorrecta"),
-            array("err"=>(integer)$row["ERR2"], "errmsg"=>"Formato de campo incorrecto"));
-            //array("err"=>(integer)$row["ERR3"], "errmsg"=>"Error tipo 3"),
+    $errors = array(array("err0"=>(integer)$row["ERR0"], "errmsg"=>"Sin error"),
+            array("err1"=>(integer)$row["ERR1"], "errmsg"=>"Cantidad de campos requeridos incorrecta"),
+            array("err2"=>(integer)$row["ERR2"], "errmsg"=>"Formato de campo incorrecto"));
+            //array("err3"=>(integer)$row["ERR3"], "errmsg"=>"Error tipo 3"),
             
 // Salida
   $out = new stdClass(); 

@@ -1,27 +1,28 @@
 <?php
-    //  app/api/invoices/update.php
+//  app/api/invoices/update.php
+
+// Cargar librerias
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
-
-  
+// Declarar funciones locales
     function existsInvoice($ctrref,$db){
         return true;
     }
 
-    //Recibir JSON y convertir a objeto
+// Recibir POST JSON y convertir a objeto
     $data = json_decode(file_get_contents('php://input'), false);
 
-    // parametros obligatorios
+// Parametros obligatorios
     $id=$data->id;
     $sessionid=$data->sessionid;
     if (is_null($id) || is_null($sessionid))
         badEnd("400", array("msg"=>"Parametros obligatorios id, sessionid" ));
         
-    // Validar user session
+// Validar usersession
     $customerid = isSessionValid($db,$sessionid);
 
-    //Llenar variables
+// Llenar variables
     $serie=avoidInjection($data->seriecontrol->serie,'str');
     $control=avoidInjection($data->seriecontrol->control,'str');
     $type=avoidInjection($data->type,'str');
@@ -47,7 +48,7 @@
     $arraydetails = $data->details;
 
 
-    // Si id de la factura es 0, es un insert de factura con header y detalle
+// Si id de la factura es 0, es un insert de factura con header y detalle
     // Esto debería ser una transaccion (try)
     if ($id == 0){
         // Se calcula el numero de control del cliente para la nueva factura
@@ -98,7 +99,7 @@
             
         }
     }
-    // Si id de la factura es <> 0 es un update. 
+// Si id de la factura es <> 0 es un update. 
     else {
         $invoiceid= $id;
         //Validar que la factura exista
@@ -158,7 +159,7 @@
 
     }
     
-    // Salida
+// Salida
     $out = new stdClass;    
     $out->id =(integer)$invoiceid;
 
