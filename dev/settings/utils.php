@@ -138,14 +138,14 @@ function enviarCorreo($from, $to, $subject, $body, $altbody=""){
     // 2 = client and server messages
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
-    $mail->Host = "espaciosegurocovisol.com";
+    $mail->Host = "kromasys.com";
     $mail->Port = 587;
     $mail->SMTPAuth = true;
     $mail->SMTPSecure = false;
     $mail->SMTPAutoTLS = false;
-    $mail->setFrom('no-responder@espaciosegurocovisol.com', 'DaycoPrint');
-    $mail->Username = 'no-responder@espaciosegurocovisol.com';
-    $mail->Password = "k%t?vx=]Fej=";
+    $mail->setFrom('no-responder@kromasys.com', 'DaycoPrint');
+    $mail->Username = 'no-responder@kromasys.com';
+    $mail->Password = "*d=G0bu1xjks";
     $mail->addAddress($to);
     $mail->Subject = $subject;
     //$mail->msgHTML(file_get_contents('forgot.html'), __DIR__);
@@ -200,29 +200,40 @@ function isSessionValidCMS($db, $sessionid){
 }
 function avoidInjection($param,$type) {
     switch ($type) {
-        case "list":
-            # Caso lista separada con guiones, hay que validar patron -XX-XX-XX
-            return $param;
         case "dashes":
             return str_replace("-",",",$param);
-        case "int":
-            return intval($param);
-        case "rif":
-            return preg_replace("/[^\-a-zA-ZáéíóúñÁÉÚÍÓÑ0-9\s.]+/","",$param);
-        case "str":
-            return preg_replace("/[^a-zA-ZáéíóúñÁÉÚÍÓÑ0-9\s.]+/","",$param);
-        case "float":
-            return floatval($param);
-        case "email":
-            if(filter_var($param, FILTER_VALIDATE_EMAIL)) 
-                return $param;
-            else
-                badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
         case "date":
             if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$param)) 
                 return $param;
             else 
                 badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
+        case "email":
+            if(filter_var($param, FILTER_VALIDATE_EMAIL)) 
+                return $param;
+            else
+                badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
+        case "float":
+            return floatval($param); 
+        case "int":
+            return intval($param);
+        case "list":
+            # Caso lista separada con guiones, hay que validar patron -XX-XX-XX
+            if (preg_match("/[-]?\w{1,2}/",$param))            
+                return $param;
+            else
+                badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
+        case "mobile":
+            if (preg_match("/^04[1,2,4,6]{2} [0-9]{7}/",$param) && strlen($param)==12) 
+                return $param;
+            else 
+                badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
+        case "rif":
+            if (preg_match("/[J,G,V,E]{1}[0-9]{9}/",$param) && strlen($param)==10) 
+                return $param;
+            else
+                badEnd("400", array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type"));
+        case "str":
+            return preg_replace("/[^a-zA-ZáéíóúñÁÉÚÍÓÑ0-9\s.]+/","",$param);
         default:
             echo (json_encode(array("msg"=>"El parametro $param no pudo ser tipeado al tipo $type")));
     }

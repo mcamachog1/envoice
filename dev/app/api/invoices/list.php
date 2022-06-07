@@ -56,9 +56,9 @@
     $sql =  "SELECT " .
             " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
             " H.type, H.ctrref, ".            
-            " SUM(unitprice*qty) gross, ".
+            " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
             " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
-            " SUM( unitprice*qty*(itemdiscount/100) ) discount, ".
+            " H.discount discount, ".
             " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
             //" SUM(D.itemdiscount) discount, SUM(D.unitprice)-SUM(D.itemdiscount) total, ".
             " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
@@ -131,8 +131,8 @@
         
         $record->amounts =new stdClass();        
         $record->amounts->gross = new stdClass(); 
-        $record->amounts->gross->number = (float)$row["gross"];
-        $record->amounts->gross->formatted = number_format($row["gross"], 2, ",", ".");
+        $record->amounts->gross->number = (float)$row["gross"]*(1-(float)$row["discount"]/100);
+        $record->amounts->gross->formatted = number_format($row["gross"]*(1-(float)$row["discount"]/100), 2, ",", ".");
         
         $record->amounts->tax = new stdClass(); 
         $record->amounts->tax->number = (float)$row["tax"];
@@ -143,8 +143,8 @@
         //$record->amounts->discount->formatted = number_format($row["discount"], 2, ",", ".");        
 
         $record->amounts->total = new stdClass(); 
-        $record->amounts->total->number = (float)$row["gross"]+$row["tax"]-$row["discount"];
-        $record->amounts->total->formatted = number_format($row["gross"]+$row["tax"]-$row["discount"], 2, ",", ".");        
+        $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
+        $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
 
 
         $records[] = $record;

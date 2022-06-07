@@ -43,7 +43,7 @@
     $sql =  "SELECT " .
             " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
             " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, ".
-            " SUM( unitprice*qty ) gross, ".
+            " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
             " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
             " H.discount, H.type, H.ctrref, ".
             " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".

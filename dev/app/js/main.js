@@ -109,20 +109,7 @@ var WS_wstimeout;
 function callWS(type, service, params, response, extra = "") {
   var url = globalurl + "/api/" + service + ".php";
 
-  var wait = document.createElement("div");
-  wait.classList.add("waitScreen");
-  wait.classList.add("textCenter");
-  wait.setAttribute("id", "waitScreen");
-  var spin = document.createElement("div");
-  spin.classList.add("spinChar");
-  spin.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-  wait.appendChild(spin);
-  setTimeout(function(){    
-    var waitScreen = document.getElementById("waitScreen");
-    waitScreen.style.opacity = "1";
-  },300);
-  document.body.appendChild(wait);
-  WS_waitscreen = true;
+  waitOn();
 
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -134,15 +121,7 @@ function callWS(type, service, params, response, extra = "") {
       } else {
         response(this.status, this.responseText, extra);
       }
-      setTimeout(function(){        
-        var waitScreen = document.getElementById("waitScreen");
-        waitScreen.style.opacity = "";
-        setTimeout(function(){
-          var waitScreen = document.getElementById("waitScreen");
-          document.body.removeChild(waitScreen);
-          WS_waitscreen = false;
-        },300);
-      },500);
+      waitOff();
     }
   };
   switch (type) {
@@ -152,7 +131,7 @@ function callWS(type, service, params, response, extra = "") {
       for (var key in params) {
         formdata.append(key, params[key]);
       }
-      xhttp.send(data);
+      xhttp.send(formdata);
       break; 
     case "JSON":
       xhttp.open("POST", url, true);
@@ -170,7 +149,33 @@ function callWS(type, service, params, response, extra = "") {
     break;
   }
 }
-
+function waitOn(){
+  /*WAIT on*/
+  var wait = document.createElement("div");
+  wait.classList.add("waitScreen");
+  wait.classList.add("textCenter");
+  wait.setAttribute("id", "waitScreen");
+  var spin = document.createElement("div");
+  spin.classList.add("spinChar");
+  spin.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+  wait.appendChild(spin);
+  setTimeout(function(){    
+    var waitScreen = document.getElementById("waitScreen");
+    waitScreen.style.opacity = "1";
+  },300);  
+  document.body.appendChild(wait);
+}
+function waitOff(){
+  setTimeout(function(){        
+    var waitScreen = document.getElementById("waitScreen");
+    waitScreen.style.opacity = "";
+    setTimeout(function(){
+      var waitScreen = document.getElementById("waitScreen");
+      document.body.removeChild(waitScreen);
+      WS_waitscreen = false;
+    },300);
+  },500);
+}
 /****************
  *   DESDE AQUI
  * 
@@ -324,7 +329,7 @@ function isEmail(email) {
 }
 function isRIF(rif){
   //var re = /^[JGVEPM][0-9]{4,9}$/;
-  var re = /^[JG][-][0-9]{4,9}$/;
+  var re = /^[JG][-][0-9]{9}$/;
   return re.test(rif);
 }
 function isCI(rif){
@@ -374,14 +379,15 @@ String.prototype.capitalize = function(lower) {
   return (out);
 };
 function formatRIF(valor){
+  let padToFour = number => number <= 999999999 ? `00000000${number}`.slice(-9) : number.slice(0,9);
   var cleaned = (valor.replace(/[.,\-, ,\/]/g,"").toUpperCase());
   if (cleaned.length){
       var area, numero;
           area = cleaned.substr(0,1);
           numero = cleaned.substr(1);
 
-      if(numero!="")
-        return(area+"-"+numero);
+      if(numero!=""&&parseFloat(numero)>0)
+        return(area+"-"+padToFour(numero));
       else
         return(area);
   }else{
@@ -429,6 +435,44 @@ function formatPhone(valor){
         return(area+" "+numero);
       else
         return(area);
+  }else{
+      return("");
+  }
+}
+function formatRefctr(valor){
+  
+  var cleaned = ('' + valor.toUpperCase()).replace(/[^a-zA-Z0-9]/g, '');
+  if (cleaned.length){
+      var prefijo, area, numero;
+    
+      if(cleaned.length>=12){
+        cleaned = cleaned.substr(0,12);
+      }
+
+      if(cleaned.length>8){                
+        numero = cleaned.substr((cleaned.length-8),8);
+        if(Math.abs(cleaned.length-8)>0){
+          if(Math.abs(cleaned.length-8)>2){            
+            area = cleaned.substr((Math.abs(cleaned.length-8)-2),2);
+            prefijo = cleaned.substr(0,(Math.abs(cleaned.length-8)-2));
+          }else{            
+            area = cleaned.substr(0,Math.abs(cleaned.length-8));            
+            prefijo = "";
+          }
+        }
+        var fullnum = "";
+        if(prefijo!="")
+          fullnum = (prefijo+"-"+area+"-"+numero);
+        else if(area!="")
+          fullnum = (area+"-"+numero);
+        else if(numero!="")
+          fullnum = (numero);
+
+
+        return fullnum;
+      }else{
+        return cleaned;
+      }
   }else{
       return("");
   }
@@ -551,11 +595,13 @@ function formatFields2(campos, formato,optional="",cnt=document){
 
 /*****
  * El parametro 1 debe ser el arreglo con los registros (opciones)
- * El parametro 2 debe ser el elemento (select) donde se insertaran las opciones
- * El parametro 3 es opcional crea una primera opcion con value=0 se puede pasar en blanco, null o undefined si no se desea
- * El parametro 4 es una opci贸n selecionada
+ * El parametro 2 debe ser el elemento (select) donde se insertaran las opciones * 
+ * El parametro 3 corresponde al valor a ser leído cómo value * 
+ * El parametro 4 corresponde al valor a ser leído cómo dsc *
+ * El parametro 5 es opcional crea una primera opcion con value=0 se puede pasar en blanco, null o undefined si no se desea
+ * El parametro 6 es una opci贸n selecionada
  * ****/
-function drawSelect(rsp, select, first, selected) {
+function drawSelect(rsp, select, id, dsc, first="", selected="") {
   select.innerHTML = "";
   var opt;
   if (first !== "" && first !== null && first !== undefined) {
@@ -566,9 +612,29 @@ function drawSelect(rsp, select, first, selected) {
   }
   for (var i = 0; i < rsp.length; i++) {
     opt = document.createElement("option");
-    opt.setAttribute("value", rsp[i].id);
-    if (rsp[i].id == selected) opt.setAttribute("selected", true);
-    opt.innerHTML = rsp[i].dsc;
+    opt.setAttribute("value", rsp[i][id]);
+    if(id.indexOf("err")>-1){
+      opt.setAttribute("errid", id);
+    }
+    if (rsp[i][id] == selected) opt.setAttribute("selected", true);
+    opt.innerHTML = rsp[i][dsc];
+    select.appendChild(opt);
+  }
+}
+function drawSelectErr(rsp, select, id, dsc, first="", selected="") {
+  select.innerHTML = "";
+  var opt;
+  if (first !== "" && first !== null && first !== undefined) {
+    opt = document.createElement("option");
+    opt.setAttribute("value", 0);
+    opt.innerHTML = first;
+    select.appendChild(opt);
+  }
+  for (var i = 0; i < rsp.length; i++) {
+    opt = document.createElement("option");
+    opt.setAttribute("value", rsp[i][id]);
+    if (rsp[i][id] == selected) opt.setAttribute("selected", true);
+    opt.innerHTML = rsp[i][dsc];
     select.appendChild(opt);
   }
 }

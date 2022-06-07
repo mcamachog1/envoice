@@ -1,28 +1,27 @@
 <?php
-//  app/api/invoices/update.php
-
-// Cargar librerias
+    //  app/api/invoices/update.php
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
-// Declarar funciones locales
+
+  
     function existsInvoice($ctrref,$db){
         return true;
     }
 
-// Recibir POST JSON y convertir a objeto
+    //Recibir JSON y convertir a objeto
     $data = json_decode(file_get_contents('php://input'), false);
 
-// Parametros obligatorios
+    // parametros obligatorios
     $id=$data->id;
     $sessionid=$data->sessionid;
     if (is_null($id) || is_null($sessionid))
         badEnd("400", array("msg"=>"Parametros obligatorios id, sessionid" ));
         
-// Validar usersession
+    // Validar user session
     $customerid = isSessionValid($db,$sessionid);
 
-// Llenar variables
+    //Llenar variables
     $serie=avoidInjection($data->seriecontrol->serie,'str');
     $control=avoidInjection($data->seriecontrol->control,'str');
     $type=avoidInjection($data->type,'str');
@@ -39,7 +38,7 @@
     $obs = avoidInjection($data->obs,'str');    
     $clientname = avoidInjection($data->client->name,'str');
     $clientaddress = avoidInjection($data->client->address,'str');
-    $mobilephone = avoidInjection($data->client->mobile,'str');
+    $mobilephone = avoidInjection($data->client->mobile,'mobile');
     $otherphone = avoidInjection($data->client->phone,'str');
     $clientemail =avoidInjection($data->client->email,'email');
     $currencyrate= avoidInjection($data->currencyrate,'float');
@@ -48,7 +47,7 @@
     $arraydetails = $data->details;
 
 
-// Si id de la factura es 0, es un insert de factura con header y detalle
+    // Si id de la factura es 0, es un insert de factura con header y detalle
     // Esto debería ser una transaccion (try)
     if ($id == 0){
         // Se calcula el numero de control del cliente para la nueva factura
@@ -99,7 +98,7 @@
             
         }
     }
-// Si id de la factura es <> 0 es un update. 
+    // Si id de la factura es <> 0 es un update. 
     else {
         $invoiceid= $id;
         //Validar que la factura exista
@@ -159,7 +158,7 @@
 
     }
     
-// Salida
+    // Salida
     $out = new stdClass;    
     $out->id =(integer)$invoiceid;
 

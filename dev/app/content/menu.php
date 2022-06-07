@@ -216,7 +216,7 @@
         </div>
         <div class="invoiceFrm">
             <div class="invoiceRow">
-                <div class="invoiceCell cell30">
+                <div class="invoiceCell cell25">
                     <div class="inptCnt">
                         <div class="inptLbl">CI / RIF</div>
                         <div class="inptFrmCnt">
@@ -224,7 +224,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="invoiceCell cell40">
+                <div class="invoiceCell cell30">
                     <div class="inptCnt">
                         <div class="inptLbl">NOMBRE / RAZÓN SOCIAL</div>
                         <div class="inptFrmCnt">
@@ -232,19 +232,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="invoiceCell cell10">
+                <div class="invoiceCell cell12Mid">
                     <div class="inptCnt">
-                        <div class="inptLbl">NRO SERIE.</div>
+                        <div class="inptLbl">TIPO</div>
                         <div class="inptFrmCnt">
-                            <input class="inptFrm" placeholder="--" id="invoiceserie"/>
+                            <select class="inptFrm" id="invoicetype">
+                                <option value="FAC">Factura</option>
+                                <option value="NCR">Nota Crédito</option>
+                                <option value="NDB">Nota Débito</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="invoiceCell cell20">
+                <div class="invoiceCell cell7Mid">
+                    <div class="inptCnt">
+                        <div class="inptLbl">NRO SERIE.</div>
+                        <div class="inptFrmCnt">
+                            <select class="inptFrm" placeholder="--" id="invoiceserie">
+                                <option>AA-00</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoiceCell cell12Mid">
                     <div class="inptCnt">
                         <div class="inptLbl">FACTURA</div>
                         <div class="inptFrmCnt">
                             <input class="inptFrm" placeholder="00000000" type="number" id="invoicenumber"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoiceCell cell12Mid">
+                    <div class="inptCnt">
+                        <div class="inptLbl">SOBRE FACTURA</div>
+                        <div class="inptFrmCnt">
+                            <input class="inptFrm" placeholder="AA-00-00000000" type="text" id="invoicerefcrtl"/>
                         </div>
                     </div>
                 </div>
@@ -463,6 +485,100 @@
 </div>
 <div class="popupCnt">
     <div class="popupCell">
+        <div class="popupCard" id="uploadPopup">
+            <div class="popupClose" popup="uploadPopup"><i class="fa fa-times"></i></div>
+            <div class="popupTit">Cargar Facturas</div>
+            <div class="popUpSect">
+                <div class="popupDsc">Seleccione las facturas a importar desde:</div>            
+                <div class="btnCell btnCellPop">
+                    <div class="btnClose btnB" id="uplFile">
+                        SELECCIONAR ARCHIVO .TXT
+                        <input class="uplFileInv" id="inptUplFile" type="file" accept=".txt"/>
+                    </div>
+                </div>
+            </div>
+            <div class="popUpSect">
+                <div class="popupDsc">Descargue un plantilla de ejemplo si lo necesita</div>            
+                <div class="btnCell btnCellPop" style="margin-bottom:15px">
+                    <div class="btnClose btnInvExamp">
+                        <span class="iccsv"></span>PLANTILLA
+                    </div>
+                </div>
+            </div>            
+            <div class="popupBtns">
+                <div class="btnsCntPop">
+                    <div class="btnCell btnCellPop" style="margin-bottom:10px">
+                        <div class="btnSave btnA" id="cancelUplInvc">                    
+                            CANCELAR
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="popupCard" id="uploadCnfrPopup">
+            <div class="popupClose" popup="uploadCnfrPopup"><i class="fa fa-times"></i></div>
+            <div class="popupTit">Cargar Facturas</div>
+            <div class="popUpSect">
+                <div class="popupDsc"> <span id="numberInvc"></span> Su archivo se ha cargado exitosamente. ¿Está seguro que quiere procesar este archivo?</div>            
+                <div class="btnCell btnCellPop">
+                    <div class="uplNameCnt">
+                        <div class="uplNameCell" id="uplName"></div>
+                        <div class="uplTrashCell" id="uplTrashFile">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btnsCntPop">
+                <div class="btnCell btnCellPop">
+                    <div class="btnClose btnB" id="uplCnfrmBtn">
+                        PROCESAR
+                    </div>
+                </div>
+                <div class="btnCell btnCellPop" style="margin-bottom:10px">
+                    <div class="btnSave btnA" id="cancelCnfrmUp">                    
+                        CANCELAR
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="popupCard" id="errUplPopup">
+            <div class="popupClose" popup="errUplPopup"><i class="fa fa-times"></i></div>
+            <div class="popupTit">Cargar Facturas</div>
+            <div class="popupErrSect">
+                <div class="invoiceRow">
+                    <div class="invoiceCell cell100">
+                        <div class="inptCnt">
+                            <div class="inptLbl">Error</div>
+                            <div class="inptFrmCnt">
+                                <select class="inptFrm" id="selErrUpl">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="listErrors" id="listItemsErr">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="popupBtns">
+            <div class="btnsCntPop">
+                <div class="btnCell btnCellPop">
+                    <div class="btnClose btnB" id="tryagainUpl">
+                        INTENTAR DE NUEVO
+                    </div>
+                </div>
+                <div class="btnCell btnCellPop" style="margin-bottom:10px">
+                    <div class="btnSave btnA" id="cancelErrInvc">                    
+                        CANCELAR
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
         <div class="popupCard" id="deletePopup">
             <div class="popupClose" popup="deletePopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Eliminar Facturas</div>
@@ -501,5 +617,39 @@
             </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="invviewer" id="invViewer">
+    <div class="invvHeadTbl">
+        <div class="invvCellLeft">
+            <span id="backViewer"><i class="fa fa-arrow-left invVBtn"></i></span>
+            <span id="invName">
+                Fact. 000187
+            </span>
+        </div>
+        <div class="invvCellCenter">
+            <div class="invvStatusLbl penStatus">
+                <div class="statusDscCell">
+                    <span id="statusVDsc">Por Enviar</span>
+                </div>
+                <div class="statusIcCell">
+                    <span ><i id="viewStatusBtn" class="invVBtn fa-solid fa-sort-down" ></i></span>
+                </div>
+                <div class="statusPopup" id="statusPopup">
+                    <div class="statusPopTbl">Creación <span id="viewIssueDate">28-02-2022</span></div>
+                    <div class="statusPopTbl">Envío <span></span></div>
+                    <div class="statusPopTbl">Leída <span></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="invvCellRight">
+            <i class="fa-solid fa-print invVBtn" id="printView"></i>
+            <i class="fa-solid fa-download invVBtn" style="padding-left:20px;position:relative;">
+            <a class="downloadViewer" id="downloadView" download="fact.pdf"></a>
+            </i>
+        </div>
+    </div>
+    <div class="contentPage">
+        <iframe class="frameView" id="frameView" name="theFrame"></iframe>
     </div>
 </div>

@@ -832,7 +832,11 @@ function BCLoadClientsUpdate(status, respText) {
       jsonResp = JSON.parse(respText);
       //var message = document.getElementById("btnMessage");
       var msg = document.getElementById("btnMessageGeneral");
-      inptError(msg,"Error inesperado, por favor intente nuevamente");
+      if(jsonResp.msg != undefined && jsonResp.msg != ""){        
+        inptError(msg,jsonResp.msg);
+      }else{
+        inptError(msg,"Error inesperado, por favor intente nuevamente");
+      }
       setTimeout(function(){
         removeErr(document.getElementById("btnMessageGeneral"));
       },5000);

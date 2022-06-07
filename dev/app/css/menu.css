@@ -9,41 +9,7 @@ body {
   background-color: #fff;
   font-size:17px;
 }
-.waitScreen{
-  position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(66 66 66 / 65%);
-    z-index: 99;
-    color: #FFFFFF;
-    font-size: 200%;
-    text-align: center;
-    z-index: 200;
-    opacity: 0;
-    transition: all .3s;
-}
-.spinCont{
-  position: absolute;
-  left: 0;
-  top: 0;
-  text-align: center;
-  width: 100%;
-  max-height: 45px;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  height: 0;
-}
-.spinChar{
-  position: relative;
-  top: 45%;
-  font-size: 60%;font-family: Roboto;
-  color: #FFFFFF;
-  font-weight: 400;
-  text-align: center;
-}
+
 .myError {
   margin: 2px 6px;
   position: absolute;
@@ -441,8 +407,8 @@ select {
   margin-left:auto;
   margin-right:auto;
   margin-bottom: 0;
-  height: 14px;
-  width: 14px;
+  height: 13px;
+  width: 13px;
   cursor:pointer;
 }
 
@@ -937,6 +903,13 @@ select {
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
+  -moz-appearance:none;
+  margin: 0; 
+}
+input[type=number]::-moz-inner-spin-button, 
+input[type=number]::-moz-outer-spin-button { 
+  -webkit-appearance: none; 
+  -moz-appearance:none;
   margin: 0; 
 }
 .pageCnt{
@@ -986,6 +959,9 @@ input[type=number]::-webkit-outer-spin-button {
 .cell10{
   width: 10%;
 }
+.cell12Mid{
+  width: 12.5%;
+}
 .cell15{
   width: 15%;
 }
@@ -1000,6 +976,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .cell30 {
   width: 30%;
+}
+.cell37Mid{
+  width: 37.5%;
 }
 .cell40 {
   width: 40%;
@@ -1113,14 +1092,13 @@ input[type=number]::-webkit-outer-spin-button {
 .totCell .inptFrm{
   color:#AEBECA;
 }
-.itemTotTbl{
-  
-  
+.itemTotTbl{  
   margin-left: 0;
   padding: 4px 0;
-padding-right: 50px;
-    display: table;
-    width: calc(100% - 50px);}
+  padding-right: 50px;
+  display: table;
+  width: calc(100% - 50px);
+}
 .itemTotLbl{
   color:#0033A0;
   font-family: 'Lato';
@@ -1272,9 +1250,10 @@ padding-right: 50px;
   transition: all ease 300ms;
   color: #0033A0;
   font-weight: bold;  
-  padding: 11px 15px;
+  padding: 10px 15px;
   min-width:150px;
   text-align:center;
+  font-size:85%;
 }
 .btnB{
   border: 1px solid #03244d;
@@ -1283,11 +1262,59 @@ padding-right: 50px;
   cursor: pointer;
   background-color: #0033A0;
   transition: all ease 300ms;
-  color: white;
+  color: #FFFFFF;
   font-weight: bold;    
-  padding: 11px 15px;
+  padding: 10px 15px;
   min-width:150px;
   text-align:center;
+  font-size:85%;
+}
+.popUpSect .btnB{
+  padding: 10px 15px;
+  font-size: 80%;
+  position: relative;
+  border-color: #03244d !important;
+  margin-bottom: 3px;
+}
+.popUpSect .popupDsc{
+  padding-bottom:8px;
+  padding-top:10px;
+}
+.btnInvExamp{
+  border: 1px solid;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all ease 300ms;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding: 11px 15px;
+  min-width: 150px;
+  text-align: center;
+  background-color: #50AB47;
+  border-color: #50AB47;
+  font-size: 82%;
+  position: relative;
+}
+.iccsv{
+  background-image: url(../img/iccsv.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  display: block;
+  top: calc(50% - 10px);
+  position: absolute;
+  left: calc(50% - 63px);
+}
+.uplFileInv{
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: 100%;
+  cursor:pointer;
 }
 .footer {
   position:relative;
@@ -1335,14 +1362,22 @@ padding-right: 50px;
   color:#0033A0;
   font-family: 'Montserrat';
   font-weight: bold;
-  font-size:140%;
+  font-size:120%;
 }
 .popupDsc{
-  font-size: 85%;
+  font-size: 75%;
   color:#4A4A4A;
   font-family:'Lato';
   font-weight: 300;
   padding: 20px 0px 25px 0px;
+}
+.popupErrSect{
+  font-size:90%;
+  color:#4A4A4A;
+  padding: 20px 0px 20px 0px;
+}
+.popupErrSect .invoiceCell{
+  padding:0;
 }
 .btnsCntPop {
   display: table;
@@ -1354,6 +1389,7 @@ padding-right: 50px;
 .btnCellPop{
   display: block;
   width: 100%;
+  font-size: 97%;
   padding: 0;
   margin-bottom: 15px;
 }
@@ -1373,12 +1409,197 @@ padding-right: 50px;
 .itemsRow .msgErrInpt{
   font-size: 87%;
 }
+.uplNameCnt{
+  font-size:80%;
+  display:table;
+  height:20px;
+  padding:5px;
+  width:calc(100% - 10px);
+  background-color:#F8FAFB;
+  border-radius: 10px;
+}
+.uplNameCell{
+  width:auto;
+  display:table-cell;
+  vertical-align: middle;
+  color:#474848;
+}
+.uplTrashCell{
+  width:30px;
+  text-align:center;
+  position:relative;
+  display:table-cell;
+  vertical-align: middle;
+  color:#5E7D95;
+}
 
 /*Responsive table*/
 .respveTbl{
   display:none;
 }
+.invviewer{
+  background-image: linear-gradient(180deg, rgb(0 84 166 / 90%) 0%, rgb(0 32 102 / 90%) 100%);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  opacity:0;
+  display:none;
+  transition:all .3s;
+}
+.invvHeadTbl{
+  display:table;
+  width:100%;
+  margin-left:auto;
+  margin-right:auto;
+  border-bottom: 1px solid rgb(242, 241, 241, 0.5);
+  height:65px;
+}
+.invvCellLeft{
+  display:table-cell;
+  vertical-align: middle;
+  color:#FFFFFF;
+  width:300px;
+  text-align:left;
+  padding-left:20px;
+  font-size:90%;
+}
+.invvCellLeft span{
+  color:#D7D7D7;
+  font-weight:bold;
+  padding-left:20px;
+  font-size:95%;
+}
+.invvCellCenter{
+  display:table-cell;
+  width:auto;
+  vertical-align: middle;
+}
+.invvCellRight{
+  display:table-cell;
+  vertical-align: middle;
+  color:#FFFFFF;
+  width:300px;
+  text-align:right;
+  padding-right:20px;
+  font-size:90%;
+}
+.invVBtn{
+  cursor:pointer;
+}
+.statusDscCell{
+  display:table-cell;
+  width:auto;
+  vertical-align: middle;
+  text-align:center;
+  font-size:80%;
+}
+.statusIcCell{
+  display:table-cell;
+  width:15px;
+  padding-left:5px;
+  text-align:center;
+  vertical-align: middle;
+  position:relative;
+}
+.statusIcCell .fa-sort-down{
+  position: absolute;
+  height: auto;
+  right: 0;
+  top: -3px;
+}
+.invvStatusLbl{
+  border-radius: 2px;
+  width: auto;
+  font-size:75%;
+  padding:6px 13px;
+  color:#FFFFFF;
+  margin-left:auto;
+  margin-right:auto;
+  display:table;
+  position:relative;
+}
+.sendStatus{
+  background-color: #50AB47;
+}
+.penStatus{
+  background-color: #E2DFDF;
+  color:#4A4A4A;
+}
+.contentPage{
+  height:calc(100% - 96px);
+  overflow-y:auto;
+  position:relative;
+  padding-bottom:30px;
+}
+.frameView {
+  max-width: calc(8.5in - 80px);
+  max-height: calc(11in - 30px);
+  min-height: calc(11in - 30px);
+  height: calc(100% - 30px);
+  width: calc(95% - 80px);
+  border: 0;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  background-color: #FFFFFF;
+  padding: 15px 40px;
+  z-index: 5;
+  display: table;
+  opacity: 0;
+  transition: all .3s;
+  box-shadow: 0 0 30px 0 rgb(0 0 0 / 50%);
+}
+.downloadViewer{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+.statusPopup {
+  left: 0;
+  top: calc(100% + 5px);
+  background-color: #F8FAFB;
+  box-shadow: 0 2px 10px 0 rgb(0 0 0 / 39%);
+  color: #4A4A4A;
+  border-radius: 5px;
+  width: max-content;
+  position: absolute;
+  z-index: 6;
+  padding: 10px 15px;
+  font-size: 95%;
+  transition:all .3s;
+  opacity:0;
+  display:none;
+}
+.listErrors{
+  background-color: #F8FAFB;
+  border-radius: 6px;
+  width: 100%;
+  overflow-y:auto;
+  max-height: 160px;
+}
+.tblBadItem{
+  width:100%;
+  height:35px;
+  display:table;
+}
+.cellErrNro{
+  display:table-cell;
+  vertical-align: middle;
+  width:50px;
+}
+.cellErrName{
+  display:table-cell;
+  vertical-align: middle;
+}
 
+@media print{
+  .frameView body{
+    padding: 10px 20px;
+  }
+}
 @media (max-width:420px){
   body{
     font-size: 16px;

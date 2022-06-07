@@ -9,6 +9,13 @@
         <a class="itemMenu itemMenuReady" id="clients"><b>Clientes</b></a>
         <a class="itemMenu itemMenuDisabled" id="operations"><b>Operaciones</b></a>
         <a class="itemMenu itemMenuReady" id="users"><b>Usuarios</b></a>
+        <div class="itemMenu itemSubMenuReady" id="config">
+            <b>Configuración</b>
+            <div class="subMenu">
+                <a class="itemMenu itemMenuReady" id="audit">Auditoría</a>
+                <a class="itemMenu itemMenuReady" id="seniatusers">Usuarios SENIAT</a>
+            </div>
+        </div>
         <div class="leaveSect"><span id="usernameMenu"></span><i style="margin-left:5px" id="logOut" class="fa-solid fa-right-from-bracket"></i></div>
     </div>
 </div>
