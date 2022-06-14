@@ -1,0 +1,249 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-size:15px;
+}
+body {
+  background-image: -webkit-linear-gradient(180deg, var(--colorA) 0%, #202020 100%);
+  background-image: -moz-linear-gradient(180deg, var(--colorA) 0%, #202020 100%);
+  background-image: -o-linear-gradient(180deg, var(--colorA) 0%, #202020 100%);
+  background-image: linear-gradient(180deg, var(--colorA) 0%, #202020 100%);
+  color: #fff;
+  font-family: var(--fontA), sans-serif;
+}
+.footer {
+  font-size: 65%;
+  color: #9B9B9B;
+  width: 100%;
+  height:40px;
+
+}
+.fontMonserrat{
+  font-family: var(--fontB), sans-serif;
+}
+.bigContainer {
+  height: calc(100% - 40px);/*Se le resta el footer*/
+  display: block;
+}
+.bigCntTbl{  
+  width:100%;
+  height:100%;
+  display:table;
+}
+.bigCntCell{
+  display:table-cell;
+  vertical-align:middle;
+}
+.containerBox {
+    background: #F8F8F8;
+    width: 365px;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius: 30px;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
+}
+.logoSect {
+    padding-top: 20px;
+    height: 110px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+.logoSect .logo {
+    width: 55%;
+    height: 80px;
+    background-image: url(../img/logoSeniat.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+#btnDisabled {
+  background: #8a898a;
+  cursor: no-drop;
+}
+.noShow {
+  visibility: hidden;
+}
+.noShowD {
+  display: none;
+}
+
+.show{
+  display:inherit;
+}
+
+#hidePwd {
+  visibility: hidden;
+}
+
+.pwd {
+  position: relative;
+}
+.icon {
+    color: #D7D7D7;
+    position: absolute;
+    cursor: pointer;
+    top: 32.5px;
+    right: 15px;
+    transition: all ease 300ms;
+    height: 15px;
+    line-height: 15px;
+}
+.icon:hover {
+  color: #161717;
+  opacity: 0.5;
+}
+
+.stdLabel {
+  color: #161717;
+  font-size: 68%;
+  font-weight: 400;
+  line-height: 13px;
+  opacity: 0.5;
+  text-align: left;
+  margin: 13px 6px 5px;
+}
+.stdLabel.mid {
+  font-size: 85%;
+}
+
+.stdLabel.big {
+  font-size: 100%;
+  text-align: center;
+  margin: 30px 0 25px;
+  color: #24293b;
+}
+
+#lostPass {
+  text-align: center;
+  cursor: pointer;
+  transition: all ease 300ms;
+}
+#lostPass:hover {
+  color: #5190e1;
+}
+.stdInpCont {
+  width:95%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="date"]::placeholder {
+  color: #adadad;
+  opacity: 1; /* Firefox */
+}
+
+input[type="text"],
+[type="password"],
+[type="date"] {
+  font-family: var(--fontA), sans-serif;
+  border: 1px solid #D7D7D7;
+  border-radius: 6px;
+  width: calc(100% - 12px);
+  height: 40px;
+  background-color: #ffffff !important;
+  font-size: 90%;
+  padding-left: 8px;
+}
+[type="button"] {
+  font-family: var(--fontA), sans-serif;
+  outline: none;
+}
+input:focus {
+  outline: none;
+}
+
+.badPwd,.badPwd:focus {
+  border: 1px solid #F52626!important;
+}
+
+input:disabled {
+  color: #828182;
+  cursor: default;
+  border: 1px solid #383837;
+  background-color: #383837;
+}
+#btnChangeMessage,
+#btnMessageUser, #btnMessagePwd, #btnMessageEmail {
+  color: #d0021b;
+  font-size: 75%;
+  line-height: 1.5;
+  text-align: left;
+  margin: 10px auto ;
+}
+
+
+.stdbtnSubmit {
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: var(--colorA);  
+  border: 1px solid var(--colorA);
+  height: 40px;  
+  width:95%;
+  max-width: 320px;
+  margin-bottom: 15px;
+  transition: all ease 300ms;
+}
+
+.stdbtnSubmit:hover {
+  background-color: var(--colorA);
+}
+
+input.stdbtnSubmit {
+  color: #ffffff;
+  font-size: 85%;
+  font-weight: 600;
+  line-height: 1.5;
+  outline: none;
+}
+
+.stdbtnCancelar {
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid var(--colorA);
+  height: 40px;
+  width:95%;
+  max-width: 320px;
+  margin-bottom: 15px;
+  transition: all ease 300ms;
+}
+
+.stdbtnCancelar:hover {
+  /*border: 1px solid #5190e1;
+  color:#5190e1;*/
+}
+input.stdbtnCancelar {
+  color:var(--colorA);
+  font-size: 85%;
+  font-weight: 600;
+  line-height: 1.5;
+  outline: none;
+}
+
+.logoOut {
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  background-image: url(../img/logoWhite.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom:25px
+}
+.forgotLbl{
+  font-size:80%;
+}

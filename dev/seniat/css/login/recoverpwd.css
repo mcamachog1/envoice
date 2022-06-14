@@ -1,0 +1,14 @@
+  .stdLabel.big {
+    margin: 20px 0 10px;
+  }
+  .stdbtnSubmit{
+      margin-top:5px;
+      margin-bottom:35px;
+  }
+  .emailPwd{
+    background-color: #E6E6EA;
+    border-radius: 10px;
+    padding: 6px 0;
+    color: #4A4A4A;
+  }
+  

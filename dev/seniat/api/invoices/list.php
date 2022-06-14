@@ -1,12 +1,14 @@
 <?php
-// app/api/invoices/list.php
+// seniat/api/invoices/list.php
 
     header("Content-Type:application/json");
     include("../../../settings/dbconn.php");
     include("../../../settings/utils.php");
+    include("../functions.php");    
 
     // parametros obligatorios
-    $parmsob = array("offset","numofrec","order","sessionid","datefrom","dateto","status");
+    $parmsob = array("offset","numofrec","order","sessionid","datefrom","dateto","status","customerid");
+    
     if (!parametrosValidos($_GET, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
@@ -16,17 +18,19 @@
     $datefrom = $_GET["datefrom"] ." 00:00:00";
     $dateto = $_GET["dateto"]." 23:59:59";
     $status = $_GET["status"];     
+    $customerid = $_GET["customerid"];     
     
     // Validar user session
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
-    
+    validSession($sessionid,$db);
+
     // Filter
+    $filter="";
     if (isset($_GET["filter"])) {
         $pattern = avoidInjection($_GET["filter"],'str');
         $filter  = " AND (";
         $filter .= "'H.id' LIKE '%$pattern%' OR ";
-        $filter .= "ctrnumber LIKE '%$pattern%' OR ";
-        $filter .= "H.refnumber LIKE '%$pattern%' OR ";          
+        $filter .= "H.ctrnumber LIKE '%$pattern%' OR ";
+        $filter .= "H.refnumber LIKE '%$pattern%' OR ";        
         $filter .= "clientrif LIKE '%$pattern%' OR ";
         $filter .= "clientname LIKE '%$pattern%'  ";
         $filter .= ") ";
@@ -84,7 +88,29 @@
     $out->numofrecords = new stdClass();
     $out->numofrecords = (integer) $row["cnt"];
 
-    // limitar numero de
+    // Calcular Totales
+    if (!$rs = $db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    $taxbase=0;
+    $tax=0;
+    $total=0;    
+    while ($row = $rs->fetch_assoc()){    
+        $taxbase += (float)$row["gross"]*(1-(float)$row["discount"]/100);
+        $tax += (float)$row["tax"];
+        $total += (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];        
+    }
+    $object = new stdClass();
+    $object->taxbase=new stdClass();
+    $object->tax=new stdClass();
+    $object->total=new stdClass();
+    $object->taxbase->number=(float)$taxbase;
+    $object->tax->number=(float)$tax;
+    $object->total->number=(float)$total;
+    $object->taxbase->formatted=number_format($taxbase, 2, ",", ".");          
+    $object->tax->formatted=number_format($tax, 2, ",", ".");
+    $object->total->formatted=number_format($total, 2, ",", ".");    
+
+    // limitar numero de registros
     $sql =  "SELECT A.* FROM (" . $sql . ") A " .
             "LIMIT " . $offset . "," . $numofrec;
     if (!$rs = $db->query($sql))
@@ -151,6 +177,10 @@
         $records[] = $record;
     }
 
+
+
+    //Totals
+    $out->totals=$object;
     $out->records = $records;
     header("HTTP/1.1 200");
     echo (json_encode($out));
