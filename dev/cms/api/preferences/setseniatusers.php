@@ -45,7 +45,7 @@ function insertUsers($users,$emails,$db){
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));    
             $counter++;
         }
-        // Si existe se limpian los fails y se desbloquea
+        // Si existe se limpian los fails y se pone status 1
         else {
             // Fails
             $email_fails = $a_emails[$i]."_fails";
@@ -53,8 +53,8 @@ function insertUsers($users,$emails,$db){
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
             // Desbloquear
-            $email_active = $a_emails[$i]."_active";
-            $sql = "UPDATE preferences SET value=1 WHERE name = '$email_active' ";
+            $email_status = $a_emails[$i]."_status";
+            $sql = "UPDATE preferences SET value=1 WHERE name = '$email_status' ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
         }
