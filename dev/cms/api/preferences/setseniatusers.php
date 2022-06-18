@@ -29,7 +29,7 @@ function insertUsers($users,$emails,$db){
     $max_users=count($a_users);
     // Seleccionar usuarios que ya existen
     $usersinserted=getUsers($db);   
-    // Si el usuario a insertar no existe se inserta
+    
     for ($i=0; $i<$max_users;$i++) {
         $insert=true;
         foreach ($usersinserted as $inserted){
@@ -38,11 +38,25 @@ function insertUsers($users,$emails,$db){
                 break;
             }
         }
+        // Si el usuario a insertar no existe se inserta
         if ($insert){    
             $sql = "INSERT INTO preferences (name, value) VALUES ('".$a_users[$i]."','".$a_emails[$i]."')";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));    
             $counter++;
+        }
+        // Si existe se limpian los fails y se desbloquea
+        else {
+            // Fails
+            $email_fails = $a_emails[$i]."_fails";
+            $sql = "UPDATE preferences SET value=0 WHERE name = '$email_fails' ";
+            if (!$db->query($sql))
+                badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
+            // Desbloquear
+            $email_active = $a_emails[$i]."_active";
+            $sql = "UPDATE preferences SET value=1 WHERE name = '$email_active' ";
+            if (!$db->query($sql))
+                badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
         }
     }
     return $counter;
