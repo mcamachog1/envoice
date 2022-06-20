@@ -18,10 +18,11 @@
         $sql ="SELECT COUNT(*) Cnt FROM preferences WHERE LOWER(value)='".strtolower($email)."'";
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>2));
-        $row = $rs->fetch_assoc();
+        if (!$row = $rs->fetch_assoc())
+            badEnd("401", array("msg"=>"Usuario/Clave InvÃ¡lidos" ));
         if ( $row['Cnt']!=1)
-            badEnd("400", array("msg"=>"Email $email no existe")); 
-        $sql ="SELECT name AS email FROM preferences WHERE LOWER(value)='".strtolower($email)."'";
+            badEnd("400", array("msg"=>"Usuario $email no existe")); 
+        $sql ="SELECT name FROM preferences WHERE LOWER(value)='".strtolower($email)."'";
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>3));
         $row = $rs->fetch_assoc();
@@ -43,6 +44,7 @@
 
         $name_password=strtolower($email)."_password";
         $name_hash = strtolower($email)."_hash";
+        $name_fails = strtolower($email)."_fails";
         //Validar que existe el hash
         $sql ="SELECT COUNT(*) Cnt FROM preferences WHERE value = '$hash'";
         if (!$rs=$db->query($sql))
@@ -61,6 +63,16 @@
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         }
+        // Actualizar fails
+        $sql ="UPDATE preferences SET value= 0 WHERE name='$name_fails'";
+        if (!$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>6));
+        // Si no existe el registro fails, se crea
+        if ($db->affected_rows==0){
+            $sql ="INSERT INTO preferences (name, value) VALUES ('$name_fails',0)";
+            if (!$db->query($sql))
+                badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+        }        
     }     
     
     function validSession($sessionid,$db){
@@ -78,22 +90,22 @@
             $row = $rs->fetch_assoc();        
             $name_session = $row['name']; 
             $email = getEmail($row['name']);
-            // Buscar registro v¨¢lido con sesion vigente
+            // Buscar registro vï¿½ï¿½lido con sesion vigente
             $name_validthru = $email."_validthru";
             $sql= "SELECT COUNT(*) Cnt FROM preferences WHERE name='$name_validthru' AND value > NOW()" ;
             if (!$rs=$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
             $row = $rs->fetch_assoc();        
-            // No hay sesi¨®n vigente, mensaje de error
+            // No hay sesiï¿½ï¿½n vigente, mensaje de error
             if ($row['Cnt']==0)
-                badEnd("400", array("msg"=>"Sesi¨®n expirada o incorrecta"));
+                badEnd("400", array("msg"=>"Sesiï¿½ï¿½n expirada o incorrecta"));
             // Hay sesion vigente retornar email
             return $email;
         }
             
         // Si no existe mensaje de error
         elseif ($row['Cnt']==0)
-            badEnd("400", array("msg"=>"Sesi¨®n expirada o incorrecta"));
+            badEnd("400", array("msg"=>"Sesiï¿½ï¿½n expirada o incorrecta"));
     }    
     
     function getEmail($name){

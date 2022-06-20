@@ -56,7 +56,9 @@
              "WHERE  UPPER(contactemail)='".$usr."' ";
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        $row = $rs->fetch_assoc();
+        if (!$row = $rs->fetch_assoc())
+            badEnd("401", array("msg"=>"Usuario/Clave Inválidos" ));
+        
         
         if ($row["status"]==0)
             badEnd("401", array("msg"=>"Usuario Inactivo" ));

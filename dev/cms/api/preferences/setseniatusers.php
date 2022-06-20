@@ -10,7 +10,7 @@ function getUsers($db){
   if (!$rs=$db->query($sql))
     badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
   $records=array();
-// Serialize
+  // Serialize
   while ($row = $rs->fetch_assoc()){
     if(filter_var($row['value'], FILTER_VALIDATE_EMAIL))       {
         $record = new stdClass();
@@ -57,7 +57,14 @@ function insertUsers($users,$emails,$db){
             $sql = "UPDATE preferences SET value=1 WHERE name = '$email_status' ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
-        }
+            // Nombre del usuario
+            $email = $a_emails[$i];
+            $user_name = $a_users[$i];
+            $sql = "UPDATE preferences SET name='$user_name' WHERE value = '$email' ";
+            if (!$db->query($sql))
+                badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
+
+            }
     }
     return $counter;
 }
