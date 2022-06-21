@@ -35,7 +35,7 @@
                 D.qty * D.unitprice *(1 - D.itemdiscount) *(1 + D.itemtax)
             ) AS total
         FROM
-            iinvoiceheader H
+            invoiceheader H
         INNER JOIN customers C ON
             H.customerid = C.id
         INNER JOIN invoicedetails D ON
@@ -61,7 +61,7 @@
         //$record->invoiceid = $row['id'];
         $record->issuedate = $row['issueformatteddate'];
         $record->duedate = $row['dueformatteddate'];
-        $record->amount = $row['total'];
+        $record->amount = number_format($row['total'], 2, ",", ".");
         $record->email = $row['clientemail'];
         $record->name = $row['clientname'];
         $record->clientName=$row['daycoClientName'];
@@ -113,7 +113,7 @@
                         "<ul style='list-style: none'>".
                           "<li>Fecha: $object->issuedate</li>".
                           "<li>Número de Factura: $object->refnumber</li>".
-                          "<li>Monto: $object->amount</li>".
+                          "<li>Monto: $object->amount Bs.</li>".
                           "<li>P&aacute;guese antes de: $object->duedate</li>".
                         "</ul>".
                        "</div>" .

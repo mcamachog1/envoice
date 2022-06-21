@@ -17,17 +17,17 @@ $invoice = new stdClass();
 
 $invoice->id=0;
 
-$invoice->sessionid=1;
+$invoice->sessionid=107;
 
 
 
 $invoice->seriecontrol = new stdClass();
 
-    $invoice->seriecontrol->serie='AA';
+    $invoice->seriecontrol->serie='';
 
     $invoice->seriecontrol->control='01';
 
-$invoice->type='NDB';
+$invoice->type='FAC';
 
 
 
@@ -35,7 +35,7 @@ $invoice->ctrref = new stdClass();
 
 
 
-$invoice->ctrref->serie = 'AA';
+$invoice->ctrref->serie = null;
 
 $invoice->ctrref->control='01';
 
@@ -53,11 +53,11 @@ $invoice->refnumber = "12345";
 
 $invoice->client = new stdClass();
 
-    $invoice->client->rif = "G-87123123";
+    $invoice->client->rif = "G871231230";
 
     $invoice->client->name = "Factura 16 INSERT";
 
-    $invoice->client->mobile = "0414 76572952";
+    $invoice->client->mobile = "0414 7672952";
 
     $invoice->client->phone = "";
 
