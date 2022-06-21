@@ -440,6 +440,8 @@
         badEnd("400", array("msg"=>"Cantidad de facturas incorrectas o monto total incorrecto."));
 // Validar serie
     $customerseries = getSeries($customerid,$db);
+    if (strlen($serie)==0)
+        $serie=' ';
     if (!in_array($serie, $customerseries) && $totalerrors==0)
         badEnd("400", array("msg"=>"Serie seleccionada $serie no es válida para el cliente."));
 // Detectar encabezados sin detalles

@@ -1,9 +1,9 @@
 //var globalurl="https://cms.checkprice.app";
-var globalurl = "https://totalsoftware.la/~envoice/dev/cms";
+var globalurl = "./";
 
 function gotoPage(id, sid, params) {
   esconderHTML(true);
-  var url = globalurl + "/";
+  var url = globalurl + "";
   var parsedPars = Object.keys(params)
     .map(function (k) {
       return encodeURIComponent(k) + "=" + encodeURIComponent(params[k]);
@@ -90,7 +90,7 @@ var WS_wstimeout;
 }*/
 
 function callWS(type, service, params, response, extra = "") {
-  var url = globalurl + "/api/" + service + ".php";
+  var url = globalurl + "api/" + service + ".php";
 
   var wait = document.createElement("div");
   wait.classList.add("waitScreen");

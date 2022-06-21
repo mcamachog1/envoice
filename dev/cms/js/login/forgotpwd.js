@@ -26,6 +26,17 @@ function respForgot(status, respText) {
       document.getElementById("showForMessage").classList.remove("noShowD");
       document.getElementById("showForMessage").classList.add("show");
       break;
+    case 400:
+        badForgotEmail.innerText = "No tenemos ningún usuario registrado con ese correo electrónico.";
+        badForgotEmail.style.display = "inherit";
+        badForgotEmail.classList.remove('noShowD')
+        document.getElementById('email').classList.add('badPwd')
+        setTimeout(function () {
+          badForgotEmail.style.display = "none";
+          badForgotEmail.classList.add('noShowD')
+          document.getElementById('email').classList.remove('badPwd')
+        }, 4000);
+    break;
     case 401:
       badForgotEmail.innerText =
         "No tenemos ningún usuario registrado con ese correo electrónico.";

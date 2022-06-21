@@ -7,12 +7,12 @@
     <div class="menuSect">
         <a class="itemMenu itemMenuDisabled" id="dashboard"><b>Dashboard</b></a>
         <a class="itemMenu itemMenuReady" id="clients"><b>Clientes</b></a>
-        <a class="itemMenu itemMenuDisabled" id="operations"><b>Operaciones</b></a>
+        <a class="itemMenu itemMenuReady" id="operations"><b>Operaciones</b></a>
         <a class="itemMenu itemMenuReady" id="users"><b>Usuarios</b></a>
         <div class="itemMenu itemSubMenuReady" id="config">
             <b>Configuración</b>
             <div class="subMenu">
-                <a class="itemMenu itemMenuReady" id="audit">Auditoría</a>
+                <a class="itemMenu itemMenuReady" >Auditoría</a>
                 <a class="itemMenu itemMenuReady" id="seniatusers">Usuarios SENIAT</a>
             </div>
         </div>
@@ -26,6 +26,40 @@
         include_once("./content/".$id."/".$sid.".php");
     }
 ?>
+</div>
+<div class="invviewer" id="invViewer">
+    <div class="invvHeadTbl">
+        <div class="invvCellLeft">
+            <span id="backViewer"><i class="fa fa-arrow-left invVBtn"></i></span>
+            <span id="invName">
+                Fact. 000187
+            </span>
+        </div>
+        <div class="invvCellCenter">
+            <div class="invvStatusLbl penStatus">
+                <div class="statusDscCell">
+                    <span id="statusVDsc">Por Enviar</span>
+                </div>
+                <div class="statusIcCell">
+                    <span ><i id="viewStatusBtn" class="invVBtn fa-solid fa-sort-down" ></i></span>
+                </div>
+                <div class="statusPopup" id="statusPopup">
+                    <div class="statusPopTbl">Creación <span id="viewIssueDate">28-02-2022</span></div>
+                    <div class="statusPopTbl">Envío <span></span></div>
+                    <div class="statusPopTbl">Leída <span></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="invvCellRight">
+            <i class="fa-solid fa-print invVBtn" id="printView"></i>
+            <!--<i class="fa-solid fa-download invVBtn" style="padding-left:20px;position:relative;">
+            <a class="downloadViewer" id="downloadView" download="fact.pdf"></a>-->
+            </i>
+        </div>
+    </div>
+    <div class="contentPage">
+        <iframe class="frameView" id="frameView" name="theFrame"></iframe>
+    </div>
 </div>
 
 <div class="footer textCenter" id="copyright"><p>© 2022. Totalsoftware de Venezuela -  Todos los derechos Reservados </p></div>

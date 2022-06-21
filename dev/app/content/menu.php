@@ -37,11 +37,11 @@
                                             </label>
                                             <select name="periodo" id="periodoSelect">
                                                 <option value="">Periodo</option>
-                                                <option value="0" selected>Última semana</option>
+                                                <option value="0">Última semana</option>
                                                 <option value="1">Últimos 15 días</option>
                                                 <option value="2">Último mes</option>
                                                 <option value="3">Mes anterior</option>
-                                                <option value="4">Este año</option>
+                                                <option value="4" selected>Este año</option>
                                                 <option value="5">Personalizado</option>
 
                                             </select>
@@ -110,7 +110,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">Factura</div>
+                                    <div class=""># Documento</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -232,18 +232,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="invoiceCell cell12Mid">
-                    <div class="inptCnt">
-                        <div class="inptLbl">TIPO</div>
-                        <div class="inptFrmCnt">
-                            <select class="inptFrm" id="invoicetype">
-                                <option value="FAC">Factura</option>
-                                <option value="NCR">Nota Crédito</option>
-                                <option value="NDB">Nota Débito</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
                 <div class="invoiceCell cell7Mid">
                     <div class="inptCnt">
                         <div class="inptLbl">NRO SERIE.</div>
@@ -256,17 +244,29 @@
                 </div>
                 <div class="invoiceCell cell12Mid">
                     <div class="inptCnt">
-                        <div class="inptLbl">FACTURA</div>
+                        <div class="inptLbl">TIPO</div>
                         <div class="inptFrmCnt">
-                            <input class="inptFrm" placeholder="00000000" type="number" id="invoicenumber"/>
+                            <select class="inptFrm" id="invoicetype">
+                                <option selected value="FAC">Factura</option>
+                                <option value="NCR">Nota Crédito</option>
+                                <option value="NDB">Nota Débito</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>                
+                <div class="invoiceCell cell12Mid" style="display:none">
+                    <div class="inptCnt">
+                        <div class="inptLbl">SOBRE FACTURA</div>
+                        <div class="inptFrmCnt">
+                            <input class="inptFrm" placeholder="AA-00-00000000" type="text" id="invoicerefcrtl"/>
                         </div>
                     </div>
                 </div>
                 <div class="invoiceCell cell12Mid">
                     <div class="inptCnt">
-                        <div class="inptLbl">SOBRE FACTURA</div>
+                        <div class="inptLbl"># DOCUMENTO</div>
                         <div class="inptFrmCnt">
-                            <input class="inptFrm" placeholder="AA-00-00000000" type="text" id="invoicerefcrtl"/>
+                            <input class="inptFrm" placeholder="00000000" type="number" id="invoicenumber"/>
                         </div>
                     </div>
                 </div>
@@ -487,9 +487,9 @@
     <div class="popupCell">
         <div class="popupCard" id="uploadPopup">
             <div class="popupClose" popup="uploadPopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Cargar Facturas</div>
+            <div class="popupTit">Cargar Documentos</div>
             <div class="popUpSect">
-                <div class="popupDsc">Seleccione las facturas a importar desde:</div>            
+                <div class="popupDsc">Seleccione los documentos a importar desde:</div>            
                 <div class="btnCell btnCellPop">
                     <div class="btnClose btnB" id="uplFile">
                         SELECCIONAR ARCHIVO .TXT
@@ -500,7 +500,7 @@
             <div class="popUpSect">
                 <div class="popupDsc">Descargue un plantilla de ejemplo si lo necesita</div>            
                 <div class="btnCell btnCellPop" style="margin-bottom:15px">
-                    <div class="btnClose btnInvExamp">
+                    <div class="btnClose btnInvExamp" id="btnInvExamp">
                         <span class="iccsv"></span>PLANTILLA
                     </div>
                 </div>
@@ -518,9 +518,9 @@
         </div>
         <div class="popupCard" id="uploadCnfrPopup">
             <div class="popupClose" popup="uploadCnfrPopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Cargar Facturas</div>
+            <div class="popupTit">Cargar Documentos</div>
             <div class="popUpSect">
-                <div class="popupDsc"> <span id="numberInvc"></span> Su archivo se ha cargado exitosamente. ¿Está seguro que quiere procesar este archivo?</div>            
+                <div class="popupDsc">Su archivo se ha cargado exitosamente.<br><span id="numberInvc"></span><br>¿Está seguro que quiere procesar este archivo?</div>            
                 <div class="btnCell btnCellPop">
                     <div class="uplNameCnt">
                         <div class="uplNameCell" id="uplName"></div>
@@ -546,8 +546,20 @@
         </div>
         <div class="popupCard" id="errUplPopup">
             <div class="popupClose" popup="errUplPopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Cargar Facturas</div>
+            <div class="popupTit">Cargar Documentos</div>
             <div class="popupErrSect">
+                <div class="cntrLblProg">
+                    <div class="progTblName">
+                        <div class="progLblName" id="progErrName"></div>
+                        <div class="progLblIcon">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </div>
+                    </div>
+                    <div class="progTblCount">
+                        <div class="tblTotCount" id="totRegCount"></div>
+                        <div class="tblErrCount" id="totErrCount"></div>
+                    </div>
+                </div>
                 <div class="invoiceRow">
                     <div class="invoiceCell cell100">
                         <div class="inptCnt">
@@ -556,6 +568,12 @@
                                 <select class="inptFrm" id="selErrUpl">
                                     <option></option>
                                 </select>
+                            </div>
+                            <div class="lblListErrors">
+                                <div class="tblBadItemHd">
+                                    <div class="cellErrNro"># Doc.</div>
+                                    <div class="cellErrName"></div>
+                                </div>
                             </div>
                             <div class="listErrors" id="listItemsErr">
                                 
@@ -581,8 +599,8 @@
         </div>
         <div class="popupCard" id="deletePopup">
             <div class="popupClose" popup="deletePopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Eliminar Facturas</div>
-            <div class="popupDsc">¿Está seguro que desea eliminar las facturas seleccionadas?</div>
+            <div class="popupTit">Eliminar Documentos</div>
+            <div class="popupDsc">¿Está seguro que desea eliminar los documentos seleccionados?</div>
             <div class="popupBtns">
             <div class="btnsCntPop">
                 <div class="btnCell btnCellPop">
@@ -598,10 +616,10 @@
             </div>
             </div>
         </div>
-        <div class="popupCard">
+        <div class="popupCard" id="sendPopup">
             <div class="popupClose" popup="sendPopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Enviar Facturas</div>
-            <div class="popupDsc">¿Está seguro que desea enviar las facturas seleccionadas por correo electrónico?</div>
+            <div class="popupTit">Enviar Documentos</div>
+            <div class="popupDsc">¿Está seguro que desea enviar los documentos seleccionados por correo electrónico?</div>
             <div class="popupBtns">
             <div class="btnsCntPop">
                 <div class="btnCell btnCellPop">
@@ -644,8 +662,8 @@
         </div>
         <div class="invvCellRight">
             <i class="fa-solid fa-print invVBtn" id="printView"></i>
-            <i class="fa-solid fa-download invVBtn" style="padding-left:20px;position:relative;">
-            <a class="downloadViewer" id="downloadView" download="fact.pdf"></a>
+            <!--<i class="fa-solid fa-download invVBtn" style="padding-left:20px;position:relative;">
+            <a class="downloadViewer" id="downloadView" download="fact.pdf"></a>-->
             </i>
         </div>
     </div>

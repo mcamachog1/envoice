@@ -15,7 +15,6 @@ function sendform() {
   if (checkform(user, pass)) {
     let par = {};
     par.usr = user.value;
-    // par.pwd = pass.value;
     par.pwd = MD5(pass.value);
     callWS("GET", "security/login", par, respLogin);
     return;
@@ -23,8 +22,6 @@ function sendform() {
 }
 
 function respLogin(status, respText) {
-  console.log("STATUS:",status);
-  console.log("respText:",respText);
   let jsonResp;
   let badLoginUser = document.getElementById("btnMessageUser");
   let badLoginPwd = document.getElementById("btnMessagePwd");
@@ -54,8 +51,10 @@ function respLogin(status, respText) {
       }, 5000);
       break;
     case 401:
-      badLoginPwd.innerText =
-        "Inténtelo nuevamente. Usuario/Contraseña inválidos.";
+      jsonResp = JSON.parse(respText);
+      var msg = jsonResp.msg;
+      if(msg==null||msg==undefined||msg=="")msg = "Inténtelo nuevamente. Usuario/Contraseña inválidos.";
+      badLoginPwd.innerText = msg;
       badLoginPwd.style.display = "inherit";
       badLoginPwd.classList.remove('noShowD')
       document.getElementById('user').classList.add('badPwd')
@@ -130,10 +129,6 @@ function checkform(user, pass) {
       document.getElementById('password').classList.remove('badPwd');
     }, 4000);
     error = false;
-    //}else if(!isOkPass(pass.value)){
-    //    document.getElementById("alerta").innerHTML = ' <div class="stdalert">La contraseña debe contener letras mayúsculas y minúsculas, números, símbolos y tener al menos 8 caracteres</div>'
-    //    pass.select();
-    //    return false;
   }
 
   return error;

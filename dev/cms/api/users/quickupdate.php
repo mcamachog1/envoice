@@ -4,6 +4,16 @@
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
+
+
+    function getStatus($userid,$db){
+        $sql = "SELECT status FROM users WHERE id=$userid ";
+        if (!$rs=$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+        
+        $row = $rs->fetch_assoc();
+        return $row['status'];
+    } 
     
     // parametros obligatorios
     $parmsob = array("id","status","sessionid");
@@ -13,8 +23,13 @@
     $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
     
     $id = $_REQUEST["id"];
+    $status = $_REQUEST["status"];    
+    $resetfails="";    
+    if ($status==1 && $status!=getStatus($id,$db))
+      $resetfails=", fails=0 ";
+    
     $sql =  "UPDATE     users " .
-            "SET        status='" . $_REQUEST["status"] . "' " .
+            "SET        status='" . $_REQUEST["status"] . "' " . $resetfails.
             "WHERE      id=" . $_REQUEST["id"];
     if (!$db->query($sql)) {
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));

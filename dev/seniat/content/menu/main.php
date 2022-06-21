@@ -46,7 +46,7 @@
                         </div>   
                     </div>
                     <div class="subHdCell cell5" style="padding-right:0">
-                        <div class="inptCnt">
+                        <div class="inptCnt inptDis">
                             <i class="fa-solid fa-download"></i>
                         </div>   
                     </div>
@@ -167,17 +167,17 @@
                         <div class="totsTblCnt">
                             <div class="pagCell pagLblBold">                            
                                 <div class="amoBox">
-                                    Base Imponible: <span>400</span>
+                                    Base Imponible: <span id="baseAmo">400</span>
                                 </div>                            
                             </div>
                             <div class="pagCell pagLblBold">
                                 <div class="amoBox">
-                                    Impuesto: <span>200</span>
+                                    IVA: <span id="impAmo">200</span>
                                 </div>     
                             </div>
                             <div class="pagCell pagLblBold">
                                 <div class="amoBox">
-                                    Total: <span>600</span>
+                                    Total: <span id="totAmo">600</span>
                                 </div>     
                             </div>
                         </div>

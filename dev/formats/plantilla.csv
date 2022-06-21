@@ -1,0 +1,12 @@
+Registro de TOTALES,TIPO DE REGISTRO ('T'),CANT DE FACTURAS,TOTAL GENERAL,SERIE
+Registro de ENCABEZADOS,TIPO DE REGISTRO ('E'),TIPO DOCUMENTO ('F','D','C'),F. EMISION ('YYYY-MM-DD'),F. VENCIMIENTO ('YYYY-MM-DD'),NUMERO DE FACTURA,RIF CLIENTE,NOMBRE CLIENTE,DIRECCION CLIENTE,CELULAR CLIENTE,OTRO TLF,EMAIL CLIENTE,OBS,MONEDA (USD, VES),TASA DE CAMBIO,FAC DE REFERENCIA,% DESCUENTO,TOTAL IMPUESTO,TOTAL GENERAL
+Registro de DETALLES,TIPO DE REGISTRO ('D'),REFERENCIA ITEM,DESCRIPCION ITEM,CANTIDAD,PRECIO UNITARIO,PCT IMPUESTO,PCT DESCUENTO
+
+T,1,74.75,A
+E,F,2022-05-24,2022-05-25,1000,J123456789,La Estrella Azul,La Castellana. Caracas. Venezuela,04241237234,,pruebas@gmail.com,,VES,4.3,,1,10.4,74.75
+D,1,Factura Mayo,1,100,16,35
+
+NOTAS:
+Los campo debe estar separados por comas
+No puede haber comas en las descripciones (nombre del cliente, dirección, obs, nombre del item, referencia del item
+Los números (montos) deben usar como separador decimal el punto. No debe haber separador de miles

@@ -322,6 +322,7 @@ function getNextControls($customerid,$db){
 } 
 function getNextControl($serie,$customerid,$db){
     $sql = "SELECT serie, nextcontrol FROM customers WHERE id=$customerid ";
+
     if (!$rs = $db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
     $records=array();
@@ -336,11 +337,12 @@ function getNextControl($serie,$customerid,$db){
         }
     }
     foreach ($records as $record) {
-       
+        if (strlen($serie)==0)
+            $serie=' ';
         if ($record->serie == "$serie" )
            return $record->nextcontrol;
-    }    
+    }
     return null;
-} 
+}  
 
 ?>

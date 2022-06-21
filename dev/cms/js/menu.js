@@ -1,4 +1,3 @@
-
   //Esta función nos permitirá cambiar entre el "formaulario creación" y la "lista", o cualquier otra pantalla que se agregue
   //id - Recibe la pantalla
   function showPage(id){
@@ -56,13 +55,28 @@ window.onload = function () {
         gotoPage("login", "main", "");
       }
       // TODO volver a poner itemMenu cuando esten listos
+      var a = Array.from(document.getElementsByClassName("itemSubMenuReady")); //Se agrega el evento de mostrar las opciones con submenu
+      a.forEach(function (e, i, o) {
+        // TODO: pendiente descomentar
+        // if (sessionStorage.getItem(e.id) == "true")
+        e.addEventListener("click", function () {
+          if(this.getElementsByClassName("subMenu")[0].style.display !== ""){
+            this.getElementsByClassName("subMenu")[0].style.display = "";
+          } else {
+            this.getElementsByClassName("subMenu")[0].style.display = "block";
+          }
+        });
+        
+      });
+      // TODO volver a poner itemMenu cuando esten listos
       var a = Array.from(document.getElementsByClassName("itemMenuReady"));
       a.forEach(function (e, i, o) {
         // TODO: pendiente descomentar
         // if (sessionStorage.getItem(e.id) == "true")
         if(true){
           e.addEventListener("click", function () {
-            gotoPage("menu", e.id, { sessid: sessid });
+            if(e.id!==null&&e.id!==undefined&&e.id!="")
+              gotoPage("menu", e.id, { sessid: sessid });
           });
 
         } else e.style.color = "#666";
@@ -102,6 +116,7 @@ window.onload = function () {
       }
     }
     //Close onLoad
+  
   };
 
 

@@ -1785,6 +1785,9 @@ select {
   font-size: 80%;
   color:#0F73EE;
 }
+.inptDis i{
+  color:#d9dee1;
+}
 .inptCnt select{
   width:100%;
 }
@@ -1796,6 +1799,9 @@ select {
   font-size: 90%;
   line-height: 20px;
 }
+
+/*VISUALIZAR FACTURA*/
+
 
 @media print{
   .frameView body{

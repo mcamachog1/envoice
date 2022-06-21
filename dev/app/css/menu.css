@@ -40,7 +40,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0% 10%;
+  padding: 0% 8%;
 }
 
 
@@ -51,8 +51,8 @@ body {
 .containerHome {
   padding-top: 10px;
   background-color: #fff;
-  padding-left: 10%;
-  padding-right: 10%;
+  padding-left: 8%;
+  padding-right: 8%;
 }
 
 .logoMenu {
@@ -80,7 +80,7 @@ body {
   position: absolute;
   color: white;
   font-weight: 600;
-  right: 10%;
+  right: 8%;
   font-size: 90%;
 }
 
@@ -104,7 +104,7 @@ body {
 }
 
 .menuSect {
-  padding: 0% 10%;
+  padding: 0% 8%;
   display: flex;
   align-items: center;
   align-content: center;
@@ -292,7 +292,7 @@ select {
 }
 .subHdTbl{
   width:100%;
-  display:table;
+  display:table;  
 }
 .subHdCell{
   display:table-cell;
@@ -393,7 +393,7 @@ select {
   padding-bottom: 0;
   font-family: "Lato", sans-serif;
 }
-.thRef, .thControl, .thMark,.thMount, .thImpto, .thTotal{
+.thRef, .thControl,.thCI, .thMark,.thMount, .thImpto, .thTotal{
   text-align:center !important;
 }
 .thMark{
@@ -1577,23 +1577,111 @@ input[type=number]::-moz-outer-spin-button {
   background-color: #F8FAFB;
   border-radius: 6px;
   width: 100%;
-  overflow-y:auto;
+  overflow-y: auto;
   max-height: 160px;
+}
+.lblListErrors{
+  border-radius: 6px;
+  width: 100%;
+  overflow-y: auto;
+  margin-top: 5px;
 }
 .tblBadItem{
   width:100%;
   height:35px;
   display:table;
+  font-size:85%;
+}
+.tblBadItemHd{
+  width:100%;
+  height:20px;
+  display:table;
+  font-size:85%;
 }
 .cellErrNro{
-  display:table-cell;
+  padding-left: 5px;
+  display: table-cell;
   vertical-align: middle;
-  width:50px;
+  width: 50px;
+  word-break: break-all;
+  font-weight: bold;
+  text-align: right;
 }
 .cellErrName{
+  padding-left:10px;
   display:table-cell;
   vertical-align: middle;
+  font-weight:400;  
+  word-break: break-all;
 }
+
+.progTblCount,.progTblName{
+  display:table;
+  width:100%;
+}
+.progTblName{
+  font-size: 85%;
+}
+.progLblName{
+  color:#474848;
+  display:table-cell;
+  width:auto;
+  text-align:left;
+  font-size:90%;
+}
+.progLblIcon{
+  color:#F52212;
+  display:table-cell;
+  width:20px;
+  font-size:110%;
+  text-align:center;
+}
+.tblTotCount{
+  font-size:85%;
+  display:table-cell;
+  vertical-align:middle;
+  padding-top:5px;
+}
+.tblErrCount{
+  font-size:85%;
+  display:table-cell;
+  vertical-align:middle;
+  padding-top:5px;
+  text-align:right;
+  color:#AEBECA;
+}
+/*Formato scroll lista de error*/
+.listErrors::-webkit-scrollbar {
+  width: 7px;     /* Tamaño del scroll en vertical */
+  height: 8px;    /* Tamaño del scroll en horizontal */
+  display: block;  /* Ocultar scroll */
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
+.listErrors::-webkit-scrollbar-thumb {
+  background: #E3E9EC;
+  border-radius: 4px;
+}
+/* Cambiamos el fondo y agregamos una sombra cuando esté en hover */
+.listErrors::-webkit-scrollbar-thumb:hover {
+  background: #E3E9EC;
+}
+
+/* Cambiamos el fondo cuando esté en active */
+.listErrors::-webkit-scrollbar-thumb:active {
+  background-color: #E3E9EC;
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del track */
+.listErrors::-webkit-scrollbar-track {
+  background: #F8FAFB;
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo cuando esté en active o hover */
+.listErrors::-webkit-scrollbar-track:hover,
+.listErrors::-webkit-scrollbar-track:active {
+background: #F8FAFB;
+}
+
 
 @media print{
   .frameView body{

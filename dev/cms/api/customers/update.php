@@ -16,6 +16,14 @@
         else
             return false;
     }
+    function getStatus($customerid,$db){
+        $sql = "SELECT status FROM customers WHERE id=$customerid ";
+        if (!$rs=$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+        
+        $row = $rs->fetch_assoc();
+        return $row['status'];
+    }     
     function getCustomers($db){
         $sql = "SELECT id, serie, initialcontrol, nextcontrol FROM customers ";
         if (!$rs=$db->query($sql))
@@ -181,8 +189,13 @@
             // El nextcontrol debe mantener los valores anteriores e incorporar los nuevos o eliminar los que se indiquen
             $object=validateUpdateSerie($serie,$control,$id,$db);
             $updatelist .= ",nextcontrol='".$object->nexts."',serie='".$object->series."',initialcontrol='".$object->initials."' ";
+            
+            $resetfails="";
+            if ($status==1 && $status!=getStatus($id,$db))
+              $resetfails=", fails=0 ";
+            
             $sql =  "UPDATE     customers " .
-                    "SET        $updatelist " .
+                    "SET        $updatelist " . $resetfails.
                     "WHERE      id=$id" ;
          
 

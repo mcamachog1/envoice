@@ -24,8 +24,7 @@ window.onload = function () {
   document.getElementById("logOut").addEventListener("click", logOut);
 
   function myMenu() {
-    document.getElementById("usernameMenu").innerText =
-      sessionStorage.getItem("username");
+    document.getElementById("usernameMenu").innerText = sessionStorage.getItem("username");
     var sessid;
     sessid = getParameterByName("sessid");
     // TODO: Pendiente descomentar
@@ -312,17 +311,17 @@ window.onload = function () {
         line.appendChild(celda);
 
         celda = document.createElement("th");
-        celda.classList.add("thControl","cell10");
+        celda.classList.add("thControl","cell12Mid");
         celda.innerHTML = "Control";
         line.appendChild(celda);
         
         celda = document.createElement("th");
-        celda.classList.add("thCI","cell12Mid");
+        celda.classList.add("thCI","cell10");
         celda.innerHTML = "Cédula/RIF";
         line.appendChild(celda);
 
         celda = document.createElement("th");
-        celda.classList.add("thName","cell20");
+        celda.classList.add("thName","cell15");
         celda.innerHTML = "Cliente";
         line.appendChild(celda);
 
@@ -408,21 +407,22 @@ window.onload = function () {
         line.appendChild(celda);
 
         celda = document.createElement("td");
-        celda.classList.add("thRef");
         celda.id="ref-"+navLink.id;
+        
+        celda.style.textAlign = "right";
         celda.innerHTML = '<span>'+navLink.refnumber+'</span>';
         line.appendChild(celda);
-
         celda = document.createElement("td");
-        celda.classList.add("thControl");
-        celda.id="control-"+navLink.id;
+        celda.id="control-"+navLink.id;        
+        celda.style.textAlign = "right";
         celda.innerHTML = '<span>'+formatRefctr(navLink.ctrnumber)+'</span>';
         line.appendChild(celda);
         
 
         celda = document.createElement("td");
         celda.classList.add("thCI");
-        celda.id="ci-"+navLink.id;
+        celda.id="ci-"+navLink.id;        
+        celda.style.textAlign = "right";
         celda.innerHTML = '<span>'+navLink.client.rif+'</span>';
         line.appendChild(celda);
 
@@ -675,7 +675,7 @@ window.onload = function () {
   //Botón lista crear
   document.getElementById("createButtom").addEventListener("click",function(){
     blankAll();
-    document.getElementById("subtitPage").innerText = "Nueva Factura";
+    document.getElementById("subtitPage").innerText = "Nuevo Documento";
     document.getElementById("saveFrm").innerText = "CREAR";
     showPage("pageFrm");    
     document.getElementById("logOut").parentElement.style.right = "calc(5% + 10px)";    
@@ -990,7 +990,10 @@ window.onload = function () {
     //#new
     par.seriecontrol = {};
     var invoiceserie = document.getElementById("invoiceserie").value;
-    if(isEmpty(document.getElementById("invoiceserie")) && !falta)falta = true;
+    if(document.getElementById("invoiceserie").value == '-1'){
+      inptError(document.getElementById("invoiceserie"),"El campo es obligatorio");
+      falta = true;
+    }
     if(invoiceserie.split("-").length>1){
       par.seriecontrol.serie = invoiceserie.split("-")[0].trim();
       par.seriecontrol.control = invoiceserie.split("-")[1].trim();
@@ -1157,7 +1160,7 @@ window.onload = function () {
     var header = rsp.header;
     setValue("issuedate",header.issuedate.date);
     setValue("duedate",header.duedate.date);
-    setValue("invoiceserie","");
+    setValue("invoiceserie","-1");
     setValue("invoicenumber",header.refnumber);
     setValue("observations",header.obs);
     document.getElementById("taxrate").setAttribute("datanumber",header.multicurrency.rate.number);
@@ -1176,7 +1179,6 @@ window.onload = function () {
       seriecontrol = ctrarr[0];
     }
     document.getElementById("invoiceserie").setAttribute("disabled","");  
-    debugger;  
     document.getElementById("invoiceserie").value = seriecontrol;
     
     //Se calcula el descuento a partir del subtotal
@@ -1186,8 +1188,9 @@ window.onload = function () {
 
     //Datos del cliente
     var client = header.client;
-    setValue("customid", client.rif);
     var cellsType = document.getElementById("topTypeCnt").getElementsByTagName("div");
+    client.rif = formatRIF(client.rif);    
+    setValue("customid", client.rif);
     if(isRIF(client.rif) || !client.rif.length){
       cellsType[1].classList.add("typeSel");
       cellsType[0].classList.remove("typeSel");
@@ -1291,7 +1294,7 @@ function blankAll(){
   document.getElementById("totAmo").removeAttribute("datanumber");
   document.getElementById("saveFrm").removeAttribute("invcid");
 
-  document.getElementById("invoiceserie").value = "";
+  document.getElementById("invoiceserie").value = "-1";
 
   var frm = document.getElementById("pageFrm");
   removeAllErr(frm);
@@ -1315,7 +1318,7 @@ function blankAll(){
             if(!view){
               blankAll();
               document.getElementById("saveFrm").innerText = "GUARDAR";
-              document.getElementById("subtitPage").innerText = "Editar Factura";
+              document.getElementById("subtitPage").innerText = "Editar Documento";
               setEntry(resp.entry);        
             }else{
               viewDocument(resp.entry);
@@ -1339,6 +1342,10 @@ function blankAll(){
     return;
   }
   
+  //Evento al botón de "enviar" para mostrar popup de confirmación
+  document.getElementById("sendButton").addEventListener("click",function(){
+    showPopup("sendPopup");
+  });
   //Evento al botón de "delete" para mostrar popup de eliminar confirmación
   document.getElementById("deleteButton").addEventListener("click",function(){
     showPopup("deletePopup");
@@ -1396,6 +1403,16 @@ function blankAll(){
     this.value = (this.value).toUpperCase();
   });
 
+  //Evento ocultar/mostrar sobre factura según el tipo
+  document.getElementById("invoicetype").addEventListener("change",function(){    
+      var sbfac = document.getElementById("invoicerefcrtl").parentElement.parentElement.parentElement;
+      if(this.value == "FAC"){
+        sbfac.style.display = "none";
+      }else{
+        sbfac.style.display = "";
+      }
+  });
+
   //Recibe el id del "card" (data del popup a mostrar)
   function showPopup(popname){
     var ele = document.getElementById(popname);
@@ -1447,10 +1464,12 @@ function blankAll(){
   //Cancelar delete evento del pboton del popup
   document.getElementById("cancelUplInvc").addEventListener("click",function(){
     closePopup("uploadPopup");
+    document.getElementById("inptUplFile").value = "";
   });
   //Cancelar delete evento del pboton del popup
   document.getElementById("cancelCnfrmUp").addEventListener("click",function(){
     closePopup("uploadCnfrPopup");
+    document.getElementById("inptUplFile").value = "";
   });
   document.getElementById("uplTrashFile").addEventListener("click",function(){
     document.getElementById("inptUplFile").value = "";
@@ -1461,6 +1480,7 @@ function blankAll(){
   //Cancelar delete evento del pboton del popup
   document.getElementById("cancelErrInvc").addEventListener("click",function(){
     closePopup("errUplPopup");
+    document.getElementById("inptUplFile").value = "";
   });
   
 
@@ -1610,7 +1630,7 @@ function blankAll(){
             if(!(newArr.length>0)){
               //Evento para mostrar popup de carga masiva. Boton encima de la tabla "cargar"
               var fileInput = document.getElementById("inptUplFile");
-              var filePath = fileInput.value;
+              var filePath = fileInput.files[0].name;;
               if(errors[0]['err0']>1)lbl = ' registros cargados'; else lbl = ' registro cargado.';
               document.getElementById("numberInvc").innerHTML = errors[0]['err0']+lbl;
               document.getElementById("uplName").innerText = filePath;
@@ -1622,12 +1642,34 @@ function blankAll(){
               closePopup("uploadPopup");
               document.getElementById("selErrUpl").dispatchEvent(new Event("change"));
               showPopup("errUplPopup");
+              //Se llena el nombre de error
+              var fileInput = document.getElementById("inptUplFile");
+              var filePath = fileInput.files[0].name;
+              var tot = 0;
+              for(var x=0;x<errors.length;x++){
+                tot = tot + parseFloat(errors[x]['err'+x]);
+              }
+              var toterr = 0;
+              for(var x=0;x<newArr.length;x++){
+                toterr = toterr + parseFloat(newArr[x][newArr[x]['lbl']]);
+              }
+              var lblreg = tot+" Registros ";
+              if(tot==1)lblreg = tot+" Registro ";
+              document.getElementById("totRegCount").innerText = lblreg;
+              document.getElementById("progErrName").innerText = filePath;
+              var lblerr = toterr+' Errores';
+              if(toterr==1)lblerr = toterr+' Error';
+              document.getElementById("totErrCount").innerText = lblerr;
             }
           break;
           case 400:
               console.log(resp);
               var file = document.getElementById("inptUplFile");
-              inptError(file,resp.msg);
+              var msg = resp.msg;
+              if(msg==""||msg==undefined||msg==null){
+                msg = 'Ocurrió un error al procesar el archivo, por favor intente nuevamente';
+              }
+              inptError(file,msg);
               file.value = "";
               setTimeout(function(){
                 removeErr(document.getElementById("inptUplFile"));
@@ -1638,9 +1680,31 @@ function blankAll(){
               gotoPage("login","main",{});
               break;
           case 500:
+            console.log(resp);
+              var file = document.getElementById("inptUplFile");
+              var msg = "";//resp.msg;
+              if(msg==""||msg==undefined||msg==null){
+                msg = 'Ocurrió un error al procesar el archivo, por favor intente nuevamente';
+              }
+              inptError(file,msg);
+              file.value = "";
+              setTimeout(function(){
+                removeErr(document.getElementById("inptUplFile"));
+              },6000);
               console.log(resp);
               break;
           default:
+            console.log(resp);
+              var file = document.getElementById("inptUplFile");
+              var msg = resp.msg;
+              if(msg==""||msg==undefined||msg==null){
+                msg = 'Ocurrió un error al procesar el archivo, por favor intente nuevamente';
+              }
+              inptError(file,msg);
+              file.value = "";
+              setTimeout(function(){
+                removeErr(document.getElementById("inptUplFile"));
+              },6000);
               console.log(resp);
               break;
       }
@@ -1658,14 +1722,22 @@ function blankAll(){
       if(respText!=="")resp = JSON.parse(respText);    
       switch (status){
           case 200:
-            if(resp==""){
-              //Evento para mostrar popup de carga masiva. Boton encima de la tabla "cargar"
-              closePopup("uploadCnfrPopup");
+            if(resp!=""){
+              if(resp.recordsupdates>0){
+                document.getElementById("inptUplFile").value = "";
+                //Evento para mostrar popup de carga masiva. Boton encima de la tabla "cargar"
+                closePopup("uploadCnfrPopup");
+                loadInvoices();
+              }
             }
           break;
           case 400:
               console.log(resp);
-              alert(resp.msg);
+              var file = document.getElementById("uplTrashFile");
+              inptError(file,'Ocurrió un error al procesar el archivo, por favor intente nuevamente');
+              setTimeout(function(){
+                removeErr(document.getElementById("uplTrashFile"));
+              },6000);
               break;
           case 401:
               console.log(resp);
@@ -1673,8 +1745,18 @@ function blankAll(){
               break;
           case 500:
               console.log(resp);
+              var file = document.getElementById("uplTrashFile");
+              inptError(file,'Ocurrió un error al procesar el archivo, por favor intente nuevamente');
+              setTimeout(function(){
+                removeErr(document.getElementById("uplTrashFile"));
+              },6000);
               break;
           default:
+              var file = document.getElementById("uplTrashFile");
+              inptError(file,'Ocurrió un error al procesar el archivo, por favor intente nuevamente');
+              setTimeout(function(){
+                removeErr(document.getElementById("uplTrashFile"));
+              },6000);
               console.log(resp);
               break;
       }
@@ -1714,8 +1796,7 @@ function blankAll(){
     setTimeout(function(){    
       //Se actualiza el frame
       var frame = document.getElementById("frameView");
-      document.getElementById("downloadView").setAttribute("href","https://totalsoftware.la/~envoice/dev/app/api/invoices/show.php?id="+id+"&sessionid="+sessid)
-      frame.setAttribute("src","https://totalsoftware.la/~envoice/dev/app/api/invoices/show.php?id="+id+"&sessionid="+sessid);
+      frame.setAttribute("src","./api/invoices/show.php?id="+id+"&sessionid="+sessid);
       showViewer();
       frame.onload = function(){
         setTimeout(function(){        
@@ -1762,7 +1843,7 @@ function blankAll(){
     select.innerHTML = "";
     var opt;
     opt = document.createElement("option");
-    opt.setAttribute("value", "");
+    opt.setAttribute("value", "-1");
     opt.innerHTML = "--";
     select.appendChild(opt);  
     for (var i = 0; i < rsp.length; i++) {
@@ -1785,7 +1866,7 @@ function blankAll(){
   //Cargar los itemes que posean un error especifico 
   function loadBadItems(offset=0,order=-1,numrecords=999){
     var par = {};
-    par.codeerror = document.getElementById("selErrUpl").value;
+    par.errorcode = (document.getElementById("selErrUpl").value).replace("err","");
     par.offset = offset;
     par.order = order;
     par.numofrec = numrecords;
@@ -1825,26 +1906,26 @@ function blankAll(){
       itemRow.classList.add("tblBadItem");
         var cellId = document.createElement("div");
         cellId.classList.add("cellErrNro");
-        cellId.innerHTML= rsp.refnumber;
+        cellId.innerHTML= rsp[i].refnumber;
         var cellName = document.createElement("div");
         cellName.classList.add("cellErrName");
-        cellName.innerHTML= rsp.client.name;
+        cellName.innerHTML= rsp[i].client.name;
       itemRow.appendChild(cellId);itemRow.appendChild(cellName);
+      tbl.appendChild(itemRow);
     }
-    tbl.appendChild(itemRow);
   }
   //al cambiar la lista de errores se refrescan los items
   document.getElementById("selErrUpl").addEventListener("change",function(){
     loadBadItems(0,-1,100);
   });
-
+  //Flecha para ver fechas con status de la factura
   document.getElementById("viewStatusBtn").addEventListener("click",function(){
     var tbl = document.getElementById("statusPopup");
     if(tbl.style.display == ""){
       tbl.style.display = "table";
       setTimeout(function(){
         document.getElementById("statusPopup").style.opacity = "1";
-      },300);
+      },100);
     }else{
       tbl.style.opacity = "";
       setTimeout(function(){
@@ -1852,6 +1933,12 @@ function blankAll(){
       },300);
     }
   });
+  //Evento descargar la plantilla
+  document.getElementById("btnInvExamp").addEventListener("click", function () {
+    var text = '../cms/formats/plantilla.csv';
+    var filename = "plantilla.csv";
+    download(filename, text);
+  }, false);
 };
  
 
