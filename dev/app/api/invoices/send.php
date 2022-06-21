@@ -6,66 +6,34 @@
     include("../../../settings/utils.php");
     require '../../../hooks/PHPMailer5/PHPMailerAutoload.php';
     date_default_timezone_set('Etc/UTC');    
+    include("functions.php");
 
-    function loadDataByInvoice($invoices,$db){
+    // Update status 
+    function updateStatus($invoices,$customerid,$db){
       $condition="";
       if (!is_null($invoices)) 
-        $condition="WHERE H.id IN (".avoidInjection($invoices,'dashes').")";
-      $sql =
-        "SELECT
-            H.id,
-            H.clientemail,
-            H.clientname,
-            H.customerid,
-            C.name daycoClientName,
-            H.refnumber,
-            H.issuedate,
-            DATE_FORMAT(H.issuedate, '%d\/%m\/%Y') issueformatteddate,
-            DATE_FORMAT(H.duedate, '%d\/%m\/%Y') dueformatteddate,
-            SUM(
-                D.qty * D.unitprice *(1 - D.itemdiscount)
-            ) AS gross,
-            SUM(
-                D.qty * D.unitprice *(1 - D.itemdiscount) *(1 + D.itemtax)
-            ) AS total
-        FROM
-            invoiceheader H
-        INNER JOIN customers C ON
-            H.customerid = C.id
-        INNER JOIN invoicedetails D ON
-            D.invoiceid = H.id ".
-          " $condition ".
-        " GROUP BY
-            H.id,
-            H.clientemail,
-            H.clientname,
-            H.customerid,
-            C.name,
-            H.refnumber,
-            H.issuedate,
-            DATE_FORMAT(H.issuedate, '%d\/%m\/%Y'),
-            DATE_FORMAT(H.duedate, '%d\/%m\/%Y') ";
-  
-      if (!$rs=$db->query($sql))
-          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>1));
-      $records=array();
-      while ($row = $rs->fetch_assoc()) {
-        $record = new stdClass();
-        $record->refnumber = $row['refnumber'];
-        $record->issuedate = $row['issueformatteddate'];
-        $record->duedate = $row['dueformatteddate'];
-        $record->amount = number_format($row['total'], 2, ",", ".");
-        $record->email = $row['clientemail'];
-        $record->name = $row['clientname'];
-        $record->clientName=$row['daycoClientName'];
-        $records[] = $record;
-      }
-
-      return $records;
+        $condition=" AND id IN (".avoidInjection($invoices,'dashes').")";
+      
+      // tosend=0 Por enviar tosend=1 Enviado
+      $sql = "UPDATE invoiceheader SET tosend=1, sentdate='2022-06-21' WHERE customerid=$customerid ".$condition;
+      if (!$db->query($sql))
+          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>2));      
+      return $db->affected_rows;
+    }
+    // Update emailhash
+    function updateEmailHash($invoiceid,$customerid,$clientrif,$db){
+      //MD5 de la tabla de facturas con los campos (id+customerid+clientrif)
+      $hash=md5("$invoiceid"."$customerid"."$clientrif");
+      $sql = "UPDATE invoiceheader SET emailhash='$hash' WHERE customerid=$customerid ".
+            " AND id=$invoiceid AND clientrif='$clientrif'";
+      if (!$db->query($sql))
+          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>3));      
+      return $db->affected_rows;
     }      
-    
-    function sendInvoices($invoices,$homeurl,$db){
-      $data = loadDataByInvoice($invoices,$db);
+
+    function sendInvoices($invoices,$homeurl,$customerid,$db){
+      //Ojo falta considerar caso donde no hay facturas para enviar
+      $data = loadDataByInvoice($invoices,$customerid,$db);
       foreach ($data as $object){
         $subject = "Factura #$object->refnumber disponible - $object->clientName";
         $body = 
@@ -91,9 +59,9 @@
                     "<div style='display:table-row'>" .
                       "<div style='display:table-cell;font-size:120%;text-align:left'>Hola, <b>".$object->name.".</b>".
                         "<p>Te queremos informar que la factura de <strong>$object->clientName</strong> ya se encuentra disponible para descargar.".
-                          " A continuación el resumen de tu factura digital:
-                        </p>
-                      </div>" .
+                          " A continuación el resumen de tu factura digital: ".
+                        "</p>".
+                      "</div>" .
                     "</div>" .
 
 
@@ -110,7 +78,7 @@
 
                     "<div style='display:table-row'>" .
                       "<div style='display:table-cell'>" .
-                        "<a href='".$homeurl . "?id=login&sid=recoverpwd&hash= "."&email=".$object->email."'>" .
+                        "<a href='".$homeurl ."../customer/view.php". "?hash=".$object->emailhash."'>" .
                           "<div style='font-weight:bold;margin-left:auto;margin-right:auto;border-radius:12px;cursor: pointer;margin-top: 50px;margin-bottom: 50px;color: white;line-height: 50px;text-align:center;background-color: #0033A0;height: 50px;width: 320px;border: none;transition: all ease 300ms;'>Ver factura</div>" .
                         "</a>" .
                       "</div>" .
@@ -126,16 +94,21 @@
             "</body>" .
           "</html>";
 
-          $altbody = "Hola ".$object->name.", para ver su factura diríjase a la dirección indicada a continuación:\n\n".
-                $homeurl . "?id=login&sid=recoverpwd&hash= "."&email=".$object->email."\n\n".
+        $altbody = "Hola ".$object->name.", para ver su factura diríjase a la dirección indicada a continuación:\n\n".
+                $homeurl . "../customer/view.php"."?hash=".$object->emailhash."\n\n".
                 "Gracias de antemano\n" .
                 "Equipo de DaycoPrint";
-
+ 
         enviarCorreo("no-responder@espacioseguroDayco.com", $object->email, $subject, $body, $altbody);
+        $affected_hash=updateEmailHash($object->invoiceid,$customerid,$object->rif,$db);
+        $affected_status=updateStatus($invoices,$customerid,$db);
 
       }
-      
-      return count($data);  
+
+      if ($affected_hash==count($data) && $affected_hash==$affected_status)
+        return count($data);  
+      else  
+        badEnd("400", array("msg"=>"Facturas enviadas no marcadas o facturas re-enviadas"));
     }
     // parametros obligatorios
     $parmsob = array("sessionid");
@@ -146,14 +119,15 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    isSessionValidCMS($db,$sessionid);
+    $customerid=isSessionValid($db,$sessionid);
 
+    
     // Enviar todas las pendientes
     if (!isset($_GET["invoiceids"]))
-      $sent=sendInvoices(null,$homeurl,$db);
+      $sent=sendInvoices(null,$homeurl,$customerid,$db);
     // Enviar solo las seleccionadas
     else
-      $sent=sendInvoices($_GET["invoiceids"],$homeurl,$db);
+      $sent=sendInvoices($_GET["invoiceids"],$homeurl,$customerid,$db);
     
     // Salida
     $out = new stdClass();
