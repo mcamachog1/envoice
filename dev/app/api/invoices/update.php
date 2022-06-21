@@ -23,6 +23,8 @@
 
     //Llenar variables
     $serie=avoidInjection($data->seriecontrol->serie,'str');
+    if (strlen($serie)==0)
+        $serie = ' ';
     $control=avoidInjection($data->seriecontrol->control,'str');
     $type=avoidInjection($data->type,'str');
     $ctrref_serie = avoidInjection($data->ctrref->serie,'str');
@@ -60,6 +62,7 @@
         
         // Obtener el nextcontrol actual
         $ctrnumber = getNextControl($serie,$customerid,$db);
+
         // Ubicar el next control
         $nexts=getNextControls($customerid,$db);
         $next = $nexts[$index];

@@ -275,7 +275,10 @@ function series($serie, $initial,$next){
     $max_length = count($serie_array);
     for ($i = 0; $i <= $max_length-1; $i++) {
         $object = new stdClass();
-        $object->serie = $serie_array[$i];
+        if (strlen($serie_array[$i])==0)
+            $object->serie = ' ';
+        else            
+            $object->serie = $serie_array[$i];
         $object->prefix=substr($initial_array[$i],0,2);
         $object->control= new stdClass();
             $object->control->initial=str_pad(substr($initial_array[$i],2),8,"0",STR_PAD_LEFT); 
@@ -331,11 +334,15 @@ function getNextControl($serie,$customerid,$db){
         $nexts = explode("-",$row['nextcontrol']);
         for ($i = 0; $i < count($series); $i++) {
             $record = new stdClass();
-            $record->serie = $series[$i];
+            if (strlen($series[$i])==0)
+                $record->serie = ' ';
+            else
+                $record->serie = $series[$i];
             $record->nextcontrol = $nexts[$i];
             $records[] = $record;
         }
     }
+
     foreach ($records as $record) {
         if (strlen($serie)==0)
             $serie=' ';
