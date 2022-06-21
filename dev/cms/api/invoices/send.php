@@ -1,5 +1,5 @@
 <?php
-// seniat/api/invoices/list.php
+// seniat/api/invoices/send.php
 
     header("Content-Type:application/json");
     include("../../../settings/dbconn.php");
@@ -7,16 +7,10 @@
     require '../../../hooks/PHPMailer5/PHPMailerAutoload.php';
     date_default_timezone_set('Etc/UTC');    
 
-    function loadData($db){
-      //$sql ="SELECT H.id, contactemail, customerid FROM invoiceheader H INNER JOIN customers C ON H.customerid=C.id ";
-      //if (!$rs=$db->query($sql))
-      //    badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>1));
-      //$row = $rs->fetch_assoc();
-
-      //return $row;
-    }  
     function loadDataByInvoice($invoices,$db){
-      $list = avoidInjection($invoices,'dashes');
+      $condition="";
+      if (!is_null($invoices)) 
+        $condition="WHERE H.id IN (".avoidInjection($invoices,'dashes').")";
       $sql =
         "SELECT
             H.id,
@@ -40,7 +34,7 @@
             H.customerid = C.id
         INNER JOIN invoicedetails D ON
             D.invoiceid = H.id ".
-          " WHERE H.id IN ($list)".
+          " $condition ".
         " GROUP BY
             H.id,
             H.clientemail,
@@ -58,7 +52,6 @@
       while ($row = $rs->fetch_assoc()) {
         $record = new stdClass();
         $record->refnumber = $row['refnumber'];
-        //$record->invoiceid = $row['id'];
         $record->issuedate = $row['issueformatteddate'];
         $record->duedate = $row['dueformatteddate'];
         $record->amount = number_format($row['total'], 2, ",", ".");
@@ -71,10 +64,6 @@
       return $records;
     }      
     
-    function sendAllInvoices($db){
-      print_r("\nEnviar todas\n");
-      return 100;
-    }
     function sendInvoices($invoices,$homeurl,$db){
       $data = loadDataByInvoice($invoices,$db);
       foreach ($data as $object){
@@ -141,7 +130,7 @@
                 $homeurl . "?id=login&sid=recoverpwd&hash= "."&email=".$object->email."\n\n".
                 "Gracias de antemano\n" .
                 "Equipo de DaycoPrint";
-        //enviarCorreoSMTP($fromeMail, $email, $subject, $message,"");        
+
         enviarCorreo("no-responder@espacioseguroDayco.com", $object->email, $subject, $body, $altbody);
 
       }
@@ -155,18 +144,17 @@
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
     $sessionid= $_GET["sessionid"];
-    $invoices = $_GET["invoiceids"];
 
     // Validar user session
     isSessionValidCMS($db,$sessionid);
 
-    if (strlen(trim($_GET["invoiceids"]))==0){
-      $sent=sendAllInvoices($db);
-    }
-    else{
-      $sent=sendInvoices($invoices,$homeurl,$db);
-    }
-
+    // Enviar todas las pendientes
+    if (!isset($_GET["invoiceids"]))
+      $sent=sendInvoices(null,$homeurl,$db);
+    // Enviar solo las seleccionadas
+    else
+      $sent=sendInvoices($_GET["invoiceids"],$homeurl,$db);
+    
     // Salida
     $out = new stdClass();
     $out->invoices=new stdClass();

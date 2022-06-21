@@ -144,7 +144,7 @@
         $record->client->name = $row["clientname"];        
         $record->status =new stdClass();
         $status=1;
-        $status_dsc = "Por Enviar";
+        $status_dsc = "Pendiente";
         if (!is_null($row["sentdate"])) {
             $status=2;
             $status_dsc = "Enviado";            
