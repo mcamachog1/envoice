@@ -90,7 +90,7 @@
             " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
             " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
             " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
-            " FROM    iinvoiceheader H ".
+            " FROM    invoiceheader H ".
             " LEFT JOIN invoicedetails D ON ".
                 " D.invoiceid = H.id ".
             " WHERE H.customerid=$customerid AND H.issuedate BETWEEN '$datefrom' AND '$dateto' ".
@@ -144,14 +144,14 @@
         $record->client->name = $row["clientname"];        
         $record->status =new stdClass();
         $status=1;
-        $status_dsc = "Por Enviar";
+        $status_dsc = "Pendiente";
         if (!is_null($row["sentdate"])) {
             $status=2;
             $status_dsc = "Enviado";            
         }
-        elseif (!is_null($row["viewdate"])) {
+        if (!is_null($row["viewdate"])) {
             $status=3;
-            $status_dsc = "Visto";            
+            $status_dsc = "Leído";            
         }
         $record->status->id = $status;
         $record->status->dsc = $status_dsc;
