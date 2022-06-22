@@ -16,10 +16,12 @@
     $datefrom = $_GET["datefrom"] ." 00:00:00";
     $dateto = $_GET["dateto"]." 23:59:59";
     $status = $_GET["status"];     
-    
+
+    if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
+        badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
     // Validar user session
     $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
-    
+    $filter="";
     // Filter
     if (isset($_GET["filter"])) {
         $pattern = avoidInjection($_GET["filter"],'str');
@@ -33,18 +35,43 @@
     }
     
     
-    // Status
-    $status_condition = "";
-    switch ($status) {
-        case 1:    
-            $status_condition = " AND sentdate IS NULL ";
-            break;
-        case 2:
-            $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
-            break;
-        case 3:
-            $status_condition = " AND viewdate IS NOT NULL ";            
-            break;
+    // Status un solo valor
+    if (strlen($status)==1){
+        $status_condition = "";
+        switch ($status) {
+            case 1:    
+                $status_condition = " AND sentdate IS NULL ";
+                break;
+            case 2:
+                $status_condition = " AND sentdate IS NOT NULL "; //AND viewdate IS NULL";            
+                break;
+            case 3:
+                $status_condition = " AND viewdate IS NOT NULL ";            
+                break;
+        }
+    }
+    // Status varios valores
+    else {
+
+        $status_list =explode("-",$status);
+     
+        $status_condition = " AND ( 0  ";
+        foreach ($status_list as $value){
+            if ($value!=1 && $value!=2 && $value!=3)
+                badEnd("400", array("msg"=>"Valor de estatus $value fuera de rango")); 
+            switch ($value) {
+                case 1:    
+                    $status_condition .= " OR (sentdate IS NULL) ";
+                    break;
+                case 2:
+                    $status_condition .= " OR (sentdate IS NOT NULL) ";            
+                    break;
+                case 3:
+                    $status_condition .= " OR (viewdate IS NOT NULL) ";            
+                    break;
+            }
+        }
+        $status_condition .= " ) ";                
     }
     // validar el order
     $order = "";
@@ -61,10 +88,9 @@
             " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
             " H.discount discount, ".
             " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
-            //" SUM(D.itemdiscount) discount, SUM(D.unitprice)-SUM(D.itemdiscount) total, ".
             " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
             " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
-            " FROM    invoiceheader H ".
+            " FROM    iinvoiceheader H ".
             " LEFT JOIN invoicedetails D ON ".
                 " D.invoiceid = H.id ".
             " WHERE H.customerid=$customerid AND H.issuedate BETWEEN '$datefrom' AND '$dateto' ".
