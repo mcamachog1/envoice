@@ -85,7 +85,7 @@
                     "</div>" .
 
                     "<div style='display:table-row'>" .
-                      "<div style='display:table-cell'>Gracias de antemano<br />$object->clientName" .
+                      "<div style='display:table-cell'>No conteste a este correo, la dirección desde la que se envía no está habilitada para la recepción de mensajes".
                       "</div>" .
                     "</div>" .
                   "</div>" .
@@ -96,7 +96,7 @@
 
         $altbody = "Hola ".$object->name.", para ver su factura diríjase a la dirección indicada a continuación:\n\n".
                 $homeurl . "../customer/view.php"."?hash=".$object->emailhash."\n\n".
-                "Gracias de antemano\n" .
+                "No conteste a este correo, la dirección desde la que se envía no está habilitada para la recepción de mensajes\n" .
                 "Equipo de DaycoPrint";
  
         enviarCorreo("no-responder@espacioseguroDayco.com", $object->email, $subject, $body, $altbody);
