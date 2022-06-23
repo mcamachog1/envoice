@@ -19,10 +19,11 @@ function esconderHTML(hide) {
         if (!hide) html.setAttribute("style", "opacity:1");
         else html.removeAttribute("style");
 }
+/*
 function download(service) {
     var url = globalurl + "/api/" + service;
     window.open(url);
-}
+}*/
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -467,6 +468,7 @@ function download(filename, textInput) {
     element.setAttribute('download', filename);
     document.body.appendChild(element);
     element.click();
+    document.body.removeChild(element);
 }
 
 // Ej formatFields({"campo1", "campo2"}, {"rif","phone"})

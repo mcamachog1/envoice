@@ -266,9 +266,14 @@ function drawItemsDet(details){
     //setValueByClass("newIdname",details[i].unitprice.formatted,itemLine);
 
     //Evento de eliminar la linea 
-    itemLine.getElementsByClassName("itemBtn")[0].addEventListener("click",function(){
-      this.parentElement.parentElement.removeChild(this.parentElement);
-    });
+    if(parseFloat(details[i].prefix+""+details[i].control.initial)==parseFloat(details[i].control.next)){
+      itemLine.getElementsByClassName("itemBtn")[0].addEventListener("click",function(){
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      itemLine.getElementsByClassName("itemBtn")[0].style.visibility = "";
+    }else{
+      itemLine.getElementsByClassName("itemBtn")[0].style.visibility = "hidden";
+    }
     //Se eliminan los labels
     var inptsLbl = itemLine.getElementsByClassName("inptLbl");
     for(var x=(inptsLbl.length-1);inptsLbl.length>0;x=(inptsLbl.length-1)){

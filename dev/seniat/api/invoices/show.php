@@ -164,14 +164,14 @@
             //Estado de la factura
             $record->status =new stdClass();
                 $status=1;
-                $status_dsc = "Por Enviar";
+                $status_dsc = "Pendiente";
                 if (!is_null($row["sentdate"])) {
                     $status=2;
                     $status_dsc = "Enviado";            
                 }
                 elseif (!is_null($row["viewdate"])) {
                     $status=3;
-                    $status_dsc = "Visto";            
+                    $status_dsc = "Le¨ªdo";            
                 }
                 $record->status->id = $status;
                 $record->status->dsc = $status_dsc;

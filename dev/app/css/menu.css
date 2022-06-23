@@ -215,9 +215,9 @@ select {
 }
 .filtTblCnt{
   display: table;
-  width: 80%;
+  width: 100%;
   margin-left: auto;
-  max-width:420px;
+  max-width:540px;
 }
 
 .filtIcCell {
@@ -237,10 +237,25 @@ select {
   width:auto;
   position:relative;
 }
+.filtRegCell{
+  width: 146px;
+  padding-left: 20px;
+}
+.filtRegCell select{
+  width: 100%;
+  padding: 0;
+  height: 40px;
+  margin: 0;
+  font-size: 75%;
+  text-indent: 10px;
+  padding-right: 5px;
+  text-align: left;
+  border-color: #E3E9EC;
+}
 .filtTblCell{
   display:table-cell;
   vertical-align: middle;
-  width: 145px;  
+  width: 138px;  
 }
 .filtTblCnt .btnIcon {
   display: table;
@@ -336,6 +351,12 @@ select {
   margin-left:auto;
   margin-right:auto;
   text-align: center;
+}
+.btnIconSubhDis{
+  display:none;
+}
+.btnIconSubhDis .icon{
+  color:#B5B6B6;
 }
 .px-0 {
   padding-left: 0px;
@@ -433,14 +454,25 @@ select {
   border-left:none;
   border-right:none;
 }
+.lineDis td{
+  border:none !important;
+}
 .containerHome tr:hover td{
   border:1px solid #000;
   border-left:none;
   border-right:none;
 }
-
+.lineDis td{
+  border:none !important;
+}
 .userLine:hover{
   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
+}
+.lineDis{
+  cursor: auto !important;
+}
+.lineDis:hover{
+  box-shadow: none !important;
 }
 .userLine:hover .thAction{
   border-right: 1px solid #0033A0;
@@ -751,7 +783,28 @@ input:checked+.slider:before {
   background-color: #E2DFDF;
   border-radius: 2px;
   font-weight: 600;
-  padding: 5px 5px;
+  padding: 4px 5px;
+  font-size: 78%;
+  height: 20px;
+  line-height: 20px;
+}
+.status-color-2 {
+  background-color: #50AB47;  
+  color:#FFFFFF;
+  border-radius: 2px;
+  font-weight: 600;
+  padding: 4px 5px;
+  font-size: 78%;
+  height: 20px;
+  line-height: 20px;
+}
+.status-color-3 {
+  background-color: #0F73EE;
+  color:#FFFFFF;
+  opacity: 0.8;
+  border-radius: 2px;
+  font-weight: 600;
+  padding: 4px 5px;
   font-size: 78%;
   height: 20px;
   line-height: 20px;
@@ -1335,7 +1388,7 @@ input[type=number]::-moz-outer-spin-button {
 .popupCard {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.5);
   width: 80%;
-  max-width: 290px;
+  max-width: 350px;
   margin-left: auto;
   margin-right: auto;
   padding: 28px 45px;
@@ -1365,7 +1418,7 @@ input[type=number]::-moz-outer-spin-button {
   font-size:120%;
 }
 .popupDsc{
-  font-size: 75%;
+  font-size: 80%;
   color:#4A4A4A;
   font-family:'Lato';
   font-weight: 300;
@@ -1432,7 +1485,32 @@ input[type=number]::-moz-outer-spin-button {
   vertical-align: middle;
   color:#5E7D95;
 }
+.optStatTbl {
+  display: table;
+  height: 25px;
+  width: 100%;
+}
 
+.boxFiltStatus {
+  display: table-cell;
+  width: 25px;
+  vertical-align: middle;
+}
+
+.lblFiltStatus {
+  display: table-cell;
+  text-align: left;
+  color:#474848;
+  font-size: 85%;
+  font-family: 'Lato';
+  vertical-align: middle;
+}
+
+.boxFiltStatus input[type="checkbox"] {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
 /*Responsive table*/
 .respveTbl{
   display:none;
@@ -1602,7 +1680,7 @@ input[type=number]::-moz-outer-spin-button {
   padding-left: 5px;
   display: table-cell;
   vertical-align: middle;
-  width: 50px;
+  width: 80px;
   word-break: break-all;
   font-weight: bold;
   text-align: right;
@@ -1679,9 +1757,41 @@ input[type=number]::-moz-outer-spin-button {
 /* Cambiamos el fondo cuando esté en active o hover */
 .listErrors::-webkit-scrollbar-track:hover,
 .listErrors::-webkit-scrollbar-track:active {
-background: #F8FAFB;
+  background: #F8FAFB;
 }
 
+.bannerCnfrm {
+  position: fixed;
+  height: 60px;
+  background-color: #000000;
+  width: 100%;
+  left: 0;
+  bottom: -65px;
+  transition:all .5s ease-in;
+}
+
+.bannerTbl {
+  display: table;
+  margin-left: 8%;
+  width:84%;
+  height: 100%;
+}
+
+.bannerIcCell {
+  display: table-cell;
+  vertical-align: middle;
+  color:#FDFDFD;
+  font-size: 90%;
+  text-align:center;
+  width:30px;
+}
+
+.bannnerLblCell {
+  display: table-cell;
+  vertical-align: middle;
+  color:#FDFDFD;
+  font-size:85%;
+}
 
 @media print{
   .frameView body{

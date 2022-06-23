@@ -25,7 +25,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">NOMBRE COMPLETO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre de Usuario" />
+                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre Completo" />
                                     </div>
                                 </div>
                             </div>
@@ -35,7 +35,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">CORREO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="nombre@correo.com" />
+                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="correo@ejemplo.com"/>
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">NOMBRE COMPLETO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre de Usuario" />
+                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre Completo" />
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">CORREO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="nombre@correo.com" />
+                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="correo@ejemplo.com"/>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">NOMBRE COMPLETO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre de Usuario" />
+                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre Completo" />
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">CORREO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="nombre@correo.com" />
+                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="correo@ejemplo.com"/>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">NOMBRE COMPLETO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre de Usuario" />
+                                        <input class="inptFrm noEmpty" autocomplete="off"  placeholder="Nombre Completo" />
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">CORREO</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="nombre@correo.com" />
+                                        <input class="inptFrm noEmpty" autocomplete="off" placeholder="correo@ejemplo.com" />
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +121,20 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div id="myModalDelete" class="modal">
+    <div class="modalContent myModalDelete">
+        <span id="closeModalDelete" class="close">&times;</span>
+        <div class="titleArea">
+            <h1 class="title">Guardar usuarios SENIAT</h1>
+        </div>
+        <p>¿Está seguro que desea guardar la información de todos los usuarios?</p>
+        <div class="btnMessage noShowD" id="btnMessageGenDel" style="display: none;"></div>
+        <div class="stdbtn" style="margin-top:25px">
+            <input id="stdbtnYes" class="stdbtnSubmit updateModal stdbtnSubmitCreateSave" type="button" value="CONFIRMAR">
+            <input id="stdbtnNo" class="cancel stdbtnOutline stdbtnSubmitCreateSave" type="button" value="CANCELAR">
         </div>
     </div>
 </div>

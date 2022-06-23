@@ -48,13 +48,13 @@
             width: 17.5%;
         }
         .cell20{
-            width: 20%;
+            width: 10%;
         }
         .cell25 {
             width: 25%;
         }
         .cell30 {
-            width: 30%;
+            width: 40%;
         }
         .cell40 {
             width: 40%;
@@ -265,7 +265,7 @@
             margin-left: auto;
             margin-right: auto;
             align-items: center;
-            font-size: 80%;
+            font-size: 55%;
             justify-content: space-around;
             font-family:'ArialMT Regular',Sans-Serif;
             color:var(--textcolor);
@@ -348,7 +348,7 @@
             <div class="tblItemsCnt">
                 <div class="itemsTblHead">
                     <div class="itemHead cell20" style="border-left:none">
-                        Ref
+                        Ref.
                     </div>
                     <div class="itemHead cell30">
                         Descripción
@@ -429,8 +429,7 @@
             </div>
         </div>
         <div class="footer">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            De conformidad con lo establecido en la PSA SNAT/2022/000012 G.O. Nro. 42.329 del 17 de Marzo del 2022, hemos sido calificados responsables del impuesto a las Grandes Transacciones Financieras (IGTF) en calidad de Agentes de Percepción, con lo cual, si el pago de esta factura se realiza en moneda distinta a la de curso legal en el país, el monto así percibido estará sujeto a un 3%, que debe ser cancelado por el cliente conjuntamente con el pago de esta factura
         </div>
     </div>
     <script type="text/javascript">        

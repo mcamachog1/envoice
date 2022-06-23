@@ -499,6 +499,7 @@ cursor: pointer;
   opacity:0;
   display:none;
   transition:all .3s;
+  z-index:2;
 }
 .invvHeadTbl{
   display:table;
@@ -625,4 +626,7 @@ cursor: pointer;
   transition:all .3s;
   opacity:0;
   display:none;
+}
+.inptDownload{
+  cursor:pointer;
 }

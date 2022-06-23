@@ -39,7 +39,7 @@
                     </div>   
                 </div>
                 <div class="subHdCell cell5" style="padding-right:0">
-                    <div class="inptCnt inptDis">
+                    <div class="inptCnt inptDownload" id="downloadRep">
                         <i class="fa-solid fa-download"></i>
                     </div>   
                 </div>

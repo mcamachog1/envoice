@@ -12,10 +12,12 @@ function getUsers($db){
   $records=array();
 // Serialize
   while ($row = $rs->fetch_assoc()){
-    $record = new stdClass();
-    $record->id = $row['name'];
-    $record->value = $row['value'];
-    $records[] = $record;
+    if(filter_var($row['value'], FILTER_VALIDATE_EMAIL))       {
+        $record = new stdClass();
+        $record->id = $row['name'];
+        $record->value = $row['value'];
+        $records[] = $record;
+    }
   }
   return $records;
 }

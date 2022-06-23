@@ -54,7 +54,10 @@ function respLogin(status, respText) {
       }, 5000);
       break;
     case 401:
-      badLoginPwd.innerText = "Inténtelo nuevamente. Usuario/Contraseña inválidos.";
+      jsonResp = JSON.parse(respText);
+      var msg = jsonResp.msg;
+      if(msg==null||msg==undefined||msg=="")msg = "Inténtelo nuevamente. Usuario/Contraseña inválidos.";
+      badLoginPwd.innerText = msg;
       badLoginPwd.style.display = "inherit";
       badLoginPwd.classList.remove('noShowD')
       document.getElementById('user').classList.add('badPwd')

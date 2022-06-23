@@ -1,7 +1,7 @@
 <div class="container" id="superContainer">
     <div class="formSect textCenter">
         <div class="stdInpCont">
-            <div class="stdText textXl fontMonserrat textCenterSm"><b>¡Bienvenido!</b></div>
+            <div class="stdText textXl fontMonserrat textCenterSm"><b>¡Bienvenido a DaycoPrint!</b></div>
         </div>
         <div class="stdInpCont textLeft">
             <div class="stdLabel">USUARIO</div>

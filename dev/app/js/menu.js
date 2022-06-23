@@ -1,21 +1,51 @@
-const numofrec = 8;
 var sessid = getParameterByName('sessid');
 
 
 window.onload = function () {
-  if(window.innerWidth<420){
-    document.getElementById("buttonsCell").style.display = "";
-  }else{
-    document.getElementById("buttonsCell").style.display = "none";
-  }
-  window.addEventListener('resize',function(){
-    if(window.innerWidth<420){
-      document.getElementById("buttonsCell").style.display = "";
-    }else{
-      document.getElementById("buttonsCell").style.display = "none";
-    }
+
+  //Descargar
+  document.getElementById("downloadButton").addEventListener("click",function(){
+    downloadReport();
   });
 
+function downloadReport(){
+    var par = {};
+    if(document.getElementById("mySearch").value!==""){
+      par.filter = document.getElementById("mySearch").value;
+    }
+    
+    let now = new Date();
+    now = now.toISOString().split('T')[0];
+
+    let desde = document.getElementById('dateDesde').value;
+    let hasta = document.getElementById('dateHasta').value;
+
+    par.datefrom = desde == "" ? now : desde;
+    par.dateto = hasta == "" ? now : hasta;
+    var checks = document.getElementsByClassName("checkstatus");
+    var status = "";
+    for(var i=0;i<checks.length;i++){
+      if(checks[i].checked){
+          status += checks[i].getAttribute("sid")+"-";
+      }
+    }
+    if(status!=="")par.status = status.substring(0, status.length - 1);
+    var actpag = document.getElementsByClassName("pagSel");
+    if(actpag.length>0){
+      actpag = parseFloat(actpag[0].innerHTML-1);
+      par.offset = (actpag)*document.getElementById("numofrecFilt").value;
+    }else{
+      par.offset = 0;
+    }
+    par.order = -1;
+    par.numofrec = document.getElementById("numofrecFilt").value;
+    par.sessionid = getParameterByName("sessid");
+    var parsedPars = Object.keys(par).map(function (k) {
+      return encodeURIComponent(k) + "=" + encodeURIComponent(par[k]);
+    })
+    .join("&");
+    download("documentos.csv",globalurl+"/api/invoices/listcsv.php?" + parsedPars);
+}
 
   init();
   myMenu();
@@ -78,7 +108,7 @@ window.onload = function () {
     }
   }
 
-  function loadInvoices(filter="",offset=0,order=-1,numrecords=numofrec, datefrom){
+  function loadInvoices(filter="",offset=0,order=-1){
       var par = {};
       if(filter !== "" && filter !== undefined && filter !== null)
           par.filter = filter;
@@ -94,10 +124,17 @@ window.onload = function () {
 
       par.datefrom = desde == "" ? now : desde;
       par.dateto = hasta == "" ? now : hasta;
-      par.status = "1"
+      var checks = document.getElementsByClassName("checkstatus");
+      var status = "";
+      for(var i=0;i<checks.length;i++){
+        if(checks[i].checked){
+            status += checks[i].getAttribute("sid")+"-";
+        }
+      }
+      if(status!=="")par.status = status.substring(0, status.length - 1);
       par.offset = offset;
       par.order = order;
-      par.numofrec = numrecords;
+      par.numofrec = document.getElementById("numofrecFilt").value
       par.sessionid = sessid;
       callWS("GET", "invoices/list", par, BCLoadInvoices, offset );
       return;
@@ -133,26 +170,30 @@ window.onload = function () {
 
         var mark = clone.getElementsByClassName("inptMark")[0];
         mark.setAttribute("invcid",navLink.id);
-        mark.addEventListener("click",function(){
-          var btnsCnt = document.getElementById("buttonsCell");
-          var marks = document.getElementsByClassName("inptMark");
-          var selected = 0;
-          for(var i=0;i<marks.length;i++){
-            if(marks[i].checked){
-              selected++;
+        if(navLink.status.id==1){
+          mark.addEventListener("click",function(){
+            var btnsCnt = document.getElementById("buttonsCell");
+            var marks = document.getElementsByClassName("inptMark");
+            var selected = 0;
+            for(var i=0;i<marks.length;i++){
+              if(marks[i].checked){
+                selected++;
+              }
             }
-          }
-          var qtyCnt = document.getElementById("invoicesQtySel");
-          if(selected>0){
-            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
-            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
-            qtyCnt.innerText = selected;
-          }else{
-            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.add("btnIconSubhDis");
-            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
-            qtyCnt.innerText = "No hay";
-          }
-        });
+            var qtyCnt = document.getElementById("invoicesQtySel");
+            if(selected>0){
+              btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+              btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
+              qtyCnt.innerText = selected+" documentos seleccionados";
+            }else{
+              btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+              btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
+              qtyCnt.innerText = "";
+            }
+          });
+        }else{
+          mark.setAttribute("disabled","");
+        }
         
         var celda = clone.getElementsByClassName("despValCell")[0].children[0];
         celda.id="date-"+navLink.id;
@@ -207,7 +248,8 @@ window.onload = function () {
       switch (status){
           case 200:
               jsonResp = JSON.parse(respText);
-              console.log('jsonResp', jsonResp)
+              console.log('jsonResp', jsonResp);
+              
               drawInvoices(jsonResp.records);
               drawInvoicesPhone(jsonResp.records)
               drawPagination(offset, jsonResp.numofrecords);
@@ -273,8 +315,10 @@ window.onload = function () {
           var selected = 0;
           if(this.checked){
             for(var i=0;i<marks.length;i++){
-              selected++;
-              marks[i].checked = true;
+              if(!marks[i].disabled){                
+                selected++;
+                marks[i].checked = true;
+              }
             }
           }else{
             for(var i=0;i<marks.length;i++){
@@ -284,11 +328,13 @@ window.onload = function () {
           }
           var qtyCnt = document.getElementById("invoicesQtySel");
           if(selected>0){
-            btnsCnt.style.display = "";
-            qtyCnt.innerText = selected;
+            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
+            qtyCnt.innerText = selected+" documentos seleccionados";
           }else{
-            btnsCnt.style.display = "none";
-            qtyCnt.innerText = "0";
+            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
+            qtyCnt.innerText = "";
           }
         });
         mark.setAttribute("type","checkbox");
@@ -356,17 +402,20 @@ window.onload = function () {
         line = document.createElement("tr");
         line.classList.add('userLine');
         line.id = navLink.id;
-        line.addEventListener("click",function(e){     
-          //Se valida que no se esté marcando el campo del icono "ver factura" o el checkmark "escoger".
-          if((e.target.classList.contains("inptMark") || e.target.classList.contains("thMark")) ||
-          (e.target.classList.contains("userIcons") || e.target.classList.contains("thAction") || e.target.classList.contains("eyeIcon"))){
-            return false;
-          }else if(e.target.tagName=='svg'||e.target.tagName=='path'){//Porque el icono de fontawesom se convierte en svg y hereda el evento del row
-            return false;
-          }
-          invoiceEntry(this.getAttribute("id"));
-        });
-
+        if(navLink.status.id==1){
+          line.addEventListener("click",function(e){     
+            //Se valida que no se esté marcando el campo del icono "ver factura" o el checkmark "escoger".
+            if((e.target.classList.contains("inptMark") || e.target.classList.contains("thMark")) ||
+            (e.target.classList.contains("userIcons") || e.target.classList.contains("thAction") || e.target.classList.contains("eyeIcon"))){
+              return false;
+            }else if(e.target.tagName=='svg'||e.target.tagName=='path'){//Porque el icono de fontawesom se convierte en svg y hereda el evento del row
+              return false;
+            }
+            invoiceEntry(this.getAttribute("id"));
+          });
+        }else{
+          line.classList.add("lineDis");
+        }
         celda = document.createElement("td");
         celda.classList.add("thMark");
         celda.id="mark-"+navLink.id;
@@ -374,24 +423,31 @@ window.onload = function () {
         mark.classList.add("inptMark");
         mark.setAttribute("type","checkbox");
         mark.setAttribute("invcid",navLink.id);
+        
+        if(navLink.status.id==1){
         mark.addEventListener("click",function(){
           var btnsCnt = document.getElementById("buttonsCell");
           var marks = document.getElementsByClassName("inptMark");
           var selected = 0;
           for(var i=0;i<marks.length;i++){
-            if(marks[i].checked){
-              selected++;
-            }
+              if(marks[i].checked){
+                  selected++;
+              }
           }
           var qtyCnt = document.getElementById("invoicesQtySel");
           if(selected>0){
-            btnsCnt.style.display = "";
-            qtyCnt.innerText = selected;
+            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
+            qtyCnt.innerText = selected+" documentos seleccionados";
           }else{
-            btnsCnt.style.display = "none";
-            qtyCnt.innerText = "0";
+            btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+            btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
+            qtyCnt.innerText = "";
           }
         });
+        }else{
+            mark.setAttribute("disabled","");
+        }
         celda.appendChild(mark);
         line.appendChild(celda);
         
@@ -483,15 +539,32 @@ window.onload = function () {
 
         table.appendChild(line);
     }
-    
+    var btnsCnt = document.getElementById("buttonsCell");
+    var marks = document.getElementsByClassName("inptMark");
+    var selected = 0;
+    for(var i=0;i<marks.length;i++){
+        if(marks[i].checked){
+            selected++;
+        }
+    }
+    var qtyCnt = document.getElementById("invoicesQtySel");
+    if(selected>0){
+      btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+      btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
+      qtyCnt.innerText = selected+" documentos seleccionados";
+    }else{
+      btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
+      btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
+      qtyCnt.innerText = "";
+    }
   }
 
 
   // Esta funcion crea la paginacion de la tabla
-  function drawPagination(offset, numofrecords, recordsbypage=numofrec){
+  function drawPagination(offset, numofrecords, recordsbypage=document.getElementById("numofrecFilt").value){
     const numofpagers = 2;
     var actpag = parseInt((offset/recordsbypage)+1);
-    var lastpag = parseInt((numofrecords/recordsbypage)+0.9);
+    var lastpag = Math.ceil((numofrecords/recordsbypage));
     var inp = document.getElementById("pagination");
     inp.innerHTML = "";
 
@@ -1126,11 +1199,6 @@ window.onload = function () {
       var resp = JSON.parse(respText);
       switch (status){
           case 200:
-            //Se oculta la botonera esquina superior derecha de la tabla
-            var qtyCnt = document.getElementById("invoicesQtySel");
-            var btnsCnt = document.getElementById("buttonsCell");
-            btnsCnt.style.display = "none";
-            qtyCnt.innerText = "0";
             loadInvoices();
             showPage("pageList");
             document.getElementById("logOut").parentElement.style.right = "";
@@ -1344,7 +1412,7 @@ function blankAll(){
   
   //Evento al botón de "enviar" para mostrar popup de confirmación
   document.getElementById("sendButton").addEventListener("click",function(){
-    showPopup("sendPopup");
+    sendcheckInvoices();
   });
   //Evento al botón de "delete" para mostrar popup de eliminar confirmación
   document.getElementById("deleteButton").addEventListener("click",function(){
@@ -1369,11 +1437,6 @@ function blankAll(){
       switch (status){
           case 200:
             closePopup("deletePopup");
-            //Se oculta la botonera esquina superior derecha de la tabla
-            var qtyCnt = document.getElementById("invoicesQtySel");
-            var btnsCnt = document.getElementById("buttonsCell");
-            btnsCnt.style.display = "none";
-            qtyCnt.innerText = "0";
             loadInvoices();
           break;
           case 400:
@@ -1393,6 +1456,108 @@ function blankAll(){
     callWS("DELETE", "invoices/delete", par, succes, "");
     return;
   }
+  function sendcheckInvoices(){
+    var par = {};
+    var marks = document.getElementsByClassName("inptMark");    
+    var ids = "";
+    for(var i=0;i<marks.length;i++){
+      if(marks[i].checked){
+        if( marks[i].getAttribute("invcid")!=null&& marks[i].getAttribute("invcid")!="")
+          ids += marks[i].getAttribute("invcid")+"-";
+      }
+    }
+    if(ids!==""){
+      ids = ids.substr(0,ids.length-1);
+      par.invoiceids = ids;  
+    }
+    par.sessionid = sessid;
+    var succes = function(status, respText){
+      var resp = JSON.parse(respText);
+      switch (status){
+          case 200:
+            if(ids!==""){
+              document.getElementById("sendNro").innerText = resp.invoices.tosend+" documentos seleccionados "; 
+            }else{
+              document.getElementById("sendNro").innerText = resp.invoices.tosend+" documentos pendientes "; 
+            }                    
+            showPopup("sendPopup");
+          break;
+          case 400:
+              console.log(resp);
+            break;
+          case 401:
+              console.log(resp);
+              break;
+          case 500:
+              console.log(resp);
+              break;
+          default:
+              console.log(resp);
+              break;
+      }
+    }
+    callWS("GET", "invoices/sendcheck", par, succes, "");
+    return;
+  }
+  function sendInvoices(){
+    var par = {};
+    var marks = document.getElementsByClassName("inptMark");    
+    var ids = "";
+    for(var i=0;i<marks.length;i++){
+      if(marks[i].checked){
+        if(marks[i].getAttribute("invcid")!=null&& marks[i].getAttribute("invcid")!="")
+          ids += marks[i].getAttribute("invcid")+"-";
+      }
+    }
+    if(ids!==""){
+      ids = ids.substr(0,ids.length-1);
+      par.invoiceids = ids;  
+    }
+    par.sessionid = sessid;
+    var succes = function(status, respText){
+      var resp = JSON.parse(respText);
+      switch (status){
+          case 200:
+            closePopup("sendPopup");
+            loadInvoices();          
+            var msg = "Sus "+resp.invoices.sent+" documentos se han enviado exitosamente";
+            showBanner(msg);
+          break;
+          case 400:
+            console.log(resp);
+          break;
+          case 401:
+            console.log(resp);
+          break;
+          case 500:
+            console.log(resp);
+          break;
+          default:
+            console.log(resp);
+          break;
+      }
+    }
+    callWS("GET", "invoices/send", par, succes, "");
+    return;
+  }
+  function showBanner(msg){
+    document.getElementById("lblMsg").innerText = msg;
+    document.getElementById("bannerMsg").style.bottom = "0px";
+    setTimeout(function(){
+      hideBanner();
+    },5000);
+  }
+  function hideBanner(){
+    setTimeout(function(){      
+      document.getElementById("lblMsg").innerText = "";
+    },500);
+    document.getElementById("bannerMsg").style.bottom = "";
+  }
+  
+  //Botón de confirmar el enviar, ejecuta la llamada al servicio
+  document.getElementById("sendInvc").addEventListener("click",function(){
+    sendInvoices();
+  });
   //Botón de confirmar el delete, ejecuta la llamada al servicio
   document.getElementById("delInvc").addEventListener("click",function(){
     deleteInvoices();
@@ -1438,6 +1603,8 @@ function blankAll(){
     ele.style.display = "block";
     setTimeout(function(){      
       ele.style.opacity = "1";
+      //window.scroll(0,0);
+      document.body.style.overflow = "hidden";
     },300);
   }
   //Oculta el popup de visualización de la factura 
@@ -1446,6 +1613,7 @@ function blankAll(){
     ele.style.opacity = "";
     setTimeout(function(){      
       ele.style.display = "";
+      document.body.style.overflow = "";
     },300);
   }
   //Evento para cancelar visualizar invoice
@@ -1461,6 +1629,11 @@ function blankAll(){
   document.getElementById("cancelDelInvc").addEventListener("click",function(){
     closePopup("deletePopup");
   });
+  //Cancelar enviar evento del pboton del popup
+  document.getElementById("cancelSendInvc").addEventListener("click",function(){
+    closePopup("sendPopup");
+  });
+  
   //Cancelar delete evento del pboton del popup
   document.getElementById("cancelUplInvc").addEventListener("click",function(){
     closePopup("uploadPopup");
@@ -1538,11 +1711,11 @@ function blankAll(){
     if(selected>0){
       btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
       btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.remove("btnIconSubhDis");
-      qtyCnt.innerText = selected;
+      qtyCnt.innerText = selected+" documentos seleccionados";
     }else{
-      btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.add("btnIconSubhDis");
+      btnsCnt.getElementsByClassName("btnIconSubh")[0].classList.remove("btnIconSubhDis");
       btnsCnt.getElementsByClassName("btnIconSubh")[1].classList.add("btnIconSubhDis");
-      qtyCnt.innerText = "No hay";
+      qtyCnt.innerText = "";
     }
   });
 
@@ -1939,6 +2112,36 @@ function blankAll(){
     var filename = "plantilla.csv";
     download(filename, text);
   }, false);
+
+  //Evento de ver todos los status del filtro
+  document.getElementById("allStatus").addEventListener("click",function(){
+    var checks = document.getElementsByClassName("checkstatus");
+    for(var i=0;i<checks.length;i++){
+      if(this.checked){
+        checks[i].checked = true;
+      }else{
+        checks[i].checked = false;
+      }
+    }
+  });
+  var checks = document.getElementsByClassName("checkstatus");
+  for(var i=0;i<checks.length;i++){
+    checks[i].addEventListener("click",function(){
+      if(this.checked){
+        document.getElementById("allStatus").checked = true;
+        var checks = document.getElementsByClassName("checkstatus");
+        for(var x=0;x<checks.length;x++){
+          if(!checks[x].checked)document.getElementById("allStatus").checked = false;
+        }
+      }else{
+        document.getElementById("allStatus").checked = false;
+      }
+    });
+  }
+
+  document.getElementById('numofrecFilt').addEventListener('change',function(){
+    loadInvoices();
+  });
 };
  
 

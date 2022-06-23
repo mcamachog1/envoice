@@ -19,9 +19,18 @@ function esconderHTML(hide) {
     if (!hide) html.setAttribute("style", "opacity:1");
     else html.removeAttribute("style");
 }
+/*
 function download(service) {
   var url = globalurl + "/api/" + service;
   window.open(url);
+}*/
+function download(filename, textInput) {
+  var element = document.createElement('a');
+  element.setAttribute('href', textInput);
+  element.setAttribute('download', filename);
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
 }
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

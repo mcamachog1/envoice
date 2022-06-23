@@ -18,10 +18,11 @@ function esconderHTML(hide) {
     if (!hide) html.setAttribute("style", "opacity:1");
     else html.removeAttribute("style");
 }
+/*
 function download(service) {
   var url = globalurl + "/api/" + service;
   window.open(url);
-}
+}*/
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -329,12 +330,14 @@ function isEmail(email) {
 }
 function isRIF(rif){
   //var re = /^[JGVEPM][0-9]{4,9}$/;
-  var re = /^[JG][-][0-9]{9}$/;
+  //var re = /^[JG][-][0-9]{9}$/;
+  var re = /^[JG][0-9]{9}$/;
   return re.test(rif);
 }
 function isCI(rif){
   //var re = /^[JGVEPM][0-9]{4,9}$/;
-  var re = /^[VEP][-][0-9]{4,9}$/;
+  //var re = /^[VEP][-][0-9]{4,9}$/;
+  var re = /^[VEP][0-9]{4,9}$/;
   return re.test(rif);
 }
 /*
@@ -387,7 +390,7 @@ function formatRIF(valor){
           numero = cleaned.substr(1);
 
       if(numero!=""&&parseFloat(numero)>0)
-        return(area+"-"+padToFour(numero));
+        return(area+""+padToFour(numero));
       else
         return(area);
   }else{
@@ -439,8 +442,7 @@ function formatPhone(valor){
       return("");
   }
 }
-function formatRefctr(valor){
-  
+function formatRefctr(valor){  
   var cleaned = ('' + valor.toUpperCase()).replace(/[^a-zA-Z0-9]/g, '');
   if (cleaned.length){
       var prefijo, area, numero;
@@ -505,7 +507,15 @@ function removeErr(ele){
     ele.parentElement.parentElement.removeChild(ele.parentElement.parentElement.getElementsByClassName("msgErrInpt")[0]);
   }
 }
+function download(filename, textInput) {
 
+  var element = document.createElement('a');
+  element.setAttribute('href', textInput);
+  element.setAttribute('download', filename);
+  document.body.appendChild(element);
+  element.click();
+  //document.body.removeChild(element);
+}
 // Ej formatFields({"campo1", "campo2"}, {"rif","phone"})
 function formatFields2(campos, formato,optional="",cnt=document){
   var ele;
@@ -634,7 +644,7 @@ function drawSelectErr(rsp, select, id, dsc, first="", selected="") {
     opt = document.createElement("option");
     opt.setAttribute("value", rsp[i][id]);
     if (rsp[i][id] == selected) opt.setAttribute("selected", true);
-    opt.innerHTML = rsp[i][dsc];
+    opt.innerHTML = rsp[i][dsc]+" ("+rsp[i][rsp[i][id]]+")";
     select.appendChild(opt);
   }
 }

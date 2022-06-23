@@ -26,6 +26,35 @@ function logOut() {
   }
   callWS("GET", "security/logout", par, success);
 }
+function downloadReport(){
+  var par = {};
+  if(document.getElementById("mySearch").value!==""){
+    par.filter = document.getElementById("mySearch").value;
+  }
+  
+  let now = new Date();
+  now = now.toISOString().split('T')[0];
+
+  let desde = document.getElementById('dateDesde').value;
+  let hasta = document.getElementById('dateHasta').value;
+
+  par.datefrom = desde == "" ? now : desde;
+  par.dateto = hasta == "" ? now : hasta;
+  var actpag = document.getElementById("actPag").value;
+  var offset = (actpag*10)-10;
+  par.status = "1-2-3";
+  par.offset = offset;
+  par.order = -1;
+  par.numofrec =  10;
+  par.customerid = document.getElementById("customersList").value;
+  if(par.customerid=="")par.customerid=-1;      
+  par.sessionid = getParameterByName("sessid");
+  var parsedPars = Object.keys(par).map(function (k) {
+    return encodeURIComponent(k) + "=" + encodeURIComponent(par[k]);
+  })
+  .join("&");
+  download("documentos.csv",globalurl+"/api/invoices/listcsv.php?" + parsedPars);
+}
 function loadInvoices(filter="",order=-1,numrecords=10){
   var par = {};
   if(filter !== "" && filter !== undefined && filter !== null)
@@ -43,7 +72,7 @@ function loadInvoices(filter="",order=-1,numrecords=10){
   par.datefrom = desde == "" ? now : desde;
   par.dateto = hasta == "" ? now : hasta;
 
-  par.status = "1";
+  par.status = "1-2-3";
   var actpag = document.getElementById("actPag").value;
   var offset = (actpag*numrecords)-numrecords;
   par.offset = offset;
@@ -185,7 +214,9 @@ function drawInvoices(data){
     table.innerHTML = "";
     
     var fulldata = data;
-    
+    document.getElementById("baseAmo").innerText = fulldata.totals.taxbase.formatted;
+    document.getElementById("impAmo").innerText = fulldata.totals.tax.formatted;
+    document.getElementById("totAmo").innerText = fulldata.totals.total.formatted;
     //Total de documentos
     document.getElementById("totDocs").innerText = fulldata.numofrecords+" Documentos";
     //Total de documentos
@@ -619,6 +650,11 @@ window.onload = function () {
     //Evento de la busqueda
     document.getElementById("mySearch").addEventListener("change",function(){
       loadInvoices(this.value);
+    });
+
+    //Descargar
+    document.getElementById("downloadRep").addEventListener("click",function(){
+      downloadReport();
     });
 
     loadCustomers();

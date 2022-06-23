@@ -32,7 +32,7 @@
                   $area = substr($cleaned,(abs(strlen($cleaned)-8)-2),2);
                   $prefijo = substr($cleaned,0,(abs(strlen($cleaned)-8)-2));
                 }else{            
-                  $area = substr($cleaned,0,abs(($cleaned)-8));            
+                  $area = substr($cleaned,0,abs(strlen($cleaned)-8));            
                   $prefijo = "";
                 }
               }
@@ -67,7 +67,7 @@
         $out = new stdClass;
         
         $sql =  "SELECT " .
-                " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
+                " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, H.printformat, ".
                 " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, ".
                 " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
                 " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
@@ -75,7 +75,8 @@
                 " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
                 " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".            
                 " H.sentdate, H.viewdate, SUM(D.qty) qty,   ".
-                " C.name customername, C.RIF customerrif, H.customerid customerid, C.imgtype imgtype ".
+                " C.name customername, C.RIF customerrif, C.address customeraddr, C.phone customerphone, ".
+                " H.customerid customerid, C.imgtype imgtype ".
                 " FROM    invoiceheader H ".
                 " INNER JOIN invoicedetails D ON ".
                 "            D.invoiceid = H.id ".
@@ -85,21 +86,29 @@
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
             
-        // Header
-        if ($row = $rs->fetch_assoc()){
+        // Header   
+        
+        if ($row = $rs->fetch_assoc()){            
             $record = new stdClass();
+            //#new
+            $pre = "fac";
+            $printformat = $row["printformat"];
+            //###
             $record->id = (integer) $row["id"];
             $record->type =new stdClass();
                 $record->type->id=$row['type'];
                 switch ($row['type']) {
                     case 'FAC':
                         $record->type->name='Factura';
+                        $pre = "fac";
                         break;
                     case 'NDB':
                         $record->type->name='Nota de Debito';
+                        $pre = "ndb";
                         break;
-                    case 'NDC':
+                    case 'NCR':
                         $record->type->name='Nota de Credito';
+                        $pre = "ncr";
                         break;
                 }
             //Nro control de ref
@@ -118,6 +127,8 @@
             $record->customer = new stdClass();
             //Información del CUSTOMER dueño de FACTURA (cliente de dayco)
             $record->customer->rif = $row["customerrif"];
+            $record->customer->address = $row["customeraddr"];
+            $record->customer->phone = $row["customerphone"];
             $record->customer->name = $row["customername"];
             $record->customer->id = $row["customerid"];
             $record->customer->image="";        
@@ -188,6 +199,8 @@
             $record->amounts->total = new stdClass(); 
             $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
             $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
+        
+            
         }
         $record->details = [];
         // Details
@@ -225,8 +238,11 @@
         } 
         $record->details = $details;
 
-        $image = $record->customer->image; 
-        $customername = $record->customer->name;
+        $image = $record->customer->image;
+        $commercerif = $record->customer->rif; 
+        $commercename = $record->customer->name;
+        $commerceaddr = $record->customer->address;
+        $commercephn = $record->customer->phone;
         $type = $record->type->name;
         $invoiceDate = $record->issuedate->formatted;
         $invoiceCtrl = $record->ctrnumber;
@@ -237,10 +253,19 @@
         $customerPhn =  $record->client->mobile;
         $customerPhn2 =  $record->client->phone;
         $conditions = $record->obs;        
-        $urlfonts = "../../../cms/formats/";
+        $urlfonts = "../../../formats/";
         $urllogo = "../../../cms/uploads/";
+        $iddir = str_pad($record->customer->id,5,"0", STR_PAD_LEFT);
+        //Lo primero que debemos hacer es construir la url con la plantilla almacenada en la tabla
+        $customerview = "../../../formats/customers/".$iddir."/".$pre.$printformat.".php";
+        //Si no existe validamos que exista ese formato en el directorio default 00000
+        $defaultview = "../../../formats/customers/00000/".$pre.$printformat.".php";
+        if(file_exists($customerview)){            
+            //Si existe se imprime la plantilla customizada  
+            include($customerview);
+        }else if(file_exists($defaultview)){
+            include($defaultview);
+        }
 
-        //Si llega hasta acá se incluye la plantilla
-        include("../../../cms/formats/customers/00000/000.php");
     }
 ?>

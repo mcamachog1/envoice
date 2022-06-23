@@ -43,7 +43,7 @@ function loadInvoices(filter="",order=-1,numrecords=10){
   par.datefrom = desde == "" ? now : desde;
   par.dateto = hasta == "" ? now : hasta;
 
-  par.status = "1";
+  par.status = "1-2-3";
   var actpag = document.getElementById("actPag").value;
   var offset = (actpag*numrecords)-numrecords;
   par.offset = offset;
@@ -97,7 +97,6 @@ function drawInvoices(data){
     inptpage.setAttribute("max",tot);
     if(tot==1)inptpage.setAttribute("disabled","");
     else inptpage.removeAttribute("disabled");
-
     if(fulldata.records.length<=0){
       document.getElementById("pagination").style.display = "none";
     }else{
@@ -353,6 +352,8 @@ function viewDocument(rsp){
     var id = rsp.header.id;    
     var sessid = getParameterByName("sessid");
     document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
+    document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
+    document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
     if(type=='FAC'){
       lblPrev = "Factura "+nro;
     }else if(type=='NCR'){
@@ -384,7 +385,9 @@ function showViewer(){
   var ele = document.getElementById("invViewer");
   ele.style.display = "block";
   setTimeout(function(){      
-    ele.style.opacity = "1";
+    ele.style.opacity = "1";    
+    window.scroll(0,0);
+    document.body.style.overflow = "hidden";
   },300);
 }
 //Oculta el popup de visualización de la factura 
@@ -393,9 +396,38 @@ function closeViewer(){
   ele.style.opacity = "";
   setTimeout(function(){      
     ele.style.display = "";
+    document.body.style.overflow = "";
   },300);
 }
+function downloadReport(){
+      var par = {};
+      if(document.getElementById("mySearch").value!==""){
+        par.filter = document.getElementById("mySearch").value;
+      }
+      
+      let now = new Date();
+      now = now.toISOString().split('T')[0];
 
+      let desde = document.getElementById('dateDesde').value;
+      let hasta = document.getElementById('dateHasta').value;
+
+      par.datefrom = desde == "" ? now : desde;
+      par.dateto = hasta == "" ? now : hasta;
+      var actpag = document.getElementById("actPag").value;
+      var offset = (actpag*10)-10;
+      par.status = "1-2-3";
+      par.offset = offset;
+      par.order = -1;
+      par.numofrec =  10;
+      par.customerid = document.getElementById("customersList").value;
+      if(par.customerid=="")par.customerid=-1;      
+      par.sessionid = getParameterByName("sessid");
+      var parsedPars = Object.keys(par).map(function (k) {
+        return encodeURIComponent(k) + "=" + encodeURIComponent(par[k]);
+      })
+      .join("&");
+      download("documentos.csv",globalurl+"/api/invoices/listcsv.php?" + parsedPars);
+}
 function init() {
 
   // Cargamos los usuarios a mostrar en la tabla
@@ -522,6 +554,11 @@ function init() {
     //Evento de la busqueda
     document.getElementById("mySearch").addEventListener("change",function(){
       loadInvoices(this.value);
+    });
+
+     //Descargar
+   document.getElementById("downloadRep").addEventListener("click",function(){
+      downloadReport();
     });
 
     loadCustomers();

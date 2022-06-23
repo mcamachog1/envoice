@@ -17,6 +17,14 @@
                             <input class="prdSearch" type="search" id="mySearch" name="Search" placeholder="Buscar">
                             <span id="iconSearch" class="iconSearch"><i class="fa fa-search" aria-hidden="true"></i></span>
                         </div>
+                        <div class="filtSrchCell filtRegCell">
+                            <select id="numofrecFilt">
+                                <option value="10">Ver 10 Registros</option>
+                                <option value="25" selected>Ver 25 Registros</option>
+                                <option value="50">Ver 50 Registros</option>
+                                <option value="100">Ver 100 Registros</option>
+                            </select>
+                        </div>
                         <div class="filtTblCell">
                             <div class="dropdown">
                                 
@@ -64,6 +72,27 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="stdBtn">
+                                            <label>
+                                                ESTATUS
+                                            </label>
+                                            <div class="optStatTbl">
+                                                <div class="boxFiltStatus"><input type="checkbox" id="allStatus" checked/></div>
+                                                <div class="lblFiltStatus">Todos</div>
+                                            </div>
+                                            <div class="optStatTbl">
+                                                <div class="boxFiltStatus"><input class="checkstatus" sid="2" type="checkbox" checked/></div>
+                                                <div class="lblFiltStatus">Enviados</div>
+                                            </div>
+                                            <div class="optStatTbl">
+                                                <div class="boxFiltStatus"><input class="checkstatus" sid="3" type="checkbox" checked /></div>
+                                                <div class="lblFiltStatus">Leídos</div>
+                                            </div>
+                                            <div class="optStatTbl">
+                                                <div class="boxFiltStatus"><input class="checkstatus" sid="1" type="checkbox" checked/></div>
+                                                <div class="lblFiltStatus">Pendientes</div>
+                                            </div>
+                                        </div>
                                         <br/>
                                     </div>
                                     <div class="stdbtn btnFiltCnt">
@@ -83,11 +112,20 @@
                     <div class="subHdCell subHdCellL">
                         <div id="loadButtom" class="btnIcon px-0"><i class="fas fa-file-upload icon"></i>Cargar</div> 
                         <div id="createButtom" class="btnIcon px-0"><i class="fas fa-file-medical icon"></i>Crear</div> 
+                        <div id="downloadButton" class="btnIconSubh px-0">
+                            <i class="icon fa-solid fa-download"></i>
+                        </div>
                     </div>
-                    <div class="subHdCell subHdCellR" id="buttonsCell" style="display:none">
-                        <div class="btnLblSubh px-0"><span id="invoicesQtySel">No hay</span>&nbsp;registros seleccionados</div> 
-                        <div id="sendButton" class="btnIconSubhDis btnIconSubh px-0"><i class="icon fa-solid fa-paper-plane"></i></div> 
-                        <div id="deleteButton" class="btnIconSubhDis btnIconSubh px-0" style="margin-right:0"><i class="icon fa-solid fa-trash-can"></i></div> 
+                    <div class="subHdCell subHdCellR" id="buttonsCell">
+                        <div class="btnLblSubh px-0">
+                            <span id="invoicesQtySel"></span>
+                        </div> 
+                        <div id="sendButton" class="btnIconSubh px-0">
+                            <i class="icon fa-solid fa-paper-plane"></i>
+                        </div> 
+                        <div id="deleteButton" class="btnIconSubhDis btnIconSubh px-0" style="margin-right:0">
+                            <i class="icon fa-solid fa-trash-can"></i>
+                        </div> 
                         <div class="divMark">
                             <input class="inptMark" id="markAllRspv" type="checkbox">
                         </div>
@@ -166,7 +204,7 @@
                             </div>
                             <div class="detLine">
                                 <div class="despLblCell">
-                                    <div class="">Status</div>
+                                    <div class="">Estatus</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -619,7 +657,7 @@
         <div class="popupCard" id="sendPopup">
             <div class="popupClose" popup="sendPopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Enviar Documentos</div>
-            <div class="popupDsc">¿Está seguro que desea enviar los documentos seleccionados por correo electrónico?</div>
+            <div class="popupDsc">¿Está seguro que desea enviar los <span id="sendNro"></span>por correo electrónico?</div>
             <div class="popupBtns">
             <div class="btnsCntPop">
                 <div class="btnCell btnCellPop">
@@ -637,6 +675,12 @@
         </div>
     </div>
 </div>
+<div class="bannerCnfrm" id="bannerMsg">
+    <div class="bannerTbl">
+        <div class="bannerIcCell"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="bannnerLblCell" id="lblMsg">Sus facturas se han enviado exitosamente</div>
+    </div>
+</div>
 <div class="invviewer" id="invViewer">
     <div class="invvHeadTbl">
         <div class="invvCellLeft">
@@ -648,14 +692,14 @@
         <div class="invvCellCenter">
             <div class="invvStatusLbl penStatus">
                 <div class="statusDscCell">
-                    <span id="statusVDsc">Por Enviar</span>
+                    <span id="statusVDsc">Estatus</span>
                 </div>
                 <div class="statusIcCell">
                     <span ><i id="viewStatusBtn" class="invVBtn fa-solid fa-sort-down" ></i></span>
                 </div>
                 <div class="statusPopup" id="statusPopup">
-                    <div class="statusPopTbl">Creación <span id="viewIssueDate">28-02-2022</span></div>
-                    <div class="statusPopTbl">Envío <span></span></div>
+                    <div class="statusPopTbl">Creada <span id="viewIssueDate">28-02-2022</span></div>
+                    <div class="statusPopTbl">Enviada <span></span></div>
                     <div class="statusPopTbl">Leída <span></span></div>
                 </div>
             </div>

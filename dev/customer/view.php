@@ -17,20 +17,8 @@
                         Fact. 000187
                     </span>
                 </div>
-                <div class="invvCellCenter">
-                    <div class="invvStatusLbl penStatus">
-                        <div class="statusDscCell">
-                            <span id="statusVDsc">Por Enviar</span>
-                        </div>
-                        <div class="statusIcCell">
-                            <span ><i id="viewStatusBtn" class="invVBtn fa-solid fa-sort-down" ></i></span>
-                        </div>
-                        <div class="statusPopup" id="statusPopup">
-                            <div class="statusPopTbl">Creación <span id="viewIssueDate">28-02-2022</span></div>
-                            <div class="statusPopTbl">Envío <span></span></div>
-                            <div class="statusPopTbl">Leída <span></span></div>
-                        </div>
-                    </div>
+                <div class="invvCellCenter" style="opacity:0">
+                    
                 </div>
                 <div class="invvCellRight">
                     <i class="fa-solid fa-print invVBtn" id="printView"></i>

@@ -33,4 +33,9 @@ window.onload = function(){
           frame.style.opacity = "1";
         },300);
     };
+
+    //Evento de imprimir la pantalla del viewer
+    document.getElementById("printView").addEventListener("click",function(){
+      window.frames[0].print();
+    });
 }

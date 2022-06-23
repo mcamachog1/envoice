@@ -1,7 +1,6 @@
 <?php
 
-//$url = "https://totalsoftware.la/~envoice/dev/app/api/invoices/update.php?";
-$url = "http://localhost/totalsoftware/envoice/dev/app/api/invoices/update.php?";   
+$url = "https://totalsoftware.la/~envoice/dev/app/api/invoices/update.php?";   
 
 
 
@@ -17,17 +16,17 @@ $invoice = new stdClass();
 
 $invoice->id=0;
 
-$invoice->sessionid=107;
+$invoice->sessionid=1;
 
 
 
 $invoice->seriecontrol = new stdClass();
 
-    $invoice->seriecontrol->serie='';
+    $invoice->seriecontrol->serie='AA';
 
     $invoice->seriecontrol->control='01';
 
-$invoice->type='FAC';
+$invoice->type='NDB';
 
 
 
@@ -35,7 +34,7 @@ $invoice->ctrref = new stdClass();
 
 
 
-$invoice->ctrref->serie = null;
+$invoice->ctrref->serie = 'AA';
 
 $invoice->ctrref->control='01';
 
@@ -53,11 +52,11 @@ $invoice->refnumber = "12345";
 
 $invoice->client = new stdClass();
 
-    $invoice->client->rif = "G871231230";
+    $invoice->client->rif = "V12123123";
 
     $invoice->client->name = "Factura 16 INSERT";
 
-    $invoice->client->mobile = "0414 7672952";
+    $invoice->client->mobile = "";
 
     $invoice->client->phone = "";
 

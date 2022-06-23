@@ -1,7 +1,7 @@
 <div class="container" id="superContainer">
     <div class="formSect textCenter">
         <div class="stdInpCont">
-            <div class="stdText textXl"><b>¡Bienvenido!</b></div>
+            <div class="stdText textXl"><b>Módulo Administrativo - CMS</b></div>
         </div>
         <div class="stdInpCont textLeft">
             <div class="stdLabel">USUARIO</div>
