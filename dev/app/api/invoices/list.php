@@ -43,7 +43,7 @@
                 $status_condition = " AND sentdate IS NULL ";
                 break;
             case 2:
-                $status_condition = " AND sentdate IS NOT NULL "; //AND viewdate IS NULL";            
+                $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
                 break;
             case 3:
                 $status_condition = " AND viewdate IS NOT NULL ";            
@@ -64,7 +64,7 @@
                     $status_condition .= " OR (sentdate IS NULL) ";
                     break;
                 case 2:
-                    $status_condition .= " OR (sentdate IS NOT NULL) ";            
+                    $status_condition .= " OR (sentdate IS NOT NULL AND viewdate IS NULL) ";            
                     break;
                 case 3:
                     $status_condition .= " OR (viewdate IS NOT NULL) ";            

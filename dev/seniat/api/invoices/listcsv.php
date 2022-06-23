@@ -4,6 +4,7 @@ header("Content-Disposition: attachment; filename=informe.csv");
 
 include("../../../settings/dbconn.php");
 include("../../../settings/utils.php");
+include("../functions.php");  
 
 function badEndCsv($message){
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
@@ -16,7 +17,7 @@ function badEndCsv($message){
 }
 
 // Parametros obligatorios
-  $parmsob = array("offset","numofrec","order","sessionid","datefrom","dateto","status");
+  $parmsob = array("offset","numofrec","order","sessionid","datefrom","dateto","status","customerid");
   if (!parametrosValidos($_GET, $parmsob))
       badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
@@ -25,13 +26,14 @@ function badEndCsv($message){
   $sessionid= $_GET["sessionid"];
   $datefrom = $_GET["datefrom"] ." 00:00:00";
   $dateto = $_GET["dateto"]." 23:59:59";
-  $status = $_GET["status"];     
+  $status = $_GET["status"];  
+  $customerid = $_GET["customerid"];      
 
   if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
+  validSession($sessionid,$db);
 
 // Filter
   $filter="";

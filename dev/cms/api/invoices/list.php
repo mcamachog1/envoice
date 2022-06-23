@@ -19,6 +19,8 @@
     $dateto = $_GET["dateto"]." 23:59:59";
     $status = $_GET["status"];     
     $customerid = $_GET["customerid"];     
+    if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
+        badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));      
     
     // Validar user session
     isSessionValidCMS($db,$sessionid);
@@ -36,21 +38,45 @@
         $filter .= ") ";
     }
     
-    
-    // Status
-    $status_condition = "";
-    switch ($status) {
-        case 1:    
-            $status_condition = " AND sentdate IS NULL ";
-            break;
-        case 2:
-            $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
-            break;
-        case 3:
-            $status_condition = " AND viewdate IS NOT NULL ";            
-            break;
+// Status un solo valor
+    if (strlen($status)==1){
+        $status_condition = "";
+        switch ($status) {
+            case 1:    
+                $status_condition = " AND sentdate IS NULL ";
+                break;
+            case 2:
+                $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
+                break;
+            case 3:
+                $status_condition = " AND viewdate IS NOT NULL ";            
+                break;
+        }
     }
-    // validar el order
+// Status varios valores
+    else {
+
+        $status_list =explode("-",$status);
+     
+        $status_condition = " AND ( 0  ";
+        foreach ($status_list as $value){
+            if ($value!=1 && $value!=2 && $value!=3)
+                badEnd("400", array("msg"=>"Valor de estatus $value fuera de rango")); 
+            switch ($value) {
+                case 1:    
+                    $status_condition .= " OR (sentdate IS NULL) ";
+                    break;
+                case 2:
+                    $status_condition .= " OR (sentdate IS NOT NULL AND viewdate IS NULL) ";            
+                    break;
+                case 3:
+                    $status_condition .= " OR (viewdate IS NOT NULL) ";            
+                    break;
+            }
+        }
+        $status_condition .= " ) ";                
+    }
+// validar el order
     $order = "";
     if (isset($_GET["order"])) {
         $order = "ORDER BY " . abs($_GET["order"]);
