@@ -34,6 +34,7 @@
     function sendInvoices($invoices,$homeurl,$customerid,$db){
       //Ojo falta considerar caso donde no hay facturas para enviar
       $data = loadDataByInvoice($invoices,$customerid,$db);
+      $affected_hash=0;
       foreach ($data as $object){
         $subject = "Factura #$object->refnumber disponible - $object->clientName";
         $body = 
@@ -100,11 +101,13 @@
                 "Equipo de DaycoPrint";
  
         enviarCorreo("no-responder@espacioseguroDayco.com", $object->email, $subject, $body, $altbody);
-        $affected_hash=updateEmailHash($object->invoiceid,$customerid,$object->rif,$db);
-        $affected_status=updateStatus($invoices,$customerid,$db);
-
+        // Incrementa contador cuando se crea el hash
+        if (updateEmailHash($object->invoiceid,$customerid,$object->rif,$db)==1)
+          $affected_hash++;
       }
-
+      // Cambia el status de todas las facturas enviadas y se obtiene la cantidad
+      $affected_status=updateStatus($invoices,$customerid,$db);    
+      // Valida que los hashes creados,los status cambiados y las facturas enviadas por correo sea la misma cantidad      
       if ($affected_hash==count($data) && $affected_hash==$affected_status)
         return count($data);  
       else  
