@@ -1,4 +1,4 @@
-var globalurl = "https://totalsoftware.la/~envoice/dev/app";
+var globalurl = ".";
 
 function gotoPage(id, sid, params) {
   esconderHTML(true);

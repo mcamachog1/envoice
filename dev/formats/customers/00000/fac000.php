@@ -65,8 +65,8 @@
         .cell100 {
             width: 100%;
         }
-        html{ padding:0;margin:0; }
-        body{ padding:0;margin:0;font-size:15px;}
+        html{ padding:0;margin:0;height:100%;}
+        body{ padding:0;margin:0;font-size:15px;height:100%;}
         .page{
             height:100%;
             width:100%;  
@@ -95,7 +95,11 @@
             }
             .headLogo img{display: none;}
             @media print{
-            .headLogo img{display:inline;width:80px;}
+                .header{
+                    padding-top:0;
+                }
+                .headLogo img{display:inline;width:80px;}
+                body{font-size:14px;}
             }
             .headTit{
                 display:table-cell;
@@ -334,7 +338,11 @@
                     <div class="detDate headDetTbl contHeadTbl">
                         <div class="headDetLbl">Teléfono</div>
                         <div class="headDetVal"><?php echo($customerPhn); ?> - <?php echo($customerPhn2); ?></div>
-                    </div>
+                    </div>                    
+                    <div class="detDate headDetTbl contHeadTbl">
+                        <div class="headDetLbl">Correo</div>
+                        <div class="headDetVal"><?php echo($customerEmail); ?></div>
+                    </div>  
                 </div>
             </div>
             <div class="contHeadDet" style="border:none">
@@ -441,7 +449,7 @@
             var padre = document.getElementsByClassName("content")[0];            
             var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight+
             padre.getElementsByClassName("contHeadDet")[1].offsetHeight);
-            document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
+            document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(98% - "+fillspace+"px)";
             var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+
             padre.getElementsByClassName("itemsTotsCnt")[0].offsetHeight + 20);
             document.getElementsByClassName("itemsDetCnt")[0].style.height = "calc(100% - "+fillspace+"px)";

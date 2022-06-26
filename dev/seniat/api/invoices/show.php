@@ -171,7 +171,7 @@
                 }
                 elseif (!is_null($row["viewdate"])) {
                     $status=3;
-                    $status_dsc = "Le¨ªdo";            
+                    $status_dsc = "Leï¿½ï¿½do";            
                 }
                 $record->status->id = $status;
                 $record->status->dsc = $status_dsc;
@@ -256,6 +256,7 @@
         $customerAddr =  $record->client->address;
         $customerPhn =  $record->client->mobile;
         $customerPhn2 =  $record->client->phone;
+        $customerEmail =  $record->client->email;
         $conditions = $record->obs;        
         $urlfonts = "../../../formats/";
         $urllogo = "../../../cms/uploads/";

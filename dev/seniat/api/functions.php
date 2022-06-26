@@ -52,13 +52,21 @@
         $row = $rs->fetch_assoc();
         if ( $row['Cnt']!=1)
             badEnd("400", array("msg"=>"Hash de recuperación $hash incorrecto"));
+        
+        //Validar que existe el registro password
+        $sql ="SELECT COUNT(*) Cnt FROM preferences WHERE name = '$name_password'";
+        if (!$rs=$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>5));
+        $row = $rs->fetch_assoc();
 
-        // Actualizar password
-        $sql ="UPDATE preferences SET value= '$pwd' WHERE name='$name_password'";
-        if (!$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>6));
+        // Actualizar password si existe
+        if ( $row['Cnt']==1) {
+            $sql ="UPDATE preferences SET value= '$pwd' WHERE name='$name_password'";
+            if (!$db->query($sql))
+                badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>6));
+        }
         // Si no existe el registro password, se crea
-        if ($db->affected_rows==0){
+        else {
             $sql ="INSERT INTO preferences (name, value) VALUES ('$name_password','$pwd')";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));

@@ -2,6 +2,12 @@ const numofrec = 8;
 let drop = false;
 let fileToSend = "";
 
+window.addEventListener("keydown", function(e) {
+  if(["ArrowDown"].indexOf(e.code) > -1) {
+      e.preventDefault();
+  }
+}, false);
+
 var sessid = getParameterByName("sessid");
 function mySearchClean(table) {
   table.forEach(function (element) {

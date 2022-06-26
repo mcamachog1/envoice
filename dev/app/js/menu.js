@@ -1,8 +1,12 @@
 var sessid = getParameterByName('sessid');
-
+window.addEventListener("keydown", function(e) {
+  if(["ArrowDown"].indexOf(e.code) > -1) {
+      e.preventDefault();
+  }
+}, false);
 
 window.onload = function () {
-
+   
   //Descargar
   document.getElementById("downloadButton").addEventListener("click",function(){
     downloadReport();

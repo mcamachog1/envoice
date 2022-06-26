@@ -6,6 +6,7 @@ function loadDataByInvoice($invoices,$customerid,$db){
       $sql =
         "SELECT
             H.id,
+            H.discount,
             H.emailhash,
             H.clientemail,
             H.clientname,
@@ -17,11 +18,12 @@ function loadDataByInvoice($invoices,$customerid,$db){
             DATE_FORMAT(H.issuedate, '%d\/%m\/%Y') issueformatteddate,
             DATE_FORMAT(H.duedate, '%d\/%m\/%Y') dueformatteddate,
             SUM(
-                D.qty * D.unitprice *(1 - D.itemdiscount)
+                D.qty * D.unitprice *(1 - D.itemdiscount/100)
             ) AS gross,
+
             SUM(
-                D.qty * D.unitprice *(1 - D.itemdiscount) *(1 + D.itemtax)
-            ) AS total
+                D.qty * D.unitprice *(1 - D.itemdiscount/100) * (D.itemtax/100)
+            ) AS totaltax            
         FROM
             invoiceheader H
         INNER JOIN customers C ON
@@ -31,6 +33,7 @@ function loadDataByInvoice($invoices,$customerid,$db){
           " $condition ".
         " GROUP BY
             H.id,
+            H.discount,  
             H.emailhash,
             H.clientemail,
             H.clientname,
@@ -53,7 +56,7 @@ function loadDataByInvoice($invoices,$customerid,$db){
         $record->refnumber = $row['refnumber'];
         $record->issuedate = $row['issueformatteddate'];
         $record->duedate = $row['dueformatteddate'];
-        $record->amount = number_format($row['total'], 2, ",", ".");
+        $record->amount = number_format(     $row['gross']*(1-$row['discount']/100) + $row['totaltax']    , 2, ",", ".");
         $record->email = $row['clientemail'];
         $record->name = $row['clientname'];
         $record->clientName=$row['daycoClientName'];

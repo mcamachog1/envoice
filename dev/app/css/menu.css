@@ -315,7 +315,7 @@ select {
 }
 .subHdCellR{
   text-align:right;
-  width:65%;  
+  width:55%;  
   position:relative;
 }
 .subHdCellR .divMark{
@@ -956,14 +956,15 @@ select {
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
-  -moz-appearance:none;
   margin: 0; 
 }
 input[type=number]::-moz-inner-spin-button, 
 input[type=number]::-moz-outer-spin-button { 
   -webkit-appearance: none; 
-  -moz-appearance:none;
   margin: 0; 
+}
+input[type=number]{
+  -moz-appearance:textfield !important;
 }
 .pageCnt{
   height:100%;

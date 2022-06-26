@@ -1,6 +1,1 @@
-[23-Jun-2022 01:30:26 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
-[23-Jun-2022 01:31:29 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
-[23-Jun-2022 01:32:46 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
-[23-Jun-2022 01:34:53 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
-[23-Jun-2022 01:35:03 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
-[23-Jun-2022 01:40:04 UTC] PHP Parse error:  syntax error, unexpected '/' in /home/envoice/public_html/dev/app/api/invoices/send.php on line 89
+[23-Jun-2022 13:00:30 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/uploadcheck.php:445) in /home/envoice/public_html/dev/settings/utils.php on line 109

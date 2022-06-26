@@ -300,8 +300,13 @@ function getSeries($customerid,$db){
     $sql = "SELECT serie FROM customers WHERE id=$customerid ";
     if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-    if ($row = $rs->fetch_assoc()) 
-        return explode("-",$row['serie']);
+    if ($row = $rs->fetch_assoc()) {
+        $series = explode("-",$row['serie']);
+        for ($i=0;$i<count($series);$i++)
+            if (strlen($series[$i])==0)
+                $series[$i]=' ';
+        return $series;
+    }
     else
         return null;
 }

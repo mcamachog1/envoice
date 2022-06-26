@@ -255,6 +255,7 @@
         $customerAddr =  $record->client->address;
         $customerPhn =  $record->client->mobile;
         $customerPhn2 =  $record->client->phone;
+        $customerEmail =  $record->client->email;
         $conditions = $record->obs;        
         $urlfonts = "../../../formats/";
         $urllogo = "../../../cms/uploads/";
