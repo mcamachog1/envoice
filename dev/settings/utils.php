@@ -356,5 +356,149 @@ function getNextControl($serie,$customerid,$db){
     }
     return null;
 }  
+function loadDataByInvoice($invoices,$customerid,$db){
+    $condition="";
+    if (!is_null($invoices)) 
+      $condition=" AND H.id IN (".avoidInjection($invoices,'dashes').")";
+    $sql =
+      "SELECT
+          H.id,
+          H.discount,
+          H.emailhash,
+          H.clientemail,
+          H.clientname,
+          H.clientrif,
+          H.customerid,
+          C.name daycoClientName,
+          H.refnumber,
+          H.issuedate,
+          DATE_FORMAT(H.issuedate, '%d\/%m\/%Y') issueformatteddate,
+          DATE_FORMAT(H.duedate, '%d\/%m\/%Y') dueformatteddate,
+          SUM(
+              D.qty * D.unitprice *(1 - D.itemdiscount/100)
+          ) AS gross,
 
+          SUM(
+              D.qty * D.unitprice *(1 - D.itemdiscount/100) * (D.itemtax/100)
+          ) AS totaltax            
+      FROM
+          invoiceheader H
+      INNER JOIN customers C ON
+          H.customerid = C.id
+      INNER JOIN invoicedetails D ON
+          D.invoiceid = H.id WHERE H.customerid=$customerid AND tosend=0 ".
+        " $condition ".
+      " GROUP BY
+          H.id,
+          H.discount,  
+          H.emailhash,
+          H.clientemail,
+          H.clientname,
+          H.clientrif,
+          H.customerid,
+          C.name,
+          H.refnumber,
+          H.issuedate,
+          DATE_FORMAT(H.issuedate, '%d\/%m\/%Y'),
+          DATE_FORMAT(H.duedate, '%d\/%m\/%Y') ";
+
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>1));
+    $records=array();
+    while ($row = $rs->fetch_assoc()) {
+      $record = new stdClass();
+      $record->invoiceid = $row['id'];
+      $record->rif = $row['clientrif'];        
+      $record->emailhash = md5("$record->invoiceid"."$customerid"."$record->rif");        
+      $record->refnumber = $row['refnumber'];
+      $record->issuedate = $row['issueformatteddate'];
+      $record->duedate = $row['dueformatteddate'];
+      $record->amount = number_format(     $row['gross']*(1-$row['discount']/100) + $row['totaltax']    , 2, ",", ".");
+      $record->email = $row['clientemail'];
+      $record->name = $row['clientname'];
+      $record->clientName=$row['daycoClientName'];
+      $records[] = $record;
+    }
+
+    return $records;
+} 
+function setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order) {
+$sql =  "SELECT " .
+        " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
+        " H.type, H.ctrref, ".            
+        " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
+        " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
+        " H.discount discount, ".
+        " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
+        " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
+        " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
+        " FROM    invoiceheader H ".
+        " LEFT JOIN invoicedetails D ON ".
+            " D.invoiceid = H.id ".
+        " WHERE H.customerid=$customerid AND H.issuedate BETWEEN '$datefrom' AND '$dateto' ".
+        $status_condition.$filter.   
+        " GROUP BY ".
+        "   H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, DATE_FORMAT(H.issuedate, '%d/%m/%Y'), ".
+        "   H.sentdate, H.viewdate " .
+            $order;
+return $sql;                    
+}
+function jsonInvoiceList($rs){    
+  $records = array();
+  while ($row = $rs->fetch_assoc()){
+      $record = new stdClass();
+      $record->id = (integer) $row["id"];
+      $record->type =new stdClass();
+          $record->type->id=$row['type'];
+          switch ($row['type']) {
+              case 'FAC':
+                  $record->type->name='Factura';
+                  break;
+              case 'NDB':
+                  $record->type->name='Nota de Debito';
+                  break;
+              case 'NDC':
+                  $record->type->name='Nota de Credito';
+                  break;
+          }
+      $record->ctrref =$row['ctrref'];
+      $record->issuedate =new stdClass();
+      $record->issuedate->date = $row["issuedate"];
+      $record->issuedate->formatted = $row["formatteddate"];
+      $record->refnumber = nvl($row["refnumber"],"");
+      $record->ctrnumber = nvl($row["ctrnumber"],"");
+      $record->client =new stdClass();
+      $record->client->rif = $row["clientrif"];
+      $record->client->name = $row["clientname"];        
+      $record->status =new stdClass();
+      $status=1;
+      $status_dsc = "Pendiente";
+      if (!is_null($row["sentdate"])) {
+          $status=2;
+          $status_dsc = "Enviado";            
+      }
+      if (!is_null($row["viewdate"])) {
+          $status=3;
+          $status_dsc = "Leído";            
+      }
+      $record->status->id = $status;
+      $record->status->dsc = $status_dsc;
+      
+      $record->amounts =new stdClass();        
+      $record->amounts->gross = new stdClass(); 
+      $record->amounts->gross->number = (float)$row["gross"]*(1-(float)$row["discount"]/100);
+      $record->amounts->gross->formatted = number_format($row["gross"]*(1-(float)$row["discount"]/100), 2, ",", ".");
+      
+      $record->amounts->tax = new stdClass(); 
+      $record->amounts->tax->number = (float)$row["tax"];
+      $record->amounts->tax->formatted = number_format($row["tax"], 2, ",", ".");         
+
+      $record->amounts->total = new stdClass(); 
+      $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
+      $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
+
+      $records[] = $record;
+  }
+  return $records;
+}
 ?>
