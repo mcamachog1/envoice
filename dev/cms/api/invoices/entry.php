@@ -50,7 +50,9 @@
             " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
             " H.discount, H.type, H.ctrref, ".
             " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
-            " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".            
+            " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".  
+            " DATE_FORMAT(H.sentdate, '%d/%m/%Y') formattedsentdate, ".
+            " DATE_FORMAT(H.viewdate, '%d/%m/%Y') formattedviewdate, ".                       
             " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
             " FROM    invoiceheader H ".
             " INNER JOIN invoicedetails D ON ".
@@ -82,7 +84,15 @@
             $record->issuedate->formatted = $row["formatteddate"];
         $record->duedate =new stdClass();
             $record->duedate->date = $row["duedate"];
-            $record->duedate->formatted = $row["formattedduedate"];            
+            $record->duedate->formatted = $row["formattedduedate"];    
+
+        $record->sentdate =new stdClass();
+            $record->sentdate->date = $row["sentdate"];
+            $record->sentdate->formatted = $row["formattedsentdate"];
+        $record->viewdate =new stdClass();
+            $record->viewdate->date = $row["viewdate"];
+            $record->viewdate->formatted = $row["formattedviewdate"]; 
+            
         $record->refnumber = nvl($row["refnumber"],"");
         $record->ctrnumber = nvl($row["ctrnumber"],"");
         $record->client =new stdClass();
