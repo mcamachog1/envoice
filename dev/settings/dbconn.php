@@ -1,8 +1,8 @@
 <?php
     // CAMBIAR AL PASAR A PRODUCCION
-    $homeurl = "https://localhost/totalsoftware/envoice/dev/cms/";
+    $homeurl = "https://totalsoftware.la/~envoice/dev/cms/";
     //mysqli($servername, $username, $password, $dbname);
-    $db = new mysqli("localhost", "root", "", "envoice_maindev");
+    $db = new mysqli("localhost", "envoice_mainusr", "UrSi8PHELjQU", "envoice_maindev");
     //verifica la conexion
     if ($db->connect_errno){
         header("HTTP/1.1 500");

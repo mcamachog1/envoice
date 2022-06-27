@@ -443,6 +443,7 @@ $sql =  "SELECT " .
             $order;
 return $sql;                    
 }
+// Prepara el JSON para los 3 modulos (CMS-APP-Seniat)
 function jsonInvoiceList($rs){    
   $records = array();
   while ($row = $rs->fetch_assoc()){

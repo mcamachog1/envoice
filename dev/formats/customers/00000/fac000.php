@@ -75,7 +75,7 @@
         .header{
             display: table;
             width: 100%;
-            padding-top: 10px;
+            padding-top: 5px;
             text-align: center;
             margin-left: auto;
             margin-right: auto;
@@ -263,7 +263,7 @@
             display: flex;
             width: 100%;
             height: calc(5vh - 20px);
-            padding-bottom: 10px;
+            padding-bottom: 5px;
             padding-top: 10px;
             text-align: center;
             margin-left: auto;

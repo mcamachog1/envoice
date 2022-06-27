@@ -39,7 +39,7 @@
         echo (json_encode($out));
         die();        
     }
-    
+    //Incluir fechas de leido y enviado
     $sql =  "SELECT " .
             " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
             " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, ".
