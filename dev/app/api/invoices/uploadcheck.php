@@ -18,6 +18,39 @@
             $invoices[]=$row["refnumber"];
         return $invoices;
     }
+
+    function diffHeaderDetailTotals($customerid,$db){
+        $sql=   "SELECT
+                H.refnumber,
+                H.total,
+                ROUND(
+                    SUM(
+                        D.qty * D.unitprice *(1 - D.itemdiscount / 100)
+                    ) *(1 - H.discount / 100) + SUM(
+                        D.qty * D.unitprice *(1 - D.itemdiscount / 100) *(D.itemtax / 100)
+                    ),
+                    2
+                ) AS detailsTotal
+            FROM
+                loadinvoicedetail D
+            INNER JOIN loadinvoiceheader H ON
+                H.id = D.loadinvoiceheaderid
+            WHERE 
+                H.customerid=$customerid
+            GROUP BY
+                H.refnumber,
+                H.total ";      
+    
+
+        if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+
+        $invoices=array();
+        while ($row = $rs->fetch_assoc()) 
+            if ($row["total"] != $row["detailsTotal"])
+                $invoices[]=$row["refnumber"];
+        return $invoices;
+    }
     function validateFields($line,$type){
         $err = 0;
         $errmsg = "";
@@ -447,7 +480,12 @@
 // Detectar encabezados sin detalles
     $withoutDetails=withoutDetails($customerid,$db);
     if (count($withoutDetails)>0 && $totalerrors==0)
-        badEnd("400", array("msg"=>"Factura(s) sin detalle(s) ".implode(",",$withoutDetails).""));
+        badEnd("400", array("msg"=>"Factura[s] sin detalle[s] ".implode(",",$withoutDetails).""));
+// Detectar totales diferentes entre el encabezado y todos los detalles
+    $diffHeaderDetailTotals=diffHeaderDetailTotals($customerid,$db);
+    if (count($diffHeaderDetailTotals)>0 && $totalerrors==0)
+        badEnd("400", array("msg"=>"Total encabezado de factura[s] difiere del total detalles. Facturas: ".implode(",",$diffHeaderDetailTotals).""));
+
 
 // Salida
   $out = new stdClass(); 
