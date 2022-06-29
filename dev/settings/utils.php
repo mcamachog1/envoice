@@ -27,7 +27,32 @@ function dlookup($db, $campo, $tabla, $where){
         return(null);
     }
 }
-function isSessionValid($db, $sessionid){
+
+
+function insertAudit($db,$userid,$ip,$app,$module,$dsc){
+    $sql = "INSERT INTO `audit`(
+        `id`,
+        `datecreation`,
+        `userid`,
+        `app`,
+        `module`,
+        `dsc`,
+        `ip`
+    )
+    VALUES(
+        NULL,
+        CURRENT_TIMESTAMP,
+        $userid,
+        '$app',
+        '$module',
+        '$dsc',
+        '$ip'
+    )";
+    if (!$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    return $db->insert_id;
+}
+function isSessionValid($db, $sessionid,$data=array()){
     // Validar sessionid activo
     $sql =  "SELECT COUNT(*) cnt, min(id) id " .
             "FROM   customers " .
@@ -44,6 +69,8 @@ function isSessionValid($db, $sessionid){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
+    if (count)
+    insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']);
     return($row["id"]);
 }
 function setAudit($db, $module, $sessionid, $dsc){
