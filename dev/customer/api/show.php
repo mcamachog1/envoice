@@ -253,10 +253,12 @@
         $customerAddr =  $record->client->address;
         $customerPhn =  $record->client->mobile;
         $customerPhn2 =  $record->client->phone;
+        $customerEmail =  $record->client->email;
         $conditions = $record->obs;        
         $urlfonts = "../../formats/";
         $urllogo = "../../cms/uploads/";
         $iddir = str_pad($record->customer->id,5,"0", STR_PAD_LEFT);
+        $nro = rand(5,getrandmax());
         //Lo primero que debemos hacer es construir la url con la plantilla almacenada en la tabla
         $customerview = "../../formats/customers/".$iddir."/".$pre.$printformat.".php";
         //Si no existe validamos que exista ese formato en el directorio default 00000

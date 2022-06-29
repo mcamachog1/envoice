@@ -60,7 +60,7 @@
                                 <div class="inptCnt">
                                     <div class="inptLbl">RIF</div>
                                     <div class="inptFrmCnt">
-                                        <input class="inptFrm noEmpty" autocomplete="off" id="rifClient" placeholder="J-00000000" />
+                                        <input class="inptFrm noEmpty" autocomplete="off" id="rifClient" placeholder="J000000000" />
                                     </div>
                                 </div>
                             </div>

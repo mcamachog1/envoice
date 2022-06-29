@@ -14,7 +14,6 @@
             <div class="invvHeadTbl">
                 <div class="invvCellLeft">
                     <span id="invName">
-                        Fact. 000187
                     </span>
                 </div>
                 <div class="invvCellCenter" style="opacity:0">

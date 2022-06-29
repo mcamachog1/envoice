@@ -15,7 +15,7 @@ function mySearchClean(table) {
     padre.removeChild(element);
   });
 }
-
+/*
 function formatRif(rif) {
   console.log('rifFormat', rif)
   let letras = ["J","E","V","P","G"];
@@ -28,13 +28,52 @@ function formatRif(rif) {
 
   return "";
 
-}
+}*/
+function formatRif(valor){
+  let padToFour = number => number <= 999999999 ? `00000000${number}`.slice(-9) : number.slice(0,9);
+  var cleaned = (valor.replace(/[.,\-, ,\/]/g,"").toUpperCase());
+  if (cleaned.length){
+      var area, numero;
+          area = cleaned.substr(0,1);
+          numero = cleaned.substr(1);
 
+      if(numero!=""&&parseFloat(numero)>0)
+        return(area+""+padToFour(numero));
+      else
+        return(area);
+  }else{
+      return("");
+  }
+  //return(valor.replace(/[.,\-, ,\/]/g,"").toUpperCase());
+}
+/*
 function formatTlf(tlf) {
   if (isNum(tlf)){
     return `(${tlf.slice(0, 4)})${tlf.slice(4, 7)}-${tlf.slice(7)}`;
   }else{
     return "";
+  }
+}*/
+function formatTlf(valor){
+  
+  var cleaned = ('' + valor).replace(/\D/g, '');
+  if (cleaned.length){
+      var prefijo, area, numero;
+      /*if (cleaned[1]=="1"){
+          prefijo = "1";
+          area = cleaned.substr(1,3);
+          numero = cleaned.substr(4);
+      }else{
+          prefijo = cleaned.substr(0,2);*/
+          area = cleaned.substr(0,4);
+          numero = cleaned.substr(4,7);
+      //}
+      if(numero!="")
+        return(area+" "+numero);
+      else
+        return(area);
+  }else{
+      return("");
   }
 }
 
@@ -1103,6 +1142,14 @@ function init() {
       tlf = tlf.replaceAll("-","");
       let format = formatTlf(tlf);
       document.getElementById("tlfClient").value = format;
+    })
+    document.getElementById("tlfClientAd").addEventListener("keypress",function(e){
+      let tlf = document.getElementById("tlfClientAd").value;
+      tlf = tlf.replaceAll("(","");
+      tlf = tlf.replaceAll(")","");
+      tlf = tlf.replaceAll("-","");
+      let format = formatTlf(tlf);
+      document.getElementById("tlfClientAd").value = format;
     })
 
     // Para el mask del rif
