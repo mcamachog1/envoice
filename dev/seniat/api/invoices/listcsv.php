@@ -123,7 +123,8 @@ function badEndCsv($message){
   $sql .= " LIMIT $offset, $numofrec"; 
   if (!$rs = $db->query($sql))
     badEndCsv("Error de Base de Datos\n $db->error");
-// Guardar la data  
+// Guardar la data 
+/* 
   $records = array(); 
   while ($row = $rs->fetch_assoc()){
     $record = new stdClass();
@@ -175,7 +176,8 @@ function badEndCsv($message){
     $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
     $records[] = $record;
   }
-
+*/
+  $records = jsonInvoiceList($rs);
 // Preparar archivo csv
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
   $fp = fopen('php://output', 'wb');

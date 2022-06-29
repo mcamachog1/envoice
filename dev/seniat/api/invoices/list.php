@@ -139,7 +139,7 @@
             "LIMIT " . $offset . "," . $numofrec;
     if (!$rs = $db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-
+/*
     $records = array();
     while ($row = $rs->fetch_assoc()){
         $record = new stdClass();
@@ -200,8 +200,8 @@
 
         $records[] = $record;
     }
-
-
+*/
+    $records = jsonInvoiceList($rs);
 
     //Totals
     $out->totals=$object;
