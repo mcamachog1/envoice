@@ -38,15 +38,15 @@
         <div class="invvCellCenter">
             <div class="invvStatusLbl penStatus">
                 <div class="statusDscCell">
-                    <span id="statusVDsc">Por Enviar</span>
+                    <span id="statusVDsc">Estatus</span>
                 </div>
                 <div class="statusIcCell">
                     <span ><i id="viewStatusBtn" class="invVBtn fa-solid fa-sort-down" ></i></span>
                 </div>
                 <div class="statusPopup" id="statusPopup">
-                    <div class="statusPopTbl">Creación <span id="viewIssueDate">28-02-2022</span></div>
-                    <div class="statusPopTbl">Envío <span></span></div>
-                    <div class="statusPopTbl">Leída <span></span></div>
+                    <div class="statusPopTbl">Creada <span id="viewIssueDate"></span></div>
+                    <div class="statusPopTbl">Enviada <span id="viewSentDate"></span></div>
+                    <div class="statusPopTbl">Leída <span id="viewReadDate"></span></div>
                 </div>
             </div>
         </div>

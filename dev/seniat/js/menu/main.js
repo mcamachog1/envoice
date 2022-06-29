@@ -483,7 +483,6 @@ function viewDocument(rsp){
     var nro = rsp.header.refnumber;
     var id = rsp.header.id;    
     var sessid = getParameterByName("sessid");
-    document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
     if(type=='FAC'){
       lblPrev = "Factura "+nro;
     }else if(type=='NCR'){
@@ -541,22 +540,6 @@ window.onload = function () {
 
     //Evento de salir
     document.getElementById("logOut").addEventListener("click", logOut);
-
-    //Flecha para ver fechas con status de la factura
-    document.getElementById("viewStatusBtn").addEventListener("click",function(){
-      var tbl = document.getElementById("statusPopup");
-      if(tbl.style.display == ""){
-        tbl.style.display = "table";
-        setTimeout(function(){
-          document.getElementById("statusPopup").style.opacity = "1";
-        },100);
-      }else{
-        tbl.style.opacity = "";
-        setTimeout(function(){
-          document.getElementById("statusPopup").style.display = "";
-        },300);
-      }
-    });
     
     
     // Filtros PERIODO Y FECHAS

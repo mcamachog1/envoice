@@ -352,8 +352,16 @@ function viewDocument(rsp){
     var id = rsp.header.id;    
     var sessid = getParameterByName("sessid");
     document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
-    document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
-    document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
+
+    if(rsp.header.sentdate.formatted)
+      document.getElementById("viewSentDate").innerText = rsp.header.sentdate.formatted;
+    else
+      document.getElementById("viewSentDate").innerText = "";
+
+    if(rsp.header.viewdate.formatted)
+      document.getElementById("viewReadDate").innerText = rsp.header.viewdate.formatted;
+    else
+      document.getElementById("viewReadDate").innerText = "";
     if(type=='FAC'){
       lblPrev = "Factura "+nro;
     }else if(type=='NCR'){
@@ -382,6 +390,11 @@ function viewDocument(rsp){
 }
 //Muestra el popup de visualización de la factura 
 function showViewer(){
+  var tbl = document.getElementById("statusPopup");
+  tbl.style.opacity = "";
+  setTimeout(function(){
+      document.getElementById("statusPopup").style.display = "";
+  },300);
   var ele = document.getElementById("invViewer");
   ele.style.display = "block";
   setTimeout(function(){      
@@ -490,17 +503,19 @@ function init() {
         }
         desde.value = fechas[0].toISOString().split('T')[0];
         hasta.value =  fechas[1].toISOString().split('T')[0];
-        
+        document.getElementById("actPag").value = 1;
         loadInvoices();
     });
     desde.addEventListener('change',function(){
       document.getElementById("actPag").value = 1;
-      document.getElementById('periodoSelect').value="5";    
+      document.getElementById('periodoSelect').value="5";  
+      document.getElementById("actPag").value = 1;  
       loadInvoices();
     });
     hasta.addEventListener('change',function(){
       document.getElementById("actPag").value = 1;
       document.getElementById('periodoSelect').value="5";    
+      document.getElementById("actPag").value = 1;
       loadInvoices();
     });    
     document.getElementById('periodoSelect').dispatchEvent(new Event('change'));
@@ -520,7 +535,8 @@ function init() {
         hasta.removeAttribute("disabled","");
         period.removeAttribute("disabled","");
         search.removeAttribute("disabled","");
-      }
+        document.getElementById("actPag").value = 1;
+      }      
       loadInvoices();
     });
     var search = document.getElementById("mySearch");
@@ -553,6 +569,7 @@ function init() {
     });
     //Evento de la busqueda
     document.getElementById("mySearch").addEventListener("change",function(){
+      document.getElementById("actPag").value = 1;
       loadInvoices(this.value);
     });
 

@@ -1603,6 +1603,11 @@ function blankAll(){
 
   //Muestra el popup de visualización de la factura 
   function showViewer(){
+    var tbl = document.getElementById("statusPopup");
+    tbl.style.opacity = "";
+    setTimeout(function(){
+      document.getElementById("statusPopup").style.display = "";
+    },300);
     var ele = document.getElementById("invViewer");
     ele.style.display = "block";
     setTimeout(function(){      
@@ -1961,6 +1966,17 @@ function blankAll(){
     var id = rsp.header.id;    
     var sessid = getParameterByName("sessid");
     document.getElementById("viewIssueDate").innerText = rsp.header.issuedate.formatted;
+
+    if(rsp.header.sentdate.formatted)
+      document.getElementById("viewSentDate").innerText = rsp.header.sentdate.formatted;
+    else
+      document.getElementById("viewSentDate").innerText = "";
+
+    if(rsp.header.viewdate.formatted)
+      document.getElementById("viewReadDate").innerText = rsp.header.viewdate.formatted;
+    else
+      document.getElementById("viewReadDate").innerText = "";
+
     if(type=='FAC'){
       lblPrev = "Factura "+nro;
     }else if(type=='NCR'){
