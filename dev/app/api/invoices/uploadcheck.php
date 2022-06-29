@@ -18,6 +18,27 @@
             $invoices[]=$row["refnumber"];
         return $invoices;
     }
+    function duplicatedInvoices($customerid,$db){
+        $sql = "SELECT
+                H.refnumber,
+                COUNT(*) qty
+            FROM
+                loadinvoiceheader H
+            WHERE
+                customerid = $customerid
+            GROUP BY
+                H.refnumber
+            HAVING
+                COUNT(*) > 1";
+
+        if (!$rs=$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+
+        $invoices=array();
+        while ($row = $rs->fetch_assoc()) 
+            $invoices[]=$row["refnumber"];
+        return $invoices;
+    }
 
     function diffHeaderDetailTotals($customerid,$db){
         $sql=   "SELECT
@@ -40,7 +61,6 @@
             GROUP BY
                 H.refnumber,
                 H.total ";      
-    
 
         if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
@@ -485,8 +505,10 @@
     $diffHeaderDetailTotals=diffHeaderDetailTotals($customerid,$db);
     if (count($diffHeaderDetailTotals)>0 && $totalerrors==0)
         badEnd("400", array("msg"=>"Total encabezado de factura[s] difiere del total detalles. Facturas: ".implode(",",$diffHeaderDetailTotals).""));
-
-
+// Detectar facturas duplicadas
+    $duplicatedInvoices=duplicatedInvoices($customerid,$db);
+    if (count($duplicatedInvoices)>0 && $totalerrors==0)
+        badEnd("400", array("msg"=>"Hay documentos con numeración duplicada. Documentos: ".implode(",",$duplicatedInvoices).""));
 // Salida
   $out = new stdClass(); 
   $out->errors = $errors;
