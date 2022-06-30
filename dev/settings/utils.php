@@ -69,8 +69,8 @@ function isSessionValid($db, $sessionid,$data=array()){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
-    if (count)
-    insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']);
+    if (count(array())>0)
+        insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']);
     return($row["id"]);
 }
 function setAudit($db, $module, $sessionid, $dsc){
@@ -206,7 +206,7 @@ function isSessionValidCust($db, $sessionid){
     }
     return($row["id"]);
 }
-function isSessionValidCMS($db, $sessionid){
+function isSessionValidCMS($db, $sessionid,$data=array()){
     // Validar sessionid activo
     $sql =  "SELECT COUNT(*) cnt, min(id) id " .
             "FROM   users " .
@@ -223,6 +223,8 @@ function isSessionValidCMS($db, $sessionid){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
+    if (count(array())>0)
+        insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']." User: ".$row["id"]);
     return($row["id"]);
 }
 function avoidInjection($param,$type) {
