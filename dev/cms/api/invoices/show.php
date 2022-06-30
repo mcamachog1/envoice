@@ -24,7 +24,7 @@
     $customerid = $_GET["customerid"];
 
     // Validar user session
-    isSessionValidCMS($db,$sessionid);
+    isSessionValidCMS($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'show.php'));
 
 
     //Funcion para formatear el nro de control
