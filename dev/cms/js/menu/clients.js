@@ -658,7 +658,7 @@ function clearFormClient() {
   document.getElementById("innerFile").style.display = "none";
   document.getElementById("innerFileText").style.display = "inherit";
 }
-
+/*
 function isRIF(rif) {
   let re = /^[JGVEPM][-][0-9]{4,9}$/;
   //var re = /^[0-9]{4,9}$/;
@@ -668,6 +668,23 @@ function isRIF(rif) {
 function isPhone(phone) {
   let re = /^[(][0-9]{4}[)][0-9]{3}[-][0-9]{4}$/;
   return re.test(phone);
+}*/
+function isPhone(phone){
+  var re = /^[0-9]{4} [0-9]{7}$/;
+  return re.test(phone);
+}
+
+function isRIF(rif){
+  //var re = /^[JGVEPM][0-9]{4,9}$/;
+  //var re = /^[JG][-][0-9]{9}$/;
+  var re = /^[JG][0-9]{9}$/;
+  return re.test(rif);
+}
+function isCI(rif){
+  //var re = /^[JGVEPM][0-9]{4,9}$/;
+  //var re = /^[VEP][-][0-9]{4,9}$/;
+  var re = /^[VEP][0-9]{4,9}$/;
+  return re.test(rif);
 }
 
 function isEmail(email) {
@@ -785,7 +802,7 @@ function clientsUpdate() {
   let rifValid = isRIF(rif);
   if (!rifValid) {
     error = true;
-    inptError(document.getElementById("rifClient"),"Ingrese un RIF con el formato X-0000000");
+    inptError(document.getElementById("rifClient"),"Ingrese un RIF con el formato X000000000");
     /*
     showMsg(
       messageRifClient,
@@ -798,7 +815,7 @@ function clientsUpdate() {
   let tlfValid = isPhone(tlf);
   if (!tlfValid) {
     error = true;
-    inptError(document.getElementById("tlfClient"),"Ingrese un teléfono con el formato (0000)000-0000");
+    inptError(document.getElementById("tlfClient"),"Ingrese un teléfono con el formato 0414 0000000");
     /*
     showMsg(
       messageTlfClient,
@@ -1135,7 +1152,7 @@ function init() {
   
     // PAra las mask del tlf
   
-    document.getElementById("tlfClient").addEventListener("keypress",function(e){
+    document.getElementById("tlfClient").addEventListener("keyup",function(e){
       let tlf = document.getElementById("tlfClient").value;
       tlf = tlf.replaceAll("(","");
       tlf = tlf.replaceAll(")","");
@@ -1143,7 +1160,7 @@ function init() {
       let format = formatTlf(tlf);
       document.getElementById("tlfClient").value = format;
     })
-    document.getElementById("tlfClientAd").addEventListener("keypress",function(e){
+    document.getElementById("tlfClientAd").addEventListener("keyup",function(e){
       let tlf = document.getElementById("tlfClientAd").value;
       tlf = tlf.replaceAll("(","");
       tlf = tlf.replaceAll(")","");
@@ -1154,11 +1171,8 @@ function init() {
 
     // Para el mask del rif
 
-    document.getElementById("rifClient").addEventListener("keypress",function(e){
-      let rif = document.getElementById("rifClient").value;
-      rif = rif.replaceAll("-","");
-      let format = formatRif(rif);
-      document.getElementById("rifClient").value = format;
+    document.getElementById("rifClient").addEventListener("keyup",function(e){
+      this.value = formatRif(this.value);
     })
 
     // Para el num de serie 
