@@ -32,7 +32,7 @@ function badEndCsv($message){
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
- isSessionValidCMS($db, $_REQUEST["sessionid"]);
+  isSessionValidCMS($db,$sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'listcsv.php'));
 
 // Filter
   $filter="";

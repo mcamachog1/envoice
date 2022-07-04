@@ -131,7 +131,7 @@
         $status=$_REQUEST["status"];
         $sessionid=$_REQUEST["sessionid"];
         
-        $userid = isSessionValidCMS($db, $sessionid);
+        $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'update.php'));
         
         // Validar consistencia entre cantidad de series e initialcontrol
         if (!series_validate($serie,$control))

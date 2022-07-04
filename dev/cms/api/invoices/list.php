@@ -23,7 +23,7 @@
         badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));      
     
     // Validar user session
-    isSessionValidCMS($db,$sessionid);
+        isSessionValidCMS($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'list.php'));
 
     // Filter
     $filter="";

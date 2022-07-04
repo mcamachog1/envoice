@@ -28,7 +28,9 @@ $parmsob = array("sessionid");
 if (!parametrosValidos($_GET, $parmsob))
     badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar sesion
-$userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+$userid = isSessionValidCMS($db,$_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'getseniatusers.php'));
+
+
 
 
 // Salida
