@@ -19,7 +19,7 @@
         badEnd("400", array("msg"=>"Parametros obligatorios id, sessionid" ));
         
     // Validar user session
-    $customerid = isSessionValid($db,$sessionid);
+    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'update.php'));
 
     //Llenar variables
     $serie=avoidInjection($data->seriecontrol->serie,'str');

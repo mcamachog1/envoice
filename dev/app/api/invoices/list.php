@@ -20,7 +20,7 @@
 
     if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
         badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
-    // Validar user session
+    // Validar user session y enviar informacion de auditoria
     $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'list.php'));
     $filter="";
     // Filter

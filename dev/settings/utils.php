@@ -69,8 +69,9 @@ function isSessionValid($db, $sessionid,$data=array()){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
-    if (count)
-    insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']);
+    if (count($data)>0)
+        insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." Customer: ".$row["id"]);
+   
     return($row["id"]);
 }
 function setAudit($db, $module, $sessionid, $dsc){

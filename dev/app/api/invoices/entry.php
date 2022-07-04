@@ -16,7 +16,7 @@
             return false;
     }
 
-    // parametros obligatorios
+    // Parametros obligatorios
     $parmsob = array("id","sessionid");
     if (!parametrosValidos($_GET, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
@@ -24,7 +24,7 @@
     $id = $_GET["id"];
     $sessionid= $_GET["sessionid"];
 
-    // Validar user session
+    // Validar user session y enviar informacion de auditoria
     $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'entry.php'));
     
     // Si la factura no está asociada al cliente, salir

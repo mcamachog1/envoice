@@ -62,7 +62,7 @@
     $id = $_REQUEST["id"];
     $sessionid= $_REQUEST["sessionid"];
     // Validar user session
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
+    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'show.php'));
     if (exist_invoices($db,$customerid,$id)) {
         $out = new stdClass;
         

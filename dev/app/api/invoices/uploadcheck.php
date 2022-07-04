@@ -387,7 +387,7 @@
   if (!parametrosValidos($_REQUEST, $parmsob))
       badEnd("400", array("msg"=>"Parámetros obligatorios " . implode(", ", $parmsob)));
 // Validar user session
-  $customerid = isSessionValid($db,$_REQUEST["sessionid"]); 
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'uploadcheck.php'));
 
 // Borrar datos en caso que existan
   $sql = "DELETE FROM loadinvoiceheader ".

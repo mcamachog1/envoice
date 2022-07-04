@@ -14,7 +14,7 @@
         $row = $rs->fetch_assoc();
         return $row['status'];
     }   
-    function createSystemUser(){
+    function createSystemUser($db){
         $sql= "INSERT INTO `users`(
             `id`,
             `usr`,
@@ -43,21 +43,15 @@
                 -1,
                 CURRENT_TIMESTAMP
             )";
-    
-    
-    
-        
-    
-    
+
         if (!$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         return $db->insert_id;
     }
-    function existSystemUser(){
+    function existSystemUser($db){
         $sql= "SELECT COUNT(*) Cnt FROM `users` WHERE id=-1";
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        
         $row = $rs->fetch_assoc();
         if ($row['Cnt']!=0)
             return true;

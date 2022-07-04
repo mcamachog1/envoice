@@ -22,7 +22,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    $customerid=isSessionValid($db,$sessionid);
+      $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'sendcheck.php'));
 
     // Enviar todas las pendientes
     if (!isset($_GET["invoiceids"])){
