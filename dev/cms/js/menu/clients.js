@@ -171,17 +171,10 @@ function BCLoadClientsEntry(status, respText, view) {
       jsonResp = JSON.parse(respText).entry;
       if (view == "consulta") {
         console.log("jsonResp:", jsonResp);
-        document.getElementById(
-          "razonSocialClientDetail"
-        ).innerHTML = `<b>${jsonResp.name}</b>`;
-        document.getElementById("rifClientDetail").innerHTML = formatRif(
-          jsonResp.rif
-        );
-        document.getElementById("direccionFiscalClientDetail").innerHTML =
-          jsonResp.address;
-        document.getElementById("tlfClientDetail").innerHTML = formatTlf(
-          jsonResp.phone
-        );
+        document.getElementById("razonSocialClientDetail").innerHTML = `<b>${jsonResp.name}</b>`;
+        document.getElementById("rifClientDetail").innerHTML = formatRif(jsonResp.rif);
+        document.getElementById("direccionFiscalClientDetail").innerHTML = jsonResp.address;
+        document.getElementById("tlfClientDetail").innerHTML = formatTlf(jsonResp.phone);
         document.getElementById(
           "contactoClientDetail"
         ).innerHTML = `<b>${jsonResp.contact.name}</b>`;
@@ -202,6 +195,7 @@ function BCLoadClientsEntry(status, respText, view) {
         document.getElementById("rifClient").value = formatRif(jsonResp.rif);
         document.getElementById("direccionFiscalClient").value = jsonResp.address;
         document.getElementById("tlfClient").value = formatTlf(jsonResp.phone);
+        document.getElementById("tlfClientAd").value = formatTlf(jsonResp.phone);
         /*
         document.getElementById("serieClient").value = jsonResp.seniat.serie;
         document.getElementById("numSeniatClient").value = jsonResp.seniat.control.initial;
@@ -620,6 +614,8 @@ function clearFormClient() {
   removeErr(document.getElementById("direccionFiscalClient"));
   document.getElementById("tlfClient").value = "";
   removeErr(document.getElementById("tlfClient"));
+  document.getElementById("tlfClientAd").value = "";
+  removeErr(document.getElementById("tlfClientAd"));
   document.getElementById("contactoClient").value = "";
   removeErr(document.getElementById("contactoClient"));
   document.getElementById("emailClient").value = "";
@@ -793,6 +789,7 @@ function clientsUpdate() {
     removeErr(document.getElementById("rifClient")); 
     removeErr(document.getElementById("direccionFiscalClient"));
     removeErr(document.getElementById("tlfClient"));
+    removeErr(document.getElementById("tlfClientAd"));
     removeErr(document.getElementById("contactoClient"));
     removeErr(document.getElementById("emailClient"));
     removeErr(document.getElementById("btnMessageGeneral"));
@@ -837,6 +834,21 @@ function clientsUpdate() {
     );*/
   }
 
+  // validamos el telefono
+  var tlfOp = document.getElementById("tlfClientAd").value;
+  if(tlfOp!==""){
+    let tlfOpValid = isPhone(tlfOp);
+    if (!tlfOpValid) {
+      error = true;
+      inptError(document.getElementById("tlfClientAd"),"Ingrese un teléfono con el formato 0414 0000000");
+      /*
+      showMsg(
+        messageTlfClient,
+        "Ingrese un teléfono con el formato (0000)000-0000",
+        "tlfClient"
+      );*/
+    }
+  }
   if (error) {
     //msg = document.getElementById("btnMessageGeneral");
     //inptError(document.getElementById("stdbtnSubmit"),"Debe completar todos los campos requeridos en ambas pestañas");
