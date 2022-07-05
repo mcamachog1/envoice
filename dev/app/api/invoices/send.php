@@ -6,7 +6,7 @@
     include("../../../settings/utils.php");
     require '../../../hooks/PHPMailer5/PHPMailerAutoload.php';
     date_default_timezone_set('Etc/UTC');    
-    include("functions.php");
+
 
     // Update status 
     function updateStatus($invoices,$customerid,$db){
