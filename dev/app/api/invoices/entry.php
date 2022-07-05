@@ -25,7 +25,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
+    $customerid = $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'app','module'=>'invoices','dsc'=>'entry.php'));
     
     // Si la factura no está asociada al cliente, salir
     if (!exist_invoices($db,$customerid,$id)) {
@@ -135,8 +135,8 @@
         $record->amounts->discount->percentage = $row["discount"]."%";
 
         $record->amounts->total = new stdClass(); 
-        $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount_percentage"]/100) + (float)$row["tax"];
-        $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount_percentage"]/100) + (float)$row["tax"], 2, ",", ".");        
+        $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
+        $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");        
     }
     // Details
     $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, ".

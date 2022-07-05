@@ -27,7 +27,7 @@ function dlookup($db, $campo, $tabla, $where){
         return(null);
     }
 }
-function isSessionValid($db, $sessionid){
+function isSessionValid($db, $sessionid,$data=array()){
     // Validar sessionid activo
     $sql =  "SELECT COUNT(*) cnt, min(id) id " .
             "FROM   customers " .

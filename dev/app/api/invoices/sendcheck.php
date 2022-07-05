@@ -4,7 +4,7 @@
     header("Content-Type:application/json");
     include("../../../settings/dbconn.php");
     include("../../../settings/utils.php");
-    include("functions.php");
+
  
 
      
