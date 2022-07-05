@@ -28,8 +28,7 @@
  
     else $filter="";        
    
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
-
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'list.php'));    
 
     // order
     $strorderby="";

@@ -132,6 +132,7 @@
     $usr = strtolower($_REQUEST["usr"]);
     $pwd = $_REQUEST["pwd"];
 
+   
     $username = validateEmail($usr,$db);
 
     //print_r(validatePassw($usr,$pwd,$db));

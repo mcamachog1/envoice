@@ -27,7 +27,7 @@
     $customerid = $_GET["customerid"];
 
     // Validar user session
-    validSession($sessionid,$db);
+    validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'entry.php'));    
 
     
     // Si la factura no está asociada al cliente, salir

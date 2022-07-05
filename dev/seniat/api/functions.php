@@ -83,7 +83,7 @@
         }        
     }     
     
-    function validSession($sessionid,$db){
+    function validSession($db,$sessionid,$data=array()){
         // Existe la sesion?
         $sql= "SELECT COUNT(*) AS Cnt FROM preferences WHERE value='$sessionid' AND name LIKE '%@%.%_session'";
         if (!$rs=$db->query($sql))
@@ -107,11 +107,14 @@
             // No hay sesi��n vigente, mensaje de error
             if ($row['Cnt']==0)
                 badEnd("400", array("msg"=>"Sesi��n expirada o incorrecta"));
-            // Hay sesion vigente retornar email
+            // Hay sesion vigente guardar auditoria y retornar email
+            if (count($data)>0)
+                insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." seniatUser: ".$row["id"]);
+    
             return $email;
         }
             
-        // Si no existe mensaje de error
+        // Si no existe, enviar  mensaje de error
         elseif ($row['Cnt']==0)
             badEnd("400", array("msg"=>"Sesi��n expirada o incorrecta"));
     }    

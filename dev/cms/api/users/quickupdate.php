@@ -20,7 +20,7 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'quickupdate.php'));    
     
     $id = $_REQUEST["id"];
     $status = $_REQUEST["status"];    

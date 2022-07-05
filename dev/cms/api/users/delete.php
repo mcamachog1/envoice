@@ -9,7 +9,8 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
     
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'delete.php'));    
+    
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM users WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))

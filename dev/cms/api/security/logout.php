@@ -12,6 +12,7 @@
     
     //definimos las variables y las rellenamos con los datos recibidos del GET
     $sessionid = $_GET["sessionid"];
+    isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'security','dsc'=>'logout.php'));    
     
     // actualizamos la base de datos blanqueando la session id y estableciendo el validthru null
     $sql =  "UPDATE users " .

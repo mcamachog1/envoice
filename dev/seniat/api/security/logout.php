@@ -6,7 +6,7 @@
 
 
     function logoutUser($sessionid,$db){
-        $email=validSession($sessionid,$db);
+        $email=validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'security','dsc'=>'logout.php'));    
         $name_session = $email."_session";
         $name_validthru = $email."_validthru"; 
         $name_fails = $email."_fails";           
