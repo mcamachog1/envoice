@@ -11,6 +11,7 @@
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
  
     // parametros opcionales
+    $filter = "";
     if (isset($_REQUEST["filter"])){
         $filtro = explode("+",$_REQUEST["filter"]);
         for ($i=0; $i<sizeof($filtro); $i++){
@@ -26,7 +27,7 @@
             $filter .= ") ";
         }
     }
-    else $filter="";        
+        
    
     $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
 
