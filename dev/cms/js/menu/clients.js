@@ -171,17 +171,10 @@ function BCLoadClientsEntry(status, respText, view) {
       jsonResp = JSON.parse(respText).entry;
       if (view == "consulta") {
         console.log("jsonResp:", jsonResp);
-        document.getElementById(
-          "razonSocialClientDetail"
-        ).innerHTML = `<b>${jsonResp.name}</b>`;
-        document.getElementById("rifClientDetail").innerHTML = formatRif(
-          jsonResp.rif
-        );
-        document.getElementById("direccionFiscalClientDetail").innerHTML =
-          jsonResp.address;
-        document.getElementById("tlfClientDetail").innerHTML = formatTlf(
-          jsonResp.phone
-        );
+        document.getElementById("razonSocialClientDetail").innerHTML = `<b>${jsonResp.name}</b>`;
+        document.getElementById("rifClientDetail").innerHTML = formatRif(jsonResp.rif);
+        document.getElementById("direccionFiscalClientDetail").innerHTML = jsonResp.address;
+        document.getElementById("tlfClientDetail").innerHTML = formatTlf(jsonResp.phone);
         document.getElementById(
           "contactoClientDetail"
         ).innerHTML = `<b>${jsonResp.contact.name}</b>`;
@@ -202,6 +195,7 @@ function BCLoadClientsEntry(status, respText, view) {
         document.getElementById("rifClient").value = formatRif(jsonResp.rif);
         document.getElementById("direccionFiscalClient").value = jsonResp.address;
         document.getElementById("tlfClient").value = formatTlf(jsonResp.phone);
+        document.getElementById("tlfClientAd").value = formatTlf(jsonResp.phone);
         /*
         document.getElementById("serieClient").value = jsonResp.seniat.serie;
         document.getElementById("numSeniatClient").value = jsonResp.seniat.control.initial;
@@ -620,6 +614,8 @@ function clearFormClient() {
   removeErr(document.getElementById("direccionFiscalClient"));
   document.getElementById("tlfClient").value = "";
   removeErr(document.getElementById("tlfClient"));
+  document.getElementById("tlfClientAd").value = "";
+  removeErr(document.getElementById("tlfClientAd"));
   document.getElementById("contactoClient").value = "";
   removeErr(document.getElementById("contactoClient"));
   document.getElementById("emailClient").value = "";
@@ -658,7 +654,7 @@ function clearFormClient() {
   document.getElementById("innerFile").style.display = "none";
   document.getElementById("innerFileText").style.display = "inherit";
 }
-
+/*
 function isRIF(rif) {
   let re = /^[JGVEPM][-][0-9]{4,9}$/;
   //var re = /^[0-9]{4,9}$/;
@@ -668,6 +664,23 @@ function isRIF(rif) {
 function isPhone(phone) {
   let re = /^[(][0-9]{4}[)][0-9]{3}[-][0-9]{4}$/;
   return re.test(phone);
+}*/
+function isPhone(phone){
+  var re = /^[0-9]{4} [0-9]{7}$/;
+  return re.test(phone);
+}
+
+function isRIF(rif){
+  //var re = /^[JGVEPM][0-9]{4,9}$/;
+  //var re = /^[JG][-][0-9]{9}$/;
+  var re = /^[JG][0-9]{9}$/;
+  return re.test(rif);
+}
+function isCI(rif){
+  //var re = /^[JGVEPM][0-9]{4,9}$/;
+  //var re = /^[VEP][-][0-9]{4,9}$/;
+  var re = /^[VEP][0-9]{4,9}$/;
+  return re.test(rif);
 }
 
 function isEmail(email) {
@@ -776,6 +789,7 @@ function clientsUpdate() {
     removeErr(document.getElementById("rifClient")); 
     removeErr(document.getElementById("direccionFiscalClient"));
     removeErr(document.getElementById("tlfClient"));
+    removeErr(document.getElementById("tlfClientAd"));
     removeErr(document.getElementById("contactoClient"));
     removeErr(document.getElementById("emailClient"));
     removeErr(document.getElementById("btnMessageGeneral"));
@@ -785,7 +799,7 @@ function clientsUpdate() {
   let rifValid = isRIF(rif);
   if (!rifValid) {
     error = true;
-    inptError(document.getElementById("rifClient"),"Ingrese un RIF con el formato X-0000000");
+    inptError(document.getElementById("rifClient"),"Ingrese un RIF con el formato X000000000");
     /*
     showMsg(
       messageRifClient,
@@ -798,7 +812,7 @@ function clientsUpdate() {
   let tlfValid = isPhone(tlf);
   if (!tlfValid) {
     error = true;
-    inptError(document.getElementById("tlfClient"),"Ingrese un teléfono con el formato (0000)000-0000");
+    inptError(document.getElementById("tlfClient"),"Ingrese un teléfono con el formato 0414 0000000");
     /*
     showMsg(
       messageTlfClient,
@@ -820,6 +834,21 @@ function clientsUpdate() {
     );*/
   }
 
+  // validamos el telefono
+  var tlfOp = document.getElementById("tlfClientAd").value;
+  if(tlfOp!==""){
+    let tlfOpValid = isPhone(tlfOp);
+    if (!tlfOpValid) {
+      error = true;
+      inptError(document.getElementById("tlfClientAd"),"Ingrese un teléfono con el formato 0414 0000000");
+      /*
+      showMsg(
+        messageTlfClient,
+        "Ingrese un teléfono con el formato (0000)000-0000",
+        "tlfClient"
+      );*/
+    }
+  }
   if (error) {
     //msg = document.getElementById("btnMessageGeneral");
     //inptError(document.getElementById("stdbtnSubmit"),"Debe completar todos los campos requeridos en ambas pestañas");
@@ -1135,7 +1164,7 @@ function init() {
   
     // PAra las mask del tlf
   
-    document.getElementById("tlfClient").addEventListener("keypress",function(e){
+    document.getElementById("tlfClient").addEventListener("keyup",function(e){
       let tlf = document.getElementById("tlfClient").value;
       tlf = tlf.replaceAll("(","");
       tlf = tlf.replaceAll(")","");
@@ -1143,7 +1172,7 @@ function init() {
       let format = formatTlf(tlf);
       document.getElementById("tlfClient").value = format;
     })
-    document.getElementById("tlfClientAd").addEventListener("keypress",function(e){
+    document.getElementById("tlfClientAd").addEventListener("keyup",function(e){
       let tlf = document.getElementById("tlfClientAd").value;
       tlf = tlf.replaceAll("(","");
       tlf = tlf.replaceAll(")","");
@@ -1154,11 +1183,8 @@ function init() {
 
     // Para el mask del rif
 
-    document.getElementById("rifClient").addEventListener("keypress",function(e){
-      let rif = document.getElementById("rifClient").value;
-      rif = rif.replaceAll("-","");
-      let format = formatRif(rif);
-      document.getElementById("rifClient").value = format;
+    document.getElementById("rifClient").addEventListener("keyup",function(e){
+      this.value = formatRif(this.value);
     })
 
     // Para el num de serie 
