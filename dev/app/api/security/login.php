@@ -87,6 +87,8 @@
     $out->validthru = $vt;
     $out->name = $name;
  
+    //insertAudit($db,$out->id,$ip,'APP','security',"Inició sesión en DaycoPrint: $ip");
+
     header("HTTP/1.1 200");
     echo (json_encode($out));
     die();

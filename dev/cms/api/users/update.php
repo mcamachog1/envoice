@@ -63,7 +63,10 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar sesion
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'update.php'));    
+  if ($id==0)
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Crear usuario.'));    
+  else
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Actualizar usuario.'));    
     
 // Crear usuario del Sistema para auditoria si no existe
     if (!existSystemUser($db))

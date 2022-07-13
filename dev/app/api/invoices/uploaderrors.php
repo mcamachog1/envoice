@@ -11,7 +11,7 @@
   if (!parametrosValidos($_REQUEST, $parmsob))
       badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar user session
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'uploaderrors.php'));
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Consulta de errores carga masiva de facturas'));
 
 
 

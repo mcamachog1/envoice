@@ -8,6 +8,13 @@
     function existsInvoice($ctrref,$db){
         return true;
     }
+    function isUniqueInvoice($customerid,$type,$ctrref,$ctrnumber,$db){
+        $sql = "SELECT customerid,type,ctrref,ctrnumber ".
+        "       FROM invoiceheader ".
+        "       WHERE   ".
+        "       customerid=$customerid AND type=$type AND (ctrref=$ctrref OR ctrnumber=$ctrnumber)";
+        return true;        
+    }
 
     //Recibir JSON y convertir a objeto
     $data = json_decode(file_get_contents('php://input'), false);
@@ -18,9 +25,12 @@
     if (is_null($id) || is_null($sessionid))
         badEnd("400", array("msg"=>"Parametros obligatorios id, sessionid" ));
         
-    // Validar user session
-    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'update.php'));
-
+    // Validar user session y grabar auditoria
+    if ($id==0)
+        $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Se creÃ³ un cliente'));
+    else
+        $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Se actualizÃ³ un cliente'));
+        
     //Llenar variables
     $serie=avoidInjection($data->seriecontrol->serie,'str');
     if (strlen($serie)==0)
@@ -73,7 +83,8 @@
         $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
         if (!$db->query($update)) 
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
-        
+        if (!isUniqueInvoice($customerid,$type,$ctrref,$ctrnumber,$db))
+            badEnd("400", array("msg"=>"El documento $ctrnumber ya existe o el numero de control $ctrnumber ya est¨¢ asignado a otro documento"));
         // SQL del Insert
         $sql="INSERT INTO `invoiceheader` (`id`, `type`,`customerid`, `issuedate`, `duedate`, `refnumber`, `ctrnumber`,`ctrref`, `clientrif`, " .
             " `clientname`, `clientaddress`, `mobilephone`, `otherphone`, " .

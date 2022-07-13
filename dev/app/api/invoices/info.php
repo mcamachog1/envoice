@@ -30,7 +30,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'info.php'));
+    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>"Se consultó serie y numero de control del cliente $customerid"));
 
     // Salida
     $out = new stdClass;    

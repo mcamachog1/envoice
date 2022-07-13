@@ -62,7 +62,7 @@
     $id = $_REQUEST["id"];
     $sessionid= $_REQUEST["sessionid"];
     // Validar user session
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'show.php'));
+    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Pre-visualizar factura'));
     if (exist_invoices($db,$customerid,$id)) {
         $out = new stdClass;
         
@@ -204,7 +204,7 @@
         }
         $record->details = [];
         // Details
-        $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, ".
+        $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, unit, ".
         " itemtax tax, itemdiscount discount, ".
         //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
         " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
@@ -221,6 +221,7 @@
             $detail->qty =new stdClass();
             $detail->qty->number = (integer)$row["qty"];
             $detail->qty->formatted = $row["qty"];   
+            $detail->item->unit = $row["unit"];
             $detail->unitprice =new stdClass();
             $detail->unitprice->number = (float)$row["unitprice"];
             $detail->unitprice->formatted = $row["unitprice"]; 

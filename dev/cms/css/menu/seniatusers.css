@@ -4,8 +4,8 @@
       box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.5);
   }
   .subMenu{
-    box-shadow: 0px -6px 10px 0 #5eb746, 0px 6px 10px 0 rgb(0 0 0 / 50%);
-  }
+  box-shadow: 0px -10px 10px -6px #5eb746, 0px 6px 10px 0 rgb(0 0 0 / 50%);
+}
   .headerCon{
       display: table;
       width: 100%;

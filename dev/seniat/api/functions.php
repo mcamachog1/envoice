@@ -72,9 +72,12 @@
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         }
         // Actualizar fails
+        $sql ="UPDATE preferences SET value= NULL WHERE name='$name_fails'";
+        if (!$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         $sql ="UPDATE preferences SET value= 0 WHERE name='$name_fails'";
         if (!$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>6));
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         // Si no existe el registro fails, se crea
         if ($db->affected_rows==0){
             $sql ="INSERT INTO preferences (name, value) VALUES ('$name_fails',0)";
@@ -97,7 +100,8 @@
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
             $row = $rs->fetch_assoc();        
             $name_session = $row['name']; 
-            $email = getEmail($row['name']);
+            $pos = strrpos($row['name'],"_");
+            $email = substr($row['name'],0,$pos);                 
             // Buscar registro v��lido con sesion vigente
             $name_validthru = $email."_validthru";
             $sql= "SELECT COUNT(*) Cnt FROM preferences WHERE name='$name_validthru' AND value > NOW()" ;
@@ -109,7 +113,7 @@
                 badEnd("400", array("msg"=>"Sesi��n expirada o incorrecta"));
             // Hay sesion vigente guardar auditoria y retornar email
             if (count($data)>0)
-                insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." seniatUser: ".$row["id"]);
+                insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." - SeniatUser:".getEmail($sessionid,$data['app'],$db));
     
             return $email;
         }
@@ -119,11 +123,5 @@
             badEnd("400", array("msg"=>"Sesi��n expirada o incorrecta"));
     }    
     
-    function getEmail($name){
-        $pos = strrpos($name,"_");
-        return strtolower(substr($name,0,$pos));
-    }
-    
-            
-        
+
 ?>

@@ -377,17 +377,17 @@ function downloadReport(){
 
         celda = document.createElement("th");
         celda.classList.add("thMount","cell7Mid");
-        celda.innerHTML = "Monto";
+        celda.innerHTML = "Monto (VES)";
         line.appendChild(celda);
         
         celda = document.createElement("th");
         celda.classList.add("thImpto","cell7Mid");
-        celda.innerHTML = "IVA";
+        celda.innerHTML = "IVA (VES)";
         line.appendChild(celda);
 
         celda = document.createElement("th");
         celda.classList.add("thTotal","cell7Mid");
-        celda.innerHTML = "Total";
+        celda.innerHTML = "Total (VES)";
         line.appendChild(celda);
 
         celda = document.createElement("th");
@@ -1136,6 +1136,8 @@ function downloadReport(){
       if(isEmpty(details[i].getElementsByClassName("inptDsc")[0],"Ingrese una descripción") && !falta)falta = true;
       detail.qty = parseFloat(valueByClass("inptQty",details[i]));
       if(isEmpty(details[i].getElementsByClassName("inptQty")[0],"Ingrese una cantidad") && !falta)falta = true;
+      detail.unit = valueByClass("inptUnit",details[i]);
+      if(isEmpty(details[i].getElementsByClassName("inptUnit")[0],"Ingrese una unidad") && !falta)falta = true;
       detail.unitprice = parseFloat(details[i].getElementsByClassName("inptPrice")[0].getAttribute("datanumber"));
       if(isEmpty(details[i].getElementsByClassName("inptPrice")[0],"Ingrese un precio") && !falta)falta = true;
       var tax = details[i].getElementsByClassName("inptIVA")[0].getAttribute("datanumber");
@@ -1316,6 +1318,7 @@ function downloadReport(){
       setValueByClass("inptRef",details[i].item.ref,itemLine);
       setValueByClass("inptDsc",details[i].item.dsc,itemLine);
       setValueByClass("inptQty",details[i].qty.formatted,itemLine,{'datanumber':details[i].qty.number});
+      setValueByClass("inptUnit",details[i].unit,itemLine);
       setValueByClass("inptPrice",details[i].unitprice.formatted,itemLine,{'datanumber':details[i].unitprice.number});
       setValueByClass("inptIVA",details[i].tax.formatted,itemLine,{'datanumber':(details[i].tax.number*100)});
       setValueByClass("inptDisc",details[i].discount.formatted,itemLine,{'datanumber':(details[i].discount.number*100)});

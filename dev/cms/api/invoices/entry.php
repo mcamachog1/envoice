@@ -27,7 +27,7 @@
     $customerid = $_GET["customerid"];
 
     // Validar user session
-    isSessionValidCMS($db,$sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'entry.php'));
+    isSessionValidCMS($db,$sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'Consultar factura.'));
 
     
     // Si la factura no está asociada al cliente, salir

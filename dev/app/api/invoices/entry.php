@@ -25,7 +25,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session y enviar informacion de auditoria
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'entry.php'));
+    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Ver una factura'));
     
     // Si la factura no está asociada al cliente, salir
     if (!exist_invoices($db,$customerid,$id)) {

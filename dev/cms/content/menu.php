@@ -12,7 +12,7 @@
         <div class="itemMenu itemSubMenuReady" id="config">
             <b>Configuración</b>
             <div class="subMenu">
-                <a class="itemMenu itemMenuReady" >Auditoría</a>
+                <a class="itemMenu itemMenuReady" id="audit">Auditoría</a>
                 <a class="itemMenu itemMenuReady" id="seniatusers">Usuarios SENIAT</a>
             </div>
         </div>

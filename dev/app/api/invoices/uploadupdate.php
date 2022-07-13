@@ -11,7 +11,7 @@
   if (!parametrosValidos($_REQUEST, $parmsob))
       badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar usersession
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'uploadupdate.php')); 
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Carga de facturas masivas')); 
 
 // Obtener la serie del lote
   $sql = "SELECT serie FROM loadinvoiceheader  WHERE customerid=$customerid LIMIT 1 ";

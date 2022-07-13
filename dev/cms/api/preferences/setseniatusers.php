@@ -102,7 +102,7 @@ $parmsob = array("usernames","emails","sessionid");
 if (!parametrosValidos($_GET, $parmsob))
     badEnd("400", array("msg"=>"Parámetros obligatorios " . implode(", ", $parmsob)));
 // Validar sesion
-    $userid = isSessionValidCMS($db,$_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'setseniatusers.php'));
+    $userid = isSessionValidCMS($db,$_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'Actualizar usuarios SENIAT.'));
 // Revisar parametros
 $users = avoidInjection($_GET["usernames"],'list');
 $emails = avoidInjection($_GET["emails"],'list');

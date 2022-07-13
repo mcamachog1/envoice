@@ -11,7 +11,7 @@
     }
     
     $sessionid = $_GET["sessionid"];
-    isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'security','dsc'=>'logout.php'));        
+    isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'security','dsc'=>'Salir de la APP'));        
     
     // actualizamos la base de datos blanqueando la session id y estableciendo el validthru null
     $sql =  "UPDATE customers " .

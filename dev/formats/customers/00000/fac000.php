@@ -358,14 +358,17 @@
                     <div class="itemHead cell20" style="border-left:none">
                         Ref.
                     </div>
-                    <div class="itemHead cell30">
+                    <div class="itemHead cell25">
                         Descripción
                     </div>                    
-                    <div class="itemHead cell10 centerText">
+                    <div class="itemHead cell7Mid centerText">
                         IVA %
                     </div>
                     <div class="itemHead cell7Mid itemHdNum">
                         Cant.
+                    </div>
+                    <div class="itemHead cell7Mid">
+                        Unit.
                     </div>
                     <div class="itemHead cell10 itemHdNum">
                         Precio
@@ -385,14 +388,17 @@
                                 <div class="itemsDet cell20" style="border-left:none">
                                     '.$record->details[$i]->item->ref.'
                                 </div>
-                                <div class="itemsDet cell30">
+                                <div class="itemsDet cell25">
                                 '.$record->details[$i]->item->dsc.'
                                 </div>                    
-                                <div class="itemsDet cell10 centerText">
+                                <div class="itemsDet cell7Mid centerText">
                                 '.$record->details[$i]->tax->formatted.'
                                 </div>
                                 <div class="itemsDet cell7Mid itemHdNum">
                                 '.$record->details[$i]->qty->formatted.'
+                                </div>
+                                <div class="itemsDet cell7Mid itemHdNum">
+                                '.$record->details[$i]->unit.'
                                 </div>
                                 <div class="itemsDet cell10 itemHdNum">
                                 '.$record->details[$i]->unitprice->formatted.'

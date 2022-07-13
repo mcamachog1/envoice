@@ -12,9 +12,12 @@
         $name_fails = $email."_fails";        
         $sessid = randomString(32);        
         // Actualizar session
+        $sql ="UPDATE preferences SET value= NULL WHERE LOWER(name)='$name_session'";
+        if (!$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));          
         $sql ="UPDATE preferences SET value='$sessid' WHERE LOWER(name)='$name_session'";
         if (!$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));            
         // Si no existe el registro session, se crea
         if ($db->affected_rows==0){
             $sql ="INSERT INTO preferences (name, value) VALUES ('$name_session','$sessid')";
@@ -35,7 +38,7 @@
         $sql ="UPDATE preferences SET value= 0 WHERE LOWER(name)='$name_fails'";
         if (!$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        // Si no existe el registro validthru, se crea
+        // Si no existe el registro fails, se crea
         if ($db->affected_rows==0 && getNumOfFails($email,$db)!=0){
             $sql ="INSERT INTO preferences (name, value) VALUES ('$name_fails',0)";
             if (!$db->query($sql))

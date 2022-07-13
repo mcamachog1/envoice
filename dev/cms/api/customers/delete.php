@@ -8,8 +8,8 @@
     $parmsob = array("id","sessionid");
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
-    
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'delete.php'));
+    // Validar session y guardar auditoría
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Eliminar cliente Dayco'));
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM customers WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))

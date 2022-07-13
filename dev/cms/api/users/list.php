@@ -28,7 +28,7 @@
  
     else $filter="";        
    
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'list.php'));    
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Listar usuarios.'));    
 
     // order
     $strorderby="";
@@ -54,7 +54,7 @@
 
     
     $sql =  "SELECT     U.id, U.usr, U.name, U.status " .
-            "FROM       users U " ;
+            "FROM       users U  WHERE U.id <> -1" ;
 
     if (strlen($filter)>0)
         $sql= $sql." WHERE ".$filter." ";

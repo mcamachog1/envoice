@@ -10,7 +10,7 @@
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
     
     $ids=avoidInjection($_REQUEST["id"],'dashes');   
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'delete.php'));
+    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Eliminar una factura'));
     // Validar que existe algun registro
     $sql="SELECT COUNT(*) Cnt FROM invoiceheader WHERE id IN ($ids) AND customerid=$customerid";
     if (!$rs=$db->query($sql))

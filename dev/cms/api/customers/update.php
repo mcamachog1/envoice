@@ -131,7 +131,10 @@
         $status=$_REQUEST["status"];
         $sessionid=$_REQUEST["sessionid"];
         
-        $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'update.php'));
+        if ($id==0)
+            $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Crear cliente Dayco'));
+        else
+            $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Actualizar cliente Dayco'));
         
         // Validar consistencia entre cantidad de series e initialcontrol
         if (!series_validate($serie,$control))

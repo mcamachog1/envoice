@@ -25,7 +25,7 @@
     $customerid = $_GET["customerid"];
 
     // Validar user session
-    validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'show.php'));    
+    validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'Pre-visualizar factura.'));    
 
 
     //Funcion para formatear el nro de control
@@ -208,7 +208,7 @@
         }
         $record->details = [];
         // Details
-        $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, ".
+        $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, unit, ".
         " itemtax tax, itemdiscount discount, ".
         //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
         " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
@@ -225,6 +225,7 @@
             $detail->qty =new stdClass();
             $detail->qty->number = (integer)$row["qty"];
             $detail->qty->formatted = $row["qty"];   
+            $detail->item->unit = $row["unit"];
             $detail->unitprice =new stdClass();
             $detail->unitprice->number = (float)$row["unitprice"];
             $detail->unitprice->formatted = $row["unitprice"]; 

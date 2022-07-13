@@ -122,7 +122,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'send.php'));
+    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Enviar facturas por correo'));
 
     
     // Enviar todas las pendientes

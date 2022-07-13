@@ -180,7 +180,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">Monto</div>
+                                    <div class="">Monto (VES)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -188,7 +188,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">IVA</div>
+                                    <div class="">IVA (VES)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -196,7 +196,7 @@
                             </div>
                             <div class="detLine">
                                 <div class="despLblCell">
-                                    <div class="">Total</div>
+                                    <div class="">Total (VES)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -391,40 +391,43 @@
         <div class="invoiceTbl">
             <div class="tblItems">
                 <div class="itemsTblHead">
-                    <div class="itemHead cell25">
+                    <div class="itemHead cell20">
                         Ref
                     </div>
-                    <div class="itemHead cell30">
+                    <div class="itemHead cell25">
                         Descripción
-                    </div>                    
+                    </div>                  
                     <div class="itemHead cell7Mid itemHdNum">
                         IVA %
                     </div>
                     <div class="itemHead cell10 itemHdNum">
-                        Cant.
-                    </div>
+                        Cant. (VES)
+                    </div>                    
+                    <div class="itemHead cell10">
+                        Unit.
+                    </div>  
                     <div class="itemHead cell10 itemHdNum">
-                        Precio
+                        Precio (VES)
                     </div>
                     <div class="itemHead cell7Mid itemHdNum">
                         Desc. %
                     </div>
                     <div class="itemHead cell10 itemHdNum">
-                        Total
+                        Total (VES)
                     </div>
                 </div>
                 <div class="itemsListCnt" style="border-bottom: 1px solid #D7D7D7;padding-bottom: 3px;">
                     <div class="itemsRow">
-                        <div class="itemCell cell25">
+                        <div class="itemCell cell20">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptRef" placeholder="0000000000" id="inptAddRef" type="number"/>
                             </div>
                         </div>
-                        <div class="itemCell cell30">
+                        <div class="itemCell cell25">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptDsc" placeholder="Descripción…" id="inptAddDsc" type="text" />
                             </div>
-                        </div>                        
+                        </div>                     
                         <div class="itemCell cell7Mid">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptNum inptIVA" placeholder="0,00" id="inptAddTax" type="text"/>
@@ -434,7 +437,12 @@
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptNum inptQty" id="inptAddQty" placeholder="0" type="number"/>
                             </div>
-                        </div>
+                        </div>                        
+                        <div class="itemCell cell10">
+                            <div class="inptFrmCnt">
+                                <input class="inptFrm inptUnit" id="inptAddUnit" placeholder="" type="text"/>
+                            </div>
+                        </div>   
                         <div class="itemCell cell10">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptNum inptPrice" id="inptAddPrice" placeholder="0,00" type="text"/>

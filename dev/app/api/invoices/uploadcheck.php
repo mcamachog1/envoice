@@ -74,6 +74,7 @@
     function validateFields($line,$type){
         $err = 0;
         $errmsg = "";
+
         if ($type =='D') {
             // Validar numero de campos     
             $maxfields=7;
@@ -292,7 +293,8 @@
         elseif ($type=='T') {
 
             if (substr($line[0],-1) != 'T') {
-                badEnd("400", array("msg"=>"Se espera línea de TOTALES en la primera fila. "));
+                echo $line;
+                badEnd("400", array("data"=>$line,"msg"=>"Se espera línea de TOTALES en la primera fila.297 "));
             }
        
             // Validar numero de campos 
@@ -387,7 +389,7 @@
   if (!parametrosValidos($_REQUEST, $parmsob))
       badEnd("400", array("msg"=>"Parámetros obligatorios " . implode(", ", $parmsob)));
 // Validar user session
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'uploadcheck.php'));
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Validación carga masiva de facturas'));
 
 // Borrar datos en caso que existan
   $sql = "DELETE FROM loadinvoiceheader ".
@@ -411,6 +413,11 @@
 
   while (($getLine = fgetcsv($handle , 10000, ",")) !== FALSE){
     $counter++;
+    // Quitar espacios y tabs al final de la linea
+    $size = count($getLine);
+    for ($x=0;$x<$size;$x++) {
+      $getLine[$x] = rtrim($getLine[$x]);
+    }    
     // Es Total
     if ($counter==1) {
         $line = validateFields($getLine,'T');
