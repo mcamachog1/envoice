@@ -6,7 +6,7 @@
 
   
     function existsReferenceInvoice($ctrref,$db){
-        $sql = "SELECT ctrref FROM `invoiceheader` WHERE ctrref = '$ctrref' LIMIT 1";
+        $sql = "SELECT ctrnumber FROM `invoiceheader` WHERE ctrnumber = '$ctrref' LIMIT 1";
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
         if (!$row = $rs->fetch_assoc())
@@ -14,10 +14,11 @@
         return true;
     }
     function isUniqueInvoice($customerid,$type,$refnumber,$ctrnumber,$db){
+        
         $sql = "SELECT customerid,type,refnumber,ctrnumber ".
         "       FROM invoiceheader ".
         "       WHERE   ".
-        "       (customerid=$customerid AND type='$type' AND refnumber='$refnumber')  ".
+        "       (customerid=$customerid AND refnumber='$refnumber')  ".
         "       OR (customerid=$customerid AND ctrnumber='$ctrnumber')";
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
@@ -42,14 +43,17 @@
     $control=avoidInjection($data->seriecontrol->control,'str');
     $type=avoidInjection($data->type,'str');
     $ctrref="";
-    if($type=='NDB' || $type == 'NDC') {
+    if($type=='NDB' || $type == 'NCR') {
         $ctrref_serie = avoidInjection($data->ctrref->serie,'str');
         $ctrref_control = avoidInjection($data->ctrref->control,'str');
         $ctrref_number = avoidInjection($data->ctrref->number,'str');
         if(trim($ctrref_control)=="")
             badEnd("400", array("msg"=>"Numero de serie y de control es requerido"));
         $ctrref =  $ctrref_serie.str_pad($ctrref_control,2,"0",STR_PAD_LEFT).str_pad($ctrref_number,8,"0",STR_PAD_LEFT);
+        if (!existsReferenceInvoice($ctrref,$db)) 
+            badEnd("400", array("msg"=>"Factura de referencia no existe $ctrref"));
     }
+  
     $clientrif = avoidInjection($data->client->rif,'rif');
     $issuedate=avoidInjection($data->issuedate,'date');
     $duedate=avoidInjection($data->duedate,'date');    
@@ -68,18 +72,19 @@
     
     // Apagar autocommit
     $db->autocommit(FALSE);
+    $exception_id=0;
     try {
+
+
     // Validar user session y grabar auditoria
         if ($id==0)
             $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>"Se creó un documento nuevo $refnumber"));
         else
             $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>"Se modificó el documento $refnumber"));
 
-  
 
-        // Si id de la factura es 0, es un insert de factura con header y detalle
-        // Esto debería ser una transaccion (try)
-        if ($id == 0){
+    // Si id de la factura es 0, es un insert de factura con header y detalle
+         if ($id == 0){
             // Se calcula el numero de control del cliente para la nueva factura
             // Obtener index de la serie (no contempla series repetidas)
             $series = getSeries($customerid,$db);
@@ -103,10 +108,10 @@
             $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
             if (!$db->query($update)) 
                 throw new Exception("$db->error");
-                //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
-            if (!isUniqueInvoice($customerid,$type,$refnumber,$ctrnumber,$db))
+            if (!isUniqueInvoice($customerid,$type,$refnumber,$ctrnumber,$db)){
+                $exception_id = 4;
                 throw new Exception("El documento $refnumber ya existe o el numero de control $ctrnumber ya está asignado a otro documento");
-                //badEnd("400", array("msg"=>"El documento $ctrnumber ya existe o el numero de control $ctrnumber ya est�� asignado a otro documento"));
+            }
             // SQL del Insert
             $sql="INSERT INTO `invoiceheader` (`id`, `type`,`customerid`, `issuedate`, `duedate`, `refnumber`, `ctrnumber`,`ctrref`, `clientrif`, " .
                 " `clientname`, `clientaddress`, `mobilephone`, `otherphone`, " .
@@ -140,14 +145,18 @@
         else {
             $invoiceid= $id;
             //Validar que la factura exista
-            $sql = "SELECT COUNT(*) Cnt FROM invoiceheader WHERE id = $invoiceid AND customerid=$customerid ";
-            if (!$rs=$db->query($sql))
-                throw new Exception("$db->error");
+            $sql = "SELECT COUNT(*) Cnt FROM iinvoiceheader WHERE id = $invoiceid AND customerid=$customerid ";
+            if (!$rs=$db->query($sql)){
+                $exception_id = 3;
+                throw new Exception($db->error);
                 //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+            }
             $row = $rs->fetch_assoc();
-            if ($row["Cnt"] == 0)       
+            if ($row["Cnt"] == 0){
+                $exception_id=1;       
                 throw new Exception("La factura $invoiceid no existe o no esta asociada al cliente logueado");
                 //badEnd("400", array("msg"=>"La factura $invoiceid no existe o no esta asociada al cliente logueado"));
+            }
 
             //Update de todos los campos del header
             $update = "UPDATE `invoiceheader` ". 
@@ -198,23 +207,27 @@
 
         }
         
-        if($type=='NDB' || $type == 'NDC') 
-            if (!existsReferenceInvoice($ctrref,$db)) 
-                throw new Exception("Factura de referencia no existe $ctrref");        
 }
 // Catch exception
     catch(Exception $e){
         // Rollback Transaction
         $db->rollback();
-        //Si la factura de referencia no existe, se envia 203
-        if($type=='NDB' || $type == 'NDC')
-            if (!existsReferenceInvoice($ctrref,$db)){
-                header("HTTP/1.1 203");
-                echo (json_encode($out));
-                die();    
-            }
+        // Prender autocommit
+        $db->autocommit(TRUE); 
 
-        badEnd("400", array("msg"=>$e->getMessage()));
+        // Si la factura de referencia no existe, se envia 203
+        if ($exception_id==2)
+            badEnd("203", array("msg"=>$e->getMessage()));
+        // Si la factura no está asociada al cliente se envía 204    
+        if ($exception_id==1)    
+            badEnd("204", array("msg"=>$e->getMessage()));
+        // Si hay error de BD se envía 500    
+        if ($exception_id==3)    
+            badEnd("500", array("msg"=>$e->getMessage()));            
+        // Si la factura no es unica
+        if ($exception_id==4)    
+            badEnd("400", array("msg"=>$e->getMessage()));            
+
     }
 // Si todo bien Commit Transaction
     $db->commit();   

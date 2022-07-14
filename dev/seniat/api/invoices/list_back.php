@@ -107,7 +107,7 @@
                 case 'NDB':
                     $record->type->name='Nota de Debito';
                     break;
-                case 'NDC':
+                case 'NCR':
                     $record->type->name='Nota de Credito';
                     break;
             }

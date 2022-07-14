@@ -123,60 +123,7 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
   $sql .= " LIMIT $offset, $numofrec"; 
   if (!$rs = $db->query($sql))
     badEndCsv("Error de Base de Datos\n $db->error");
-// Guardar la data 
-/* 
-  $records = array(); 
-  while ($row = $rs->fetch_assoc()){
-    $record = new stdClass();
-    $record->id = (integer) $row["id"];
-    $record->type =new stdClass();
-    $record->type->id=$row['type'];
-    switch ($row['type']) {
-        case 'FAC':
-            $record->type->name='Factura';
-            break;
-        case 'NDB':
-            $record->type->name='Nota de Debito';
-            break;
-        case 'NDC':
-            $record->type->name='Nota de Credito';
-            break;
-    }
-    $record->ctrref =$row['ctrref'];
-    $record->issuedate =new stdClass();
-    $record->issuedate->date = $row["issuedate"];
-    $record->issuedate->formatted = $row["formatteddate"];
-    $record->refnumber = nvl($row["refnumber"],"");
-    $record->ctrnumber = nvl($row["ctrnumber"],"");
-    $record->client =new stdClass();
-    $record->client->rif = $row["clientrif"];
-    $record->client->name = $row["clientname"];        
-    $record->status =new stdClass();
-    $status=1;
-    $status_dsc = "Pendiente";
-    if (!is_null($row["sentdate"])) {
-        $status=2;
-        $status_dsc = "Enviado";            
-    }
-    if (!is_null($row["viewdate"])) {
-        $status=3;
-        $status_dsc = "Leído";            
-    }
-    $record->status->id = $status;
-    $record->status->dsc = $status_dsc;
-    $record->amounts =new stdClass();        
-    $record->amounts->gross = new stdClass(); 
-    $record->amounts->gross->number = (float)$row["gross"]*(1-(float)$row["discount"]/100);
-    $record->amounts->gross->formatted = number_format($row["gross"]*(1-(float)$row["discount"]/100), 2, ",", ".");
-    $record->amounts->tax = new stdClass(); 
-    $record->amounts->tax->number = (float)$row["tax"];
-    $record->amounts->tax->formatted = number_format($row["tax"], 2, ",", ".");         
-    $record->amounts->total = new stdClass(); 
-    $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
-    $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
-    $records[] = $record;
-  }
-*/
+
   $records = jsonInvoiceList($rs);
 // Preparar archivo csv
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";

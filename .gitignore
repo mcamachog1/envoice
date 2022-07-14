@@ -2,3 +2,4 @@ dev\settings\dbconn.php
 app\api\invoices\verfactura.html
 *.txt
 *.sql
+envia*.php
