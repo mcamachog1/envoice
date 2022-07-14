@@ -42,7 +42,7 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
     VALUES(
         NULL,
         CURRENT_TIMESTAMP,
-        $userid,
+        '$userid',
         '$app',
         '$module',
         '$dsc',
@@ -93,9 +93,10 @@ function isSessionValid($db, $sessionid,$data=array()){
         die();
     }
 
-    if (count($data)>0)
-        insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." - User:".getEmail($sessionid,$data['app'],$db));
-   
+    if (count($data)>0){
+        $email = getEmail($sessionid,'APP',$db);
+        insertAudit($db,$email,$data['ip'],$data['app'],$data['module'],$data['dsc']);
+    }
 
     return($row["id"]);
 }

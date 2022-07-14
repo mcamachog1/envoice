@@ -86,8 +86,10 @@
     $out->sessionid = $sessionid;
     $out->validthru = $vt;
     $out->name = $name;
- 
-    //insertAudit($db,$out->id,$ip,'APP','security',"Inició sesión en DaycoPrint: $ip");
+    
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $email = getEmail($sessionid,'APP',$db);
+    insertAudit($db,$email,$ip,'APP','security',"Inició sesión en DaycoPrint: IP= $ip");
 
     header("HTTP/1.1 200");
     echo (json_encode($out));

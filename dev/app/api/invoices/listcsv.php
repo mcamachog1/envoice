@@ -32,7 +32,7 @@ function badEndCsv($message){
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Se exportó a excel lista de clientes'));
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
 
 // Filter
   $filter="";
