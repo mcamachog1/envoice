@@ -1,0 +1,3 @@
+function getCustomerEmail($customerid, $db) {
+
+}

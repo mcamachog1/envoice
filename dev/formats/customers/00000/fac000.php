@@ -50,6 +50,9 @@
         .cell20{
             width: 10%;
         }
+        .cell22Mid {
+            width: 22.5%;
+        }
         .cell25 {
             width: 25%;
         }
@@ -358,7 +361,7 @@
                     <div class="itemHead cell20" style="border-left:none">
                         Ref.
                     </div>
-                    <div class="itemHead cell25">
+                    <div class="itemHead cell22Mid">
                         Descripción
                     </div>                    
                     <div class="itemHead cell7Mid centerText">
@@ -367,8 +370,8 @@
                     <div class="itemHead cell7Mid itemHdNum">
                         Cant.
                     </div>
-                    <div class="itemHead cell7Mid">
-                        Unit.
+                    <div class="itemHead cell10">
+                        Unidad
                     </div>
                     <div class="itemHead cell10 itemHdNum">
                         Precio
@@ -388,7 +391,7 @@
                                 <div class="itemsDet cell20" style="border-left:none">
                                     '.$record->details[$i]->item->ref.'
                                 </div>
-                                <div class="itemsDet cell25">
+                                <div class="itemsDet cell22Mid">
                                 '.$record->details[$i]->item->dsc.'
                                 </div>                    
                                 <div class="itemsDet cell7Mid centerText">
@@ -397,7 +400,7 @@
                                 <div class="itemsDet cell7Mid itemHdNum">
                                 '.$record->details[$i]->qty->formatted.'
                                 </div>
-                                <div class="itemsDet cell7Mid itemHdNum">
+                                <div class="itemsDet cell10 itemHdNum">
                                 '.$record->details[$i]->unit.'
                                 </div>
                                 <div class="itemsDet cell10 itemHdNum">
