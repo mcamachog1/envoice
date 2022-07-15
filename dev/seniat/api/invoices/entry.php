@@ -72,10 +72,10 @@
                     $record->type->name='Factura';
                     break;
                 case 'NDB':
-                    $record->type->name='Nota de Debito';
+                    $record->type->name='Nota de Débito';
                     break;
                 case 'NCR':
-                    $record->type->name='Nota de Credito';
+                    $record->type->name='Nota de Crédito';
                     break;
             }
         $record->ctrref =$row['ctrref'];

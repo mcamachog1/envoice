@@ -83,7 +83,7 @@ function isSessionValid($db, $sessionid,$data=array()){
             "AND    validthru > NOW() ";
     if (!$rs = $db->query($sql)){
         header("HTTP/1.1 500");
-        echo (json_encode(array("msg"=>$db->error)));
+        echo (json_encode(array("msg"=>$db->error,"sql"=>$sql)));
         die();
     }
     $row = $rs->fetch_assoc();
@@ -102,13 +102,8 @@ function isSessionValid($db, $sessionid,$data=array()){
 }
 function setAudit($db, $module, $sessionid, $dsc){
     try {
-        // obtener usuario
-        $sql = "SELECT id " . 
-               "FROM   users " . 
-               "WHERE  sessionid = '" . $sessionid . "' ";
-        $rs = $db->query($sql);
-        $row = $rs->fetch_assoc();
-        $userid = $row["id"];
+        // obtener email
+        $userid=getEmail($sessionid,$module,$db);
         
         // incluir auditoria
         $sql = "INSERT INTO audit (module, userid, dsc) " .
@@ -512,10 +507,10 @@ function jsonInvoiceList($rs){
                   $record->type->name='Factura';
                   break;
               case 'NDB':
-                  $record->type->name='Nota de Debito';
+                  $record->type->name='Nota de Débito';
                   break;
-              case 'NDC':
-                  $record->type->name='Nota de Credito';
+              case 'NCR':
+                  $record->type->name='Nota de Crédito';
                   break;
           }
       $record->ctrref =$row['ctrref'];

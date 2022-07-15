@@ -11,7 +11,7 @@
   if (!parametrosValidos($_REQUEST, $parmsob))
       badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar usersession
-  $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Carga de facturas masivas')); 
+  $customerid = isSessionValid($db, $_REQUEST["sessionid"]); 
 
 // Obtener la serie del lote
   $sql = "SELECT serie FROM loadinvoiceheader  WHERE customerid=$customerid LIMIT 1 ";
@@ -81,7 +81,10 @@
     if (!$db->query($update)) 
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
 
-// Salida
+  // Auditoria
+    setAudit($db, 'APP', $_REQUEST["sessionid"], "Se validó una carga masiva de $qtyinvoices documentos");
+
+  // Salida
   $out = new stdClass(); 
   $out->recordsupdates = $qtyinvoices;
   header("HTTP/1.1 200");

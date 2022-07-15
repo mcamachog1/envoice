@@ -5,8 +5,10 @@
     include_once("../../../settings/utils.php");
 
   
-    function existsReferenceInvoice($ctrref,$db){
-        $sql = "SELECT ctrnumber FROM `invoiceheader` WHERE ctrnumber = '$ctrref' LIMIT 1";
+    function existsReferenceInvoice($customerid,$ctrref,$db){
+        $ctrref = trim($ctrref);
+        $sql = "SELECT ctrnumber FROM `invoiceheader` ".
+        "       WHERE TRIM(ctrnumber) = '$ctrref' AND customerid=$customerid LIMIT 1";
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
         if (!$row = $rs->fetch_assoc())
@@ -14,12 +16,13 @@
         return true;
     }
     function isUniqueInvoice($customerid,$type,$refnumber,$ctrnumber,$db){
-        
+        $ctrnumber = trim($ctrnumber);
         $sql = "SELECT customerid,type,refnumber,ctrnumber ".
         "       FROM invoiceheader ".
         "       WHERE   ".
         "       (customerid=$customerid AND refnumber='$refnumber')  ".
-        "       OR (customerid=$customerid AND ctrnumber='$ctrnumber')";
+        "       OR (customerid=$customerid AND TRIM(ctrnumber)='$ctrnumber')";
+
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
         if (!$row = $rs->fetch_assoc())
@@ -33,6 +36,7 @@
     // parametros obligatorios
     $id=$data->id;
     $sessionid=$data->sessionid;
+    $customerid = isSessionValid($db, $sessionid);
     if (is_null($id) || is_null($sessionid))
         badEnd("400", array("msg"=>"Parametros obligatorios id, sessionid" ));
         
@@ -50,7 +54,7 @@
         if(trim($ctrref_control)=="")
             badEnd("400", array("msg"=>"Numero de serie y de control es requerido"));
         $ctrref =  $ctrref_serie.str_pad($ctrref_control,2,"0",STR_PAD_LEFT).str_pad($ctrref_number,8,"0",STR_PAD_LEFT);
-        if (!existsReferenceInvoice($ctrref,$db)) 
+        if (!existsReferenceInvoice($customerid,$ctrref,$db)) 
             badEnd("400", array("msg"=>"Factura de referencia no existe $ctrref"));
     }
   
@@ -108,7 +112,8 @@
             $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
             if (!$db->query($update)) 
                 throw new Exception("$db->error");
-            if (!isUniqueInvoice($customerid,$type,$refnumber,$ctrnumber,$db)){
+
+            if (!isUniqueInvoice($customerid,$type,$refnumber,trim($ctrnumber),$db)){
                 $exception_id = 4;
                 throw new Exception("El documento $refnumber ya existe o el numero de control $ctrnumber ya está asignado a otro documento");
             }
