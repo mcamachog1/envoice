@@ -404,7 +404,7 @@
                         Cant. (VES)
                     </div>                    
                     <div class="itemHead cell10">
-                        Unit.
+                        Unidad
                     </div>  
                     <div class="itemHead cell10 itemHdNum">
                         Precio (VES)

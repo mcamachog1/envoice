@@ -1252,6 +1252,8 @@ function downloadReport(){
     }else if(ctrarr.length>1){
       seriecontrol = ctrarr[0];
     }
+    setValue("invoicetype",header.type.id);
+    document.getElementById("invoicetype").dispatchEvent(new Event("change"));
     document.getElementById("invoiceserie").setAttribute("disabled","");  
     document.getElementById("invoiceserie").value = seriecontrol;
     
@@ -1370,7 +1372,8 @@ function blankAll(){
   document.getElementById("saveFrm").removeAttribute("invcid");
 
   document.getElementById("invoiceserie").value = "-1";
-
+  document.getElementById("invoicetype").value = "FAC";
+  document.getElementById("invoicetype").dispatchEvent(new Event("change"));
   var frm = document.getElementById("pageFrm");
   removeAllErr(frm);
 
