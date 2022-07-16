@@ -77,7 +77,8 @@
 
         if ($type =='D') {
             // Validar numero de campos     
-            $maxfields=7;
+            $maxfields=8;
+
             $qtyfields = count($line);
             if ($qtyfields<$maxfields) {
                 for ($i=$qtyfields;$i<$maxfields;$i++)
@@ -92,11 +93,14 @@
                 $errmsg = "Cantidad de campos esperados incorrecto en el Detalle de la factura";             
             }
             // Recorrer campos, validar tipo de dato
-            $fieldmsgs = array(0=>"Formato de campo incorrecto.",1=>"",2=>"",
+            $fieldmsgs = array(0=>"Formato de campo incorrecto.",
+            1=>"",
+            2=>"",
             3=>"Formato de campo cantidad incorrecto en línea de Detalle",
-            4=>"Formato de campo precio unitario incorrecto en línea de Detalle",
-            5=>"Formato de campo impuesto incorrecto en línea de Detalle",
-            6=>"Formato de campo descuento incorrecto en línea de Detalle");
+            4=>"", //unidad           
+            5=>"Formato de campo precio unitario incorrecto en línea de Detalle",
+            6=>"Formato de campo impuesto incorrecto en línea de Detalle",
+            7=>"Formato de campo descuento incorrecto en línea de Detalle");
             if ($err==0){
                 for ($i=0;$i<$maxfields;$i++){
                     switch ($i) {
@@ -109,9 +113,9 @@
                                 $line[$i]= "";
                         break;
                         case 3:
-                        case 4:
                         case 5:
                         case 6:
+                        case 7:
                             if (strlen($line[$i])!=0 && !is_numeric($line[$i])) {
                                 $err = 2;
                                 $errmsg =$fieldmsgs[$i];
@@ -188,7 +192,8 @@
                         break;
                         case 2:
                         case 3:
-                            if (strlen($line[$i])!=0 && !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$line[$i])) {
+                            if (strlen($line[$i])!=0 && !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$line[$i])) 
+                            {
                                 $err = 2;
                                 $errmsg = $fieldmsgs[$i];
                             }
@@ -283,12 +288,13 @@
                         break;                        
                     }       
                     
-                    if ($err==0 && strlen($line[2])!=0 && strlen($line[3])!=0 && strtotime($line[2]) > strtotime($line[3])){
+                    if ($err==0 && strlen($line[2])!=0 && strlen($line[3])!=0 && strtotime($line[2]) > strtotime($line[3]))
+                    {
                         $err = 3;
                         $errmsg = "Fecha de emisión mayor que fecha de vencimiento en factura ".$line[4]."";                    
                     }            
                 }
-            }
+            }   
         }
         elseif ($type=='T') {
 
@@ -383,7 +389,7 @@
         
         return $db->insert_id; 
     }
-
+    
 // Parámetros obligatorios
   $parmsob = array("sessionid");
   if (!parametrosValidos($_REQUEST, $parmsob))
@@ -447,9 +453,9 @@
         }
         elseif ($line[0] == 'D') {
             $sql = "INSERT INTO loadinvoicedetail ".
-                " (id, loadinvoiceheaderid, itemref, itemdsc, qty, unitprice, itemtax, itemdiscount )".
+                " (id, loadinvoiceheaderid, itemref, itemdsc, qty, unit, unitprice, itemtax, itemdiscount )".
                 " VALUES ( 0, ". 
-                $headerid.",'".$line[1]."','".$line[2]."',".$line[3].",".$line[4].",".$line[5].",".$line[6].
+                $headerid.",'".$line[1]."','".$line[2]."',".$line[3].",'".$line[4]."',".$line[5].",".$line[6].",".$line[7].
                 ") ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
@@ -516,13 +522,14 @@
     $duplicatedInvoices=duplicatedInvoices($customerid,$db);
     if (count($duplicatedInvoices)>0 && $totalerrors==0)
         badEnd("400", array("msg"=>"Hay documentos con numeración duplicada. Documentos: ".implode(",",$duplicatedInvoices).""));
-// Salida
 
+// Auditoria
   $countdocs = 0;
   for ($x=0;$x<count($errors);$x++)
     $countdocs += $errors[$x]['err'.$x];
   setAudit($db, 'APP', $_REQUEST["sessionid"], "Se validó una carga masiva de $countdocs documentos");
 
+// Salida
   $out = new stdClass(); 
   $out->errors = $errors;
   header("HTTP/1.1 200");

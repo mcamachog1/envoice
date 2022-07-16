@@ -51,8 +51,8 @@
   $qtyinvoices =  $db->affected_rows;
 
 // Copiar registros de detalle
-  $sql = "INSERT INTO invoicedetails (invoiceid, itemref, itemdsc, qty, unitprice, itemtax, itemdiscount) " .
-    " SELECT         FH.id, D.itemref, D.itemdsc, D.qty, D.unitprice, D.itemtax, D.itemdiscount ".
+  $sql = "INSERT INTO invoicedetails (invoiceid, itemref, itemdsc, qty, unit,unitprice, itemtax, itemdiscount) " .
+    " SELECT         FH.id, D.itemref, D.itemdsc, D.qty, D.unit,D.unitprice, D.itemtax, D.itemdiscount ".
     " FROM         loadinvoicedetail D ".
     " INNER JOIN    loadinvoiceheader H ".
     " ON            D.loadinvoiceheaderid = H.id ".

@@ -20,7 +20,7 @@
         $sql = "SELECT customerid,type,refnumber,ctrnumber ".
         "       FROM invoiceheader ".
         "       WHERE   ".
-        "       (customerid=$customerid AND refnumber='$refnumber')  ".
+        "       (customerid=$customerid AND type='$refnumber' AND refnumber='$refnumber')  ".
         "       OR (customerid=$customerid AND TRIM(ctrnumber)='$ctrnumber')";
 
         if (!$rs = $db->query($sql))
