@@ -100,23 +100,7 @@ function isSessionValid($db, $sessionid,$data=array()){
 
     return($row["id"]);
 }
-function setAudit($db, $module, $sessionid, $dsc){
-    try {
-        // obtener email
-        $userid=getEmail($sessionid,$module,$db);
-        
-        // incluir auditoria
-        $sql = "INSERT INTO audit (module, userid, dsc) " .
-               "VALUES            ('" . $module . "', '" . $userid . "', '" . $dsc . "')";
-        if ($rs = $db->query($sql)){
-            return(true);
-        }else{
-            return(false);
-        }
-    } catch (Exception $e){
-        return(false);
-    }
-}
+
 function tienePrivilegio($db, $sessionid, $privilegeid){
     try {
         // obtener usuario
@@ -245,8 +229,10 @@ function isSessionValidCMS($db, $sessionid,$data=array()){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
-    if (count($data)>0)
-        insertAudit($db,$row["id"],$data['ip'],$data['app'],$data['module'],$data['dsc']." - User: ".getEmail($sessionid,$data['app'],$db));
+    if (count($data)>0){
+        $email = getEmail($sessionid,'CMS',$db);
+        insertAudit($db,$email,$data['ip'],$data['app'],$data['module'],$data['dsc']);
+    }
     return($row["id"]);
 }
 function avoidInjection($param,$type) {

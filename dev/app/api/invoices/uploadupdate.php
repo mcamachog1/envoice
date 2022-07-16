@@ -82,8 +82,7 @@
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
 
   // Auditoria
-    setAudit($db, 'APP', $_REQUEST["sessionid"], "Se validó una carga masiva de $qtyinvoices documentos");
-
+    insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se hizo una carga masiva de $qtyinvoices documentos");
   // Salida
   $out = new stdClass(); 
   $out->recordsupdates = $qtyinvoices;

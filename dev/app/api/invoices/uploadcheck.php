@@ -527,7 +527,9 @@
   $countdocs = 0;
   for ($x=0;$x<count($errors);$x++)
     $countdocs += $errors[$x]['err'.$x];
-  setAudit($db, 'APP', $_REQUEST["sessionid"], "Se validó una carga masiva de $countdocs documentos");
+  
+  insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se validó una carga masiva de $countdocs documentos");
+
 
 // Salida
   $out = new stdClass(); 

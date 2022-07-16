@@ -146,6 +146,8 @@ function badEndCsv($message){
   foreach($csvarray as $arr){
     fputcsv($fp,$arr,';');
   }
+// Auditoria
+  insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se exportó a Excel lista de documentos");  
 // Cerrar archivo
   fclose($fp);
   die(); 

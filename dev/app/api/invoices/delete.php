@@ -10,29 +10,37 @@
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
     
     $ids=avoidInjection($_REQUEST["id"],'dashes');   
-    $customerid = isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Eliminar una factura'));
-    // Validar que existe algun registro
-    $sql="SELECT COUNT(*) Cnt FROM invoiceheader WHERE id IN ($ids) AND customerid=$customerid";
+    $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
+    // Validar que existe algun registro y que el documento esté por enviar
+    $sql="SELECT COUNT(*) Cnt FROM invoiceheader WHERE id IN ($ids) ".
+        " AND customerid=$customerid AND tosend=0 AND sentdate IS NOT NULL ";
     if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     $row = $rs->fetch_assoc();
     if ($row["Cnt"]==0)
         badEnd("204", array('msg'=>"El registro no existe"));
 
-    // Seleccionar los ids que pertenecen al cliente (por si acaso)
-    $sql="SELECT id FROM invoiceheader WHERE id IN ($ids) AND customerid=$customerid";
+    // Seleccionar los ids que pertenecen al cliente 
+    $sql="SELECT id, refnumber FROM invoiceheader WHERE id IN ($ids)".
+    " AND customerid=$customerid AND tosend=0 AND sentdate IS NOT NULL";
     if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     $ids_array = array();
-    while ($row = $rs->fetch_assoc()) 
+    $refs_array = array();
+    while ($row = $rs->fetch_assoc()) {
         $ids_array [] = $row["id"];
+        $refs_array[] = $row["refnumber"];
+    }
     $ids=join(",",$ids_array);
+    $refs=join(",",$refs_array);
 
-    
+    $countdocs=count($ids_array);
     $sql="UPDATE invoiceheader SET canceldate= NOW() WHERE id IN ($ids) AND customerid=$customerid";
     if (!$db->query($sql)) 
         badEnd("304", array('msg'=>"El registro existe pero no se pudo anular"));
- 
+    
+    // Audit
+    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos ($refs)");
 
     $out = new stdClass;
     $out->id =$ids;

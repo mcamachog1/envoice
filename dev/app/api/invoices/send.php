@@ -15,15 +15,21 @@
         $condition=" AND id IN (".avoidInjection($invoices,'dashes').")";
       
       // tosend=0 Por enviar tosend=1 Enviado
-      $sql = "UPDATE invoiceheader SET tosend=1, sentdate='2022-06-21' WHERE customerid=$customerid ".$condition;
+      $sql = "UPDATE invoiceheader SET tosend=1, sentdate=NOW() WHERE customerid=$customerid ".$condition;
       if (!$db->query($sql))
-          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>2));      
+          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>1));      
       return $db->affected_rows;
     }
     // Update emailhash
     function updateEmailHash($invoiceid,$customerid,$clientrif,$db){
       //MD5 de la tabla de facturas con los campos (id+customerid+clientrif)
       $hash=md5("$invoiceid"."$customerid"."$clientrif");
+      // Forzar que cuente las filas actualizadas
+      $sql = "UPDATE invoiceheader SET emailhash=NULL WHERE customerid=$customerid ".
+            " AND id=$invoiceid AND clientrif='$clientrif'";
+      if (!$db->query($sql))
+          badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>2));         
+      // Actualizar el hash
       $sql = "UPDATE invoiceheader SET emailhash='$hash' WHERE customerid=$customerid ".
             " AND id=$invoiceid AND clientrif='$clientrif'";
       if (!$db->query($sql))
@@ -32,8 +38,8 @@
     }      
 
     function sendInvoices($invoices,$homeurl,$customerid,$db){
-      //Ojo falta considerar caso donde no hay facturas para enviar
       $data = loadDataByInvoice($invoices,$customerid,$db);
+
       $affected_hash=0;
       foreach ($data as $object){
         $subject = "Factura #$object->refnumber disponible - $object->clientName";
@@ -111,7 +117,7 @@
       if ($affected_hash==count($data) && $affected_hash==$affected_status)
         return count($data);  
       else  
-        badEnd("400", array("msg"=>"Facturas enviadas no marcadas o facturas re-enviadas"));
+        badEnd("400", array("msg"=>"Facturas enviadas no coincide con los status actualizados"));
     }
     // parametros obligatorios
     $parmsob = array("sessionid");
@@ -122,7 +128,7 @@
     $sessionid= $_GET["sessionid"];
 
     // Validar user session
-    $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>'Enviar facturas por correo'));
+    $customerid = isSessionValid($db, $sessionid);
 
     
     // Enviar todas las pendientes
@@ -132,6 +138,8 @@
     else
       $sent=sendInvoices($_GET["invoiceids"],$homeurl,$customerid,$db);
     
+    // Auditoria
+    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se enviaron $sent documentos por email");  
     // Salida
     $out = new stdClass();
     $out->invoices=new stdClass();
