@@ -29,9 +29,9 @@
     $ids=join(",",$ids_array);
 
     
-    $sql="DELETE FROM invoiceheader WHERE id IN ($ids) AND customerid=$customerid";
+    $sql="UPDATE invoiceheader SET canceldate= NOW() WHERE id IN ($ids) AND customerid=$customerid";
     if (!$db->query($sql)) 
-        badEnd("304", array('msg'=>"El registro existe pero no se pudo eliminar"));
+        badEnd("304", array('msg'=>"El registro existe pero no se pudo anular"));
  
 
     $out = new stdClass;

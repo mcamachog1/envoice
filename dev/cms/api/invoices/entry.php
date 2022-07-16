@@ -141,7 +141,7 @@
         $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount_percentage"]/100) + (float)$row["tax"], 2, ",", ".");        
     }
     // Details
-    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, ".
+    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unit, unitprice, ".
     " itemtax tax, itemdiscount discount, ".
     //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
     " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
@@ -157,7 +157,8 @@
         $detail->item->dsc = $row["dsc"];
         $detail->qty =new stdClass();
         $detail->qty->number = (integer)$row["qty"];
-        $detail->qty->formatted = $row["qty"];   
+        $detail->qty->formatted = $row["qty"];  
+        $detail->unit = $row["unit"];    
         $detail->unitprice =new stdClass();
         $detail->unitprice->number = (float)$row["unitprice"];
         $detail->unitprice->formatted = $row["unitprice"]; 

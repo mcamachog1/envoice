@@ -138,8 +138,6 @@
    
     $username = validateEmail($usr,$db);
 
-    //print_r(validatePassw($usr,$pwd,$db));
-    //die();
     if (validatePassw($usr,$pwd,$db)!=1 && (getStatus($usr,$db)==1 || getStatus($usr,$db)==-1)) {
         setNumOfFails($usr,$db);
         $qtytry=getNumOfFails($usr,$db);

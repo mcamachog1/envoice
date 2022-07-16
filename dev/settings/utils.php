@@ -482,7 +482,7 @@ $sql =  "SELECT " .
         " H.discount discount, ".
         " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
         " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
-        " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
+        " H.sentdate, H.viewdate, H.canceldate, SUM(D.qty) qty   ".
         " FROM    invoiceheader H ".
         " LEFT JOIN invoicedetails D ON ".
             " D.invoiceid = H.id ".
@@ -490,9 +490,9 @@ $sql =  "SELECT " .
         $status_condition.$filter.   
         " GROUP BY ".
         "   H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, DATE_FORMAT(H.issuedate, '%d/%m/%Y'), ".
-        "   H.sentdate, H.viewdate " .
+        "   H.sentdate, H.viewdate, H.canceldate " .
             $order;
-return $sql;                    
+    return $sql;                    
 }
 // Prepara el JSON para los 3 modulos (CMS-APP-Seniat)
 function jsonInvoiceList($rs){    
@@ -533,6 +533,10 @@ function jsonInvoiceList($rs){
           $status=3;
           $status_dsc = "Leído";            
       }
+      if (!is_null($row["canceldate"])) {
+        $status=4;
+        $status_dsc = "Anulada";            
+      }      
       $record->status->id = $status;
       $record->status->dsc = $status_dsc;
       

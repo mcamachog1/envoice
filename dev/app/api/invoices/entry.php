@@ -42,7 +42,7 @@
     //Incluir fechas de leido y enviado
     $sql =  "SELECT " .
             " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
-            " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, ".
+            " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, manualload, ".
             " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
             " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
             " H.discount, H.type, H.ctrref, ".
@@ -62,6 +62,7 @@
     if ($row = $rs->fetch_assoc()){
         $record = new stdClass();
         $record->id = (integer) $row["id"];
+        ($row["manualload"]==1) ? ($record->manualload = true) : ($record->manualload = false);
         $record->type =new stdClass();
             $record->type->id=$row['type'];
             switch ($row['type']) {
@@ -139,7 +140,7 @@
         $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");        
     }
     // Details
-    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, ".
+    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unit, unitprice, ".
     " itemtax tax, itemdiscount discount, ".
     //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
     " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
@@ -156,6 +157,7 @@
         $detail->qty =new stdClass();
         $detail->qty->number = (integer)$row["qty"];
         $detail->qty->formatted = $row["qty"];   
+        $detail->unit = $row["unit"];   
         $detail->unitprice =new stdClass();
         $detail->unitprice->number = (float)$row["unitprice"];
         $detail->unitprice->formatted = $row["unitprice"]; 

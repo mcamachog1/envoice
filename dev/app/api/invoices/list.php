@@ -18,9 +18,9 @@
     $dateto = $_GET["dateto"]." 23:59:59";
     $status = $_GET["status"];     
 
-    if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
+    if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3 && $status!=4)
         badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
-    // Validar user session y enviar informacion de auditoria
+    // Validar user session 
     $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
     $filter="";
     // Filter
@@ -48,6 +48,9 @@
             case 3:
                 $status_condition = " AND viewdate IS NOT NULL ";            
                 break;
+            case 4:
+                $status_condition = " AND canceldate IS NOT NULL ";            
+                break;                
         }
     }
     // Status varios valores
@@ -55,7 +58,7 @@
         $status_list =explode("-",$status);
         $status_condition = " AND ( 0  ";
         foreach ($status_list as $value){
-            if ($value!=1 && $value!=2 && $value!=3)
+            if ($value!=1 && $value!=2 && $value!=3 && $value!=4)
                 badEnd("400", array("msg"=>"Valor de estatus $value fuera de rango")); 
             switch ($value) {
                 case 1:    
@@ -67,6 +70,9 @@
                 case 3:
                     $status_condition .= " OR (viewdate IS NOT NULL) ";            
                     break;
+                case 4:
+                    $status_condition .= " OR (canceldate IS NOT NULL) ";            
+                    break;                    
             }
         }
         $status_condition .= " ) ";                

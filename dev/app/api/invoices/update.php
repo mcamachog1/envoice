@@ -133,12 +133,13 @@
                 $itemref = $object->itemref;
                 $itemdsc = $object->itemdsc;
                 $qty = $object->qty;
+                $unitdsc = $object->unit;
                 $unitprice = $object->unitprice;
                 $itemtax = $object->tax;
                 $itemdiscount = $object->discount;
                 
-                $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unitprice`, `itemtax`, `itemdiscount`) ".
-                "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, $unitprice, $itemtax, $itemdiscount) ";  
+                $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".
+                "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, '$unitdsc', $unitprice, $itemtax, $itemdiscount) ";  
     
                 if (!$db->query($sql))
                     throw new Exception("$db->error");
@@ -150,7 +151,7 @@
         else {
             $invoiceid= $id;
             //Validar que la factura exista
-            $sql = "SELECT COUNT(*) Cnt FROM iinvoiceheader WHERE id = $invoiceid AND customerid=$customerid ";
+            $sql = "SELECT COUNT(*) Cnt FROM invoiceheader WHERE id = $invoiceid AND customerid=$customerid ";
             if (!$rs=$db->query($sql)){
                 $exception_id = 3;
                 throw new Exception($db->error);
@@ -198,13 +199,14 @@
                 $itemref = $object->itemref;
                 $itemdsc = $object->itemdsc;
                 $qty = $object->qty;
+                $unitdsc = $object->unit;
                 $unitprice = $object->unitprice;
                 $itemtax = $object->tax;
                 $itemdiscount = $object->discount;
                 
-                $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unitprice`, `itemtax`, `itemdiscount`) ".
-                "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, $unitprice, $itemtax, $itemdiscount) "; 
-                
+                $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".
+                "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, '$unitdsc', $unitprice, $itemtax, $itemdiscount) "; 
+
                 if (!$db->query($sql))
                     throw new Exception("$db->error");
                     //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));             
