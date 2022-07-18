@@ -401,7 +401,7 @@
                                 '.$record->details[$i]->qty->formatted.'
                                 </div>
                                 <div class="itemsDet cell10 itemHdNum">
-                                '.$record->details[$i]->unit.'
+                                '.$record->details[$i]->item->unit.'
                                 </div>
                                 <div class="itemsDet cell10 itemHdNum">
                                 '.$record->details[$i]->unitprice->formatted.'

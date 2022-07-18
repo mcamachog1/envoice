@@ -42,7 +42,8 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
 
   par.datefrom = desde == "" ? now : desde;
   par.dateto = hasta == "" ? now : hasta;
-
+  document.getElementById('dateDesde').value = now;
+  document.getElementById('dateHasta').value = now;
   par.offset = offset;
   par.order = order;
   par.numofrec = numrecords;
@@ -51,8 +52,13 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
   par.sessionid = getParameterByName("sessid");
 
   par.user = document.getElementById("usersList").value;
+  if(par.user=="" || par.user ==undefined || par.user == null){
+    return;
+  }
   par.module = document.getElementById("modulsList").value;
-
+  if(par.module=="" || par.module ==undefined || par.module == null){
+    return;
+  }
   var success = function(status, respText, offset){
     var jsonResp;
     if(respText!="")jsonResp = JSON.parse(respText);
@@ -73,6 +79,7 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
         break;
     }
   }
+
   callWS("GET", "audit/list", par, success, offset );
   return;
 }
@@ -180,7 +187,6 @@ function loadModules(){
             var dsc = 'dsc';  
             var first = 'Seleccione un Módulo';
             var newArr = [];
-            debugger;
             for(var i=0;i<jsonResp.records.length;i++){
                 var ele = {};
                 ele.id = jsonResp.records[i].application+"-*";
@@ -225,9 +231,17 @@ function loadUsers(platform,module){
         case 200:     
             var select = document.getElementById("usersList");
             var id = 'id';
-            var dsc = 'name';  
+            var dsc = 'dsc';  
             var first = 'Seleccione un Usuario';     
-            drawSelectCustom(jsonResp.records, select, id, dsc, first, "");
+            var newArr = [];
+            debugger;
+            for(var i=0;i<jsonResp.records.length;i++){
+                var ele = {};
+                ele.id = jsonResp.records[i];
+                ele.dsc = jsonResp.records[i];
+                newArr.push(ele);
+            }
+            drawSelectCustom(newArr, select, id, dsc, first, "");
         break;
         case 400:
         break;
@@ -407,7 +421,8 @@ function init() {
     
     document.getElementById("modulsList").addEventListener("change",function(){  
       var platform = this.options[this.selectedIndex].getAttribute("platform");
-      var module = this.options[this.selectedIndex].getAttribute("value");
+      var module = this.options[this.selectedIndex].getAttribute("value");      
+      if(module.split("-").length>1)module = module.split("-")[1];
       loadUsers(platform,module);
     });
     /*
@@ -547,7 +562,7 @@ function waitOff(){
   for (var i = 0; i < rsp.length; i++) {
       opt = document.createElement("option");
       opt.setAttribute("value", rsp[i][id]);
-      opt.setAttribute("platform", rsp[i]['platform']);
+      if(rsp[i]['platform']!=undefined && rsp[i]['platform']!= null)opt.setAttribute("platform", rsp[i]['platform']);
       if (rsp[i][id] == selected) opt.setAttribute("selected", true);
       opt.innerHTML = rsp[i][dsc];
       select.appendChild(opt);
