@@ -6,6 +6,25 @@
   include_once("../../../settings/dbconn.php");
   include_once("../../../settings/utils.php");
 
+function validateInvoicesBeforeLoad($db,$customerid){
+  $sql = "SELECT COUNT(*) AS Cnt
+          FROM invoiceheader h
+          INNER JOIN(
+              SELECT refnumber, TYPE
+              FROM loadinvoiceheader
+              WHERE customerid = $customerid) l
+          ON
+            l.refnumber = h.refnumber 
+            AND(CASE WHEN l.type = 'F' THEN 'FAC' WHEN l.type = 'D' THEN 'NDB' 
+                  WHEN l.type = 'C' THEN 'NCR' ELSE '0' END) = h.type
+          WHERE h.customerid = $customerid";
+  if (!$rs=$db->query($sql))
+    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+  $row = $rs->fetch_assoc();
+  $count=$row['Cnt'];
+  if ($count>0)
+    badEnd("400", array("msg"=>"existen $count documentos con códigos duplicados "));
+}  
 // Parametros obligatorios
   $parmsob = array("sessionid");
   if (!parametrosValidos($_REQUEST, $parmsob))
@@ -21,7 +40,8 @@
     $serie = $row['serie'];
 // Asignar ctrnumber inicial de la corrida según la serie
   $ctrnumber = getNextControl($serie,$customerid,$db)-1;
-
+// Validar que las facturas (refnumber) que se van a cargar no existan
+  validateInvoicesBeforeLoad($db,$customerid);
 // Copiar registros header a la tabla definitiva
   $sql = "INSERT INTO invoiceheader ( " . 
     " ctrnumber, ".
@@ -82,7 +102,7 @@
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
 
   // Auditoria
-    insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se hizo una carga masiva de $qtyinvoices documentos");
+    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se hizo una carga masiva de $qtyinvoices documentos");
   // Salida
   $out = new stdClass(); 
   $out->recordsupdates = $qtyinvoices;

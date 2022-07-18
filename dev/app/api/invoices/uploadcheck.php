@@ -33,7 +33,6 @@
 
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-
         $invoices=array();
         while ($row = $rs->fetch_assoc()) 
             $invoices[]=$row["refnumber"];
@@ -521,14 +520,14 @@
 // Detectar facturas duplicadas
     $duplicatedInvoices=duplicatedInvoices($customerid,$db);
     if (count($duplicatedInvoices)>0 && $totalerrors==0)
-        badEnd("400", array("msg"=>"Hay documentos con numeración duplicada. Documentos: ".implode(",",$duplicatedInvoices).""));
+        badEnd("400", array("msg"=>"Hay documentos en el archivo con numeración duplicada. Documentos: ".implode(",",$duplicatedInvoices).""));
 
 // Auditoria
   $countdocs = 0;
   for ($x=0;$x<count($errors);$x++)
     $countdocs += $errors[$x]['err'.$x];
   
-  insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se validó una carga masiva de $countdocs documentos");
+  insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se validó una carga masiva de $countdocs documentos");
 
 
 // Salida

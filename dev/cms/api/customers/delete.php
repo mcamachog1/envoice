@@ -4,12 +4,23 @@
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
     
+    function getUserEmail($db,$customerid){
+        $sql = "SELECT contactemail FROM customers WHERE id=$customerid ";
+        if (!$rs=$db->query($sql))
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+        
+        if (!$row = $rs->fetch_assoc())
+            badEnd("400", array("msg"=>"Cliente id: $customerid no encontrado"));
+        
+        return $row['contactemail'];
+    }
+
     // parametros obligatorios
     $parmsob = array("id","sessionid");
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
     // Validar session y guardar auditoría
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Eliminar cliente Dayco'));
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM customers WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))
@@ -31,6 +42,10 @@
     if (!$db->query($sql)) 
         badEnd("304", array('msg'=>"El registro existe pero no se pudo eliminar"));
     $id=$_REQUEST["id"];    
+
+// Auditoria  
+    $customeremail = getUserEmail($db,$id);  
+    insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se eliminó un usuario de CMS - $customeremail");        
 
     $out = new stdClass;
     $out->id =(integer)$id;

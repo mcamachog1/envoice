@@ -1,7 +1,0 @@
-[05-Apr-2022 15:40:13 UTC] PHP Warning:  Creating default object from empty value in /home/envoice/public_html/dev/cms/api/customers/list.php on line 97
-[07-Apr-2022 15:06:39 UTC] PHP Warning:  Use of undefined constant id - assumed 'id' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 63
-[07-Apr-2022 15:06:39 UTC] PHP Warning:  Use of undefined constant msg - assumed 'msg' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 63
-[07-Apr-2022 15:08:53 UTC] PHP Warning:  Use of undefined constant id - assumed 'id' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 64
-[07-Apr-2022 15:08:53 UTC] PHP Warning:  Use of undefined constant msg - assumed 'msg' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 64
-[07-Apr-2022 15:26:29 UTC] PHP Warning:  Use of undefined constant id - assumed 'id' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 66
-[07-Apr-2022 15:26:29 UTC] PHP Warning:  Use of undefined constant msg - assumed 'msg' (this will throw an Error in a future version of PHP) in /home/envoice/public_html/dev/cms/api/customers/update.php on line 66
