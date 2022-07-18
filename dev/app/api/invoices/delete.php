@@ -42,7 +42,10 @@
     if ($db->affected_rows==0)
         badEnd("304", array('msg'=>"El registro existe pero no se pudo anular"));
     // Audit
-    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos ($refs)");
+    if ($countdocs<10)
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos ($refs)");
+    else
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos");        
 
     $out = new stdClass;
     $out->id =$ids;

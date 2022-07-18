@@ -1,3 +1,0 @@
-function getCustomerEmail($customerid, $db) {
-
-}

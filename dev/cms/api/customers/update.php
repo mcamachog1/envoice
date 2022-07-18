@@ -131,10 +131,7 @@
         $status=$_REQUEST["status"];
         $sessionid=$_REQUEST["sessionid"];
         
-        if ($id==0)
-            $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Crear cliente Dayco'));
-        else
-            $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'customers','dsc'=>'Actualizar cliente Dayco'));
+        $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
         
         // Validar consistencia entre cantidad de series e initialcontrol
         if (!series_validate($serie,$control))
@@ -249,6 +246,12 @@
             $values = $values.",'$ftpusr','$ftppwd'";
             $updatelist = $updatelist.",ftpusr='$ftpusr', ftppwd='$ftppwd'";
         }    
+
+        if ($id==0)
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se creó un usuario de CMS - $contactemail");        
+        else
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se modificó un usuario de CMS - $contactemail");        
+
 
         $out = new stdClass;    
         $out->id =(integer)$id_result;
