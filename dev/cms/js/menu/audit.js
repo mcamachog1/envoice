@@ -73,7 +73,7 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
         break;
     }
   }
-  callWS("GET", "invoices/list", par, success, offset );
+  callWS("GET", "audit/list", par, success, offset );
   return;
 }
 // Esta funcion crea la tabla diamicamente segun la respuesta de user/list
@@ -177,9 +177,10 @@ function loadModules(){
         case 200:     
             var select = document.getElementById("modulsList");
             var id = 'id';
-            var dsc = 'name';  
+            var dsc = 'dsc';  
             var first = 'Seleccione un Módulo';
             var newArr = [];
+            debugger;
             for(var i=0;i<jsonResp.records.length;i++){
                 var ele = {};
                 ele.id = jsonResp.records[i].application+"-*";
@@ -240,7 +241,7 @@ function loadUsers(platform,module){
     }
   }
 
-  callWS("GET", "customers/list", par, success);
+  callWS("GET", "audit/getusers", par, success);
   return;
 }
 //Esta función nos permitirá cambiar entre el "formaulario creación" y la "lista", o cualquier otra pantalla que se agregue
@@ -406,8 +407,7 @@ function init() {
     
     document.getElementById("modulsList").addEventListener("change",function(){  
       var platform = this.options[this.selectedIndex].getAttribute("platform");
-      var module = this.options[this.selectedIndex].getAttribute("id");
-      if(module.split("-").length>1)module = module.split("-")[1];
+      var module = this.options[this.selectedIndex].getAttribute("value");
       loadUsers(platform,module);
     });
     /*

@@ -406,7 +406,7 @@ function downloadReport(){
         line = document.createElement("tr");
         line.classList.add('userLine');
         line.id = navLink.id;
-        if(navLink.status.id==1 && navLink.){
+        if(navLink.status.id==1 && navLink.manualload){
           line.addEventListener("click",function(e){     
             //Se valida que no se esté marcando el campo del icono "ver factura" o el checkmark "escoger".
             if((e.target.classList.contains("inptMark") || e.target.classList.contains("thMark")) ||
