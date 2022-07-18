@@ -460,9 +460,9 @@ function loadDataByInvoice($invoices,$customerid,$db){
     return $records;
 } 
 function setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order) {
-$sql =  "SELECT " .
+    $sql =  "SELECT " .
         " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
-        " H.type, H.ctrref, ".            
+        " H.type, H.ctrref, manualload, ".            
         " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
         " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
         " H.discount discount, ".
@@ -486,6 +486,7 @@ function jsonInvoiceList($rs){
   while ($row = $rs->fetch_assoc()){
       $record = new stdClass();
       $record->id = (integer) $row["id"];
+      ($row["manualload"]==1) ? ($record->manualload = true) : ($record->manualload = false);
       $record->type =new stdClass();
           $record->type->id=$row['type'];
           switch ($row['type']) {

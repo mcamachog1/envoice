@@ -13,7 +13,7 @@
     $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
     // Validar que existe algun registro y que el documento esté por enviar
     $sql="SELECT COUNT(*) Cnt FROM invoiceheader WHERE id IN ($ids) ".
-        " AND customerid=$customerid AND tosend=0 AND sentdate IS NOT NULL ";
+        " AND customerid=$customerid AND tosend=0 AND sentdate IS NULL ";
     if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     $row = $rs->fetch_assoc();
@@ -22,7 +22,7 @@
 
     // Seleccionar los ids que pertenecen al cliente 
     $sql="SELECT id, refnumber FROM invoiceheader WHERE id IN ($ids)".
-    " AND customerid=$customerid AND tosend=0 AND sentdate IS NOT NULL";
+    " AND customerid=$customerid AND tosend=0 AND sentdate IS NULL";
     if (!$rs=$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     $ids_array = array();
@@ -36,9 +36,11 @@
 
     $countdocs=count($ids_array);
     $sql="UPDATE invoiceheader SET canceldate= NOW() WHERE id IN ($ids) AND customerid=$customerid";
+
     if (!$db->query($sql)) 
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    if ($db->affected_rows==0)
         badEnd("304", array('msg'=>"El registro existe pero no se pudo anular"));
-    
     // Audit
     insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos ($refs)");
 
