@@ -809,6 +809,17 @@ input:checked+.slider:before {
   height: 20px;
   line-height: 20px;
 }
+.status-color-4 {
+  background-color: #ee0f0f;
+  color:#FFFFFF;
+  opacity: 0.8;
+  border-radius: 2px;
+  font-weight: 600;
+  padding: 4px 5px;
+  font-size: 78%;
+  height: 20px;
+  line-height: 20px;
+}
 
 #divFilters {
   width: 15%;

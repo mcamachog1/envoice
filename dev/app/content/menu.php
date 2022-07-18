@@ -513,6 +513,7 @@
             </div>
         </div>
         <div class="invoiceBot">
+            <div class="msgErrInpt" style="text-align: center;margin-top:-10px;padding-bottom: 10px;" id="globMsgErr"></div>
             <div class="btnsCnt">
                 <div class="btnCell">
                     <div class="btnClose btnA" id="closeFrm">
@@ -645,13 +646,13 @@
         </div>
         <div class="popupCard" id="deletePopup">
             <div class="popupClose" popup="deletePopup"><i class="fa fa-times"></i></div>
-            <div class="popupTit">Eliminar Documentos</div>
-            <div class="popupDsc">¿Está seguro que desea eliminar los documentos seleccionados?</div>
+            <div class="popupTit">Anular Documentos</div>
+            <div class="popupDsc">¿Está seguro que desea anular los documentos seleccionados?</div>
             <div class="popupBtns">
             <div class="btnsCntPop">
                 <div class="btnCell btnCellPop">
                     <div class="btnClose btnB" id="delInvc">
-                        ELIMINAR
+                        ANULAR
                     </div>
                 </div>
                 <div class="btnCell btnCellPop" style="margin-bottom:10px">

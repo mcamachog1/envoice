@@ -406,7 +406,7 @@ function downloadReport(){
         line = document.createElement("tr");
         line.classList.add('userLine');
         line.id = navLink.id;
-        if(navLink.status.id==1){
+        if(navLink.status.id==1 && navLink.){
           line.addEventListener("click",function(e){     
             //Se valida que no se esté marcando el campo del icono "ver factura" o el checkmark "escoger".
             if((e.target.classList.contains("inptMark") || e.target.classList.contains("thMark")) ||
@@ -1211,13 +1211,16 @@ function downloadReport(){
               break;
           case 400:
               console.log(resp);
-              alert(resp.msg);
+              globErr(document.getElementById("globMsgErr"),resp.msg);
               break;
           case 401:
               console.log(resp);
               gotoPage("login","main",{});
               break;
           case 500:
+            var msg = "";
+            if(resp.msg!==""&&resp.msg!==undefined)msg = resp.msg;
+              globErr(document.getElementById("globMsgErr"),msg);
               console.log(resp);
               break;
           default:
@@ -1443,11 +1446,14 @@ function blankAll(){
     par.id = ids;
     par.sessionid = sessid;
     var succes = function(status, respText){
-      var resp = JSON.parse(respText);
+      if(respText!="")var resp = JSON.parse(respText);
       switch (status){
           case 200:
             closePopup("deletePopup");
             loadInvoices();
+          break;
+          case 204:
+            console.log("El registro no existe");
           break;
           case 400:
               console.log(resp);

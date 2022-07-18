@@ -26,7 +26,7 @@ function logOut() {
   }
   callWS("GET", "security/logout", par, success);
 }
-function loadInvoices(offset = 0,filter="",order=-1,numrecords=10){
+function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
   var par = {};
   if(filter !== "" && filter !== undefined && filter !== null)
       par.filter = filter;
@@ -43,13 +43,15 @@ function loadInvoices(offset = 0,filter="",order=-1,numrecords=10){
   par.datefrom = desde == "" ? now : desde;
   par.dateto = hasta == "" ? now : hasta;
 
-  par.status = "1-2-3";
   par.offset = offset;
   par.order = order;
   par.numofrec = numrecords;
   par.customerid = document.getElementById("usersList").value;
   if(par.customerid=="")par.customerid=-1;
   par.sessionid = getParameterByName("sessid");
+
+  par.user = document.getElementById("usersList").value;
+  par.module = document.getElementById("modulsList").value;
 
   var success = function(status, respText, offset){
     var jsonResp;
@@ -164,16 +166,11 @@ function drawInvoices(data){
     }
 
 }  
-function loadModuls(filter="",offset=0,order=2,numrecords=100000){
+function loadModules(){
   var par = {};  
-  par.filter = "";
-  par.status = "1"
-  par.offset = offset;
-  par.order = order;
-  par.numofrec = numrecords;
   par.sessionid = getParameterByName("sessid");
 
-  var success = function(status, respText, offset){
+  var success = function(status, respText){
     var jsonResp;
     if(respText!="")jsonResp = JSON.parse(respText);
     switch (status){
@@ -181,8 +178,23 @@ function loadModuls(filter="",offset=0,order=2,numrecords=100000){
             var select = document.getElementById("modulsList");
             var id = 'id';
             var dsc = 'name';  
-            var first = 'Seleccione un Módulo';     
-            drawSelectCustom(jsonResp.records, select, id, dsc, first, "");
+            var first = 'Seleccione un Módulo';
+            var newArr = [];
+            for(var i=0;i<jsonResp.records.length;i++){
+                var ele = {};
+                ele.id = jsonResp.records[i].application+"-*";
+                ele.dsc = jsonResp.records[i].application+" - Todos";
+                ele.platform = jsonResp.records[i].application;
+                newArr.push(ele);
+              for(var x=0;x<jsonResp.records[i].modules;x++){
+                var ele = {};
+                ele.id = jsonResp.records[i].application+"-"+jsonResp.records[i].modules[x];
+                ele.dsc = jsonResp.records[i].application+" - "+jsonResp.records[i].modules[x];
+                ele.platform = jsonResp.records[i].application;
+                newArr.push(ele);
+              }
+            }     
+            drawSelectCustom(newArr, select, id, dsc, first, "");
         break;
         case 400:
         break;
@@ -196,19 +208,16 @@ function loadModuls(filter="",offset=0,order=2,numrecords=100000){
     }
   }
 
-  callWS("GET", "customers/list", par, success, offset );
+  callWS("GET", "audit/getmodules", par, success);
   return;
 }
-function loadUsers(filter="",offset=0,order=2,numrecords=100000){
+function loadUsers(platform,module){
   var par = {};  
-  par.filter = "";
-  par.status = "1"
-  par.offset = offset;
-  par.order = order;
-  par.numofrec = numrecords;
   par.sessionid = getParameterByName("sessid");
+  par.app = platform;
+  par.module = module;
 
-  var success = function(status, respText, offset){
+  var success = function(status, respText){
     var jsonResp;
     if(respText!="")jsonResp = JSON.parse(respText);
     switch (status){
@@ -231,7 +240,7 @@ function loadUsers(filter="",offset=0,order=2,numrecords=100000){
     }
   }
 
-  callWS("GET", "customers/list", par, success, offset );
+  callWS("GET", "customers/list", par, success);
   return;
 }
 //Esta función nos permitirá cambiar entre el "formaulario creación" y la "lista", o cualquier otra pantalla que se agregue
@@ -277,7 +286,7 @@ function drawPagination(offset, numofrecords, recordsbypage = 10) {
     o.classList.add("colorBlue");
   }
   o.addEventListener("click", function () {
-    loadInvoices();
+    loadAudit();
   });
   inp.appendChild(o);
   o = document.createElement("span");
@@ -286,7 +295,7 @@ function drawPagination(offset, numofrecords, recordsbypage = 10) {
   if (actpag > 1) {
     o.classList.add("colorBlue");
     o.addEventListener("click", function () {
-      loadInvoices((actpag - 2) * recordsbypage);
+      loadAudit((actpag - 2) * recordsbypage);
     });
   }
   inp.appendChild(o);
@@ -313,7 +322,7 @@ function drawPagination(offset, numofrecords, recordsbypage = 10) {
     if (actpag == i) o.classList.add("pagSel");
     o.innerHTML = i;
     o.addEventListener("click", function () {
-      loadInvoices((1 * this.innerHTML - 1) * recordsbypage);
+      loadAudit((1 * this.innerHTML - 1) * recordsbypage);
     });
     inp.appendChild(o);
   }
@@ -331,7 +340,7 @@ function drawPagination(offset, numofrecords, recordsbypage = 10) {
   if (actpag < parseInt(lastpag)) {
     o.classList.add("colorBlue");
     o.addEventListener("click", function () {
-      loadInvoices(actpag * recordsbypage);
+      loadAudit(actpag * recordsbypage);
     });
   }
   inp.appendChild(o);
@@ -343,7 +352,7 @@ function drawPagination(offset, numofrecords, recordsbypage = 10) {
     o.classList.add("colorBlue");
   }
   o.addEventListener("click", function () {
-    loadInvoices((lastpag - 1) * recordsbypage);
+    loadAudit((lastpag - 1) * recordsbypage);
   });
   inp.appendChild(o);
 }
@@ -383,34 +392,37 @@ function init() {
         desde.value = fechas[0].toISOString().split('T')[0];
         hasta.value =  fechas[1].toISOString().split('T')[0];
         document.getElementById("actPag").value = 1;
-        loadInvoices();
+        loadAudit();
     });*/
     
     let desde = document.getElementById('dateDesde');
     let hasta = document.getElementById('dateHasta');
     desde.addEventListener('change',function(){
-      loadInvoices();
+      loadAudit();
     });
     hasta.addEventListener('change',function(){
-      loadInvoices();
+      loadAudit();
     });    
     
-    document.getElementById("usersList").addEventListener("change",function(){      
-      
+    document.getElementById("modulsList").addEventListener("change",function(){  
+      var platform = this.options[this.selectedIndex].getAttribute("platform");
+      var module = this.options[this.selectedIndex].getAttribute("id");
+      if(module.split("-").length>1)module = module.split("-")[1];
+      loadUsers(platform,module);
     });
     /*
     document.getElementById("btnPagRight").addEventListener("click",function(){
       var actpag = document.getElementById("actPag");
       if(actpag.getAttribute("max")>=(parseFloat(actpag.value)+1)){
         actpag.value = parseFloat(actpag.value)+1;        
-        loadInvoices();
+        loadAudit();
       }
     });
     document.getElementById("btnPagLeft").addEventListener("click",function(){
       var actpag = document.getElementById("actPag");
       if(actpag.value>1){
         actpag.value = parseFloat(actpag.value)-1;        
-        loadInvoices();
+        loadAudit();
       }
     });
     document.getElementById("actPag").addEventListener("change",function(){
@@ -419,16 +431,15 @@ function init() {
       }else if(parseFloat(this.value) > parseFloat(this.getAttribute("max"))){
         this.value = this.getAttribute("max");
       }
-      loadInvoices();
+      loadAudit();
     });*/
     //Evento de la busqueda
     document.getElementById("mySearch").addEventListener("change",function(){
-      loadInvoices(this.value);
+      loadAudit(this.value);
     });
 
-    loadModuls();
-    loadUsers();
-    loadInvoices();
+    loadModules();
+    loadAudit();
     
     showPage("homeCenter");
 };
@@ -536,11 +547,9 @@ function waitOff(){
   for (var i = 0; i < rsp.length; i++) {
       opt = document.createElement("option");
       opt.setAttribute("value", rsp[i][id]);
-      if(id.indexOf("err")>-1){
-          opt.setAttribute("errid", id);
-      }
+      opt.setAttribute("platform", rsp[i]['platform']);
       if (rsp[i][id] == selected) opt.setAttribute("selected", true);
-      opt.innerHTML = rsp[i][dsc] + " - " + rsp[i]['rif'];
+      opt.innerHTML = rsp[i][dsc];
       select.appendChild(opt);
   }
 }

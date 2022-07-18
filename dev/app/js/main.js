@@ -487,7 +487,16 @@ function setTextFormat(o){
         e.target.setSelectionRange(cursorStart, cursorEnd);
   });
 }
-
+function globErr(ele,msg){
+  ele.classList.add("inptErr");
+  if(msg!=""){
+    ele.innerHTML = msg;
+   
+  }
+  setTimeout(function(){
+    ele.innerHTML = "";
+  },6000);
+}
 function inptError(ele,msg=""){
   ele.parentElement.classList.add("inptErr");
   if(msg!=""){

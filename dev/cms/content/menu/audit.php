@@ -1,6 +1,10 @@
 <div class="container page" id="homeCenter">
     <div class="centerSect">
-        
+        <div class="headerCon" style="padding-bottom:10px">
+                <div class="paddingTitle headerCol">
+                    <span class="stdText textLg"><b>Auditoría</b></span>
+                </div>
+        </div>
         <div class="stdBtn">
             <div class="subHdTbl">
                 <div class="subHdCell cell20" style="padding-left:0">
