@@ -61,6 +61,9 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
           case 3:
               $status_condition = " AND viewdate IS NOT NULL ";            
               break;
+          case 4:
+              $status_condition = " AND canceldate IS NOT NULL ";            
+              break;                 
       }
   }
 // Status varios valores
@@ -80,6 +83,9 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
             case 3:
                 $status_condition .= " OR (viewdate IS NOT NULL) ";            
                 break;
+            case 4:
+                $status_condition .= " OR (canceldate IS NOT NULL) ";            
+                break;                      
         }
     }
     $status_condition .= " ) ";                
@@ -92,23 +98,8 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
         $order = $order .  " DESC";
   }
 // SQL
-  $sql =  "SELECT " .
-    " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
-    " H.type, H.ctrref, ".            
-    " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
-    " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
-    " H.discount discount, ".
-    " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
-    " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
-    " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
-    " FROM    invoiceheader H ".
-    " LEFT JOIN invoicedetails D ON ".
-      " D.invoiceid = H.id ".
-    " WHERE H.customerid=$customerid AND H.issuedate BETWEEN '$datefrom' AND '$dateto' ".
-    $status_condition.$filter.   
-    " GROUP BY ".
-    "   H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, DATE_FORMAT(H.issuedate, '%d/%m/%Y'), ".
-    "   H.sentdate, H.viewdate " . $order;
+  $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);
+ 
 
 
 // Calcular numero de registros

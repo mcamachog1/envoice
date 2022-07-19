@@ -60,6 +60,9 @@ function badEndCsv($message){
           case 3:
               $status_condition = " AND viewdate IS NOT NULL ";            
               break;
+          case 4:
+              $status_condition = " AND canceldate IS NOT NULL ";            
+              break;                   
       }
   }
 // Status varios valores
@@ -79,6 +82,10 @@ function badEndCsv($message){
             case 3:
                 $status_condition .= " OR (viewdate IS NOT NULL) ";            
                 break;
+            case 4:
+              $status_condition .= " OR (canceldate IS NOT NULL) ";            
+              break;                   
+             
         }
     }
     $status_condition .= " ) ";                
