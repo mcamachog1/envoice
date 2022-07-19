@@ -3,14 +3,16 @@
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
-    
+    include_once("functions.php");    
+
     // parametros obligatorios
     $parmsob = array("id","sessionid");
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
     
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Eliminar usuario.'));    
-    
+    $id=$_REQUEST["id"]; 
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+    $userCMS = getUserCMS($db,$id);
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM users WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))
@@ -25,8 +27,11 @@
     $sql="DELETE FROM users WHERE id=".$_REQUEST["id"];
     if (!$db->query($sql)) 
         badEnd("304", array('msg'=>"El registro existe pero no se pudo eliminar"));
-    $id=$_REQUEST["id"];    
+   
 
+    // Auditoria
+
+    insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se eliminó un usuario de CMS $userCMS");  
     $out = new stdClass;
     $out->id =(integer)$id;
     header("HTTP/1.1 200");

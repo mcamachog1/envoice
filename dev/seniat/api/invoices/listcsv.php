@@ -6,6 +6,7 @@ include("../../../settings/dbconn.php");
 include("../../../settings/utils.php");
 include("../functions.php");  
 
+
 function badEndCsv($message){
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
   $fp = fopen('php://output', 'wb');
@@ -33,7 +34,7 @@ function badEndCsv($message){
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
-validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'Exportar lista de facturas.'));    
+validSession($db, $_REQUEST["sessionid"]);    
 
 // Filter
   $filter="";
@@ -92,7 +93,9 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
         $order = $order .  " DESC";
   }
 // SQL
-  $sql =  "SELECT " .
+  $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);  
+  /*
+    sql =  "SELECT " .
     " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
     " H.type, H.ctrref, ".            
     " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
@@ -109,7 +112,7 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
     " GROUP BY ".
     "   H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, DATE_FORMAT(H.issuedate, '%d/%m/%Y'), ".
     "   H.sentdate, H.viewdate " . $order;
-
+  */
 
 // Calcular numero de registros
   if (!$rs = $db->query("SELECT COUNT(*) cnt FROM (" . $sql . ") A "))
@@ -164,6 +167,9 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
   foreach($csvarray as $arr){
     fputcsv($fp,$arr,';');
   }
+// Auditoria
+  $customer = getCustomerName($id,$db);
+  insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'SENIAT','invoices',"Se exportó la lista de documentos del cliente $customer");  
 // Cerrar archivo
   fclose($fp);
   die(); 

@@ -158,6 +158,10 @@
     $out->validthru = $usersession['validthru'];
     $out->name = $usr;
  
+// Audit    
+    $ip = $_SERVER['REMOTE_ADDR'];
+    insertAudit($db,$usr,$ip,'SENIAT','security',"Inició sesión en módulo Seniat: IP= $ip");
+
     header("HTTP/1.1 200");
     echo (json_encode($out));
     die();

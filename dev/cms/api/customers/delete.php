@@ -4,7 +4,7 @@
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
     
-    function getUserEmail($db,$customerid){
+    function getCustomerEmail($db,$customerid){
         $sql = "SELECT contactemail FROM customers WHERE id=$customerid ";
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
@@ -19,8 +19,10 @@
     $parmsob = array("id","sessionid");
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
-    // Validar session y guardar auditoría
+    // Validar session 
     $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+    $customeremail = getCustomerEmail($db,$_REQUEST["id"]); 
+    $email=getEmail($_REQUEST["sessionid"],'CMS',$db);    
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM customers WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))
@@ -41,14 +43,14 @@
     $sql="DELETE FROM customers WHERE id=".$_REQUEST["id"];
     if (!$db->query($sql)) 
         badEnd("304", array('msg'=>"El registro existe pero no se pudo eliminar"));
-    $id=$_REQUEST["id"];    
+
 
 // Auditoria  
-    $customeremail = getUserEmail($db,$id);  
-    insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se eliminó un usuario de CMS - $customeremail");        
+   
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se eliminó un cliente - $customeremail");        
 
     $out = new stdClass;
-    $out->id =(integer)$id;
+    $out->id =(integer)$_REQUEST["id"];
     header("HTTP/1.1 200");
     echo (json_encode($out));
     die();

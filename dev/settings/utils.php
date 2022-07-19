@@ -75,7 +75,7 @@ function getEmail($sessionid,$module,$db){
     }
     return strtolower($row["$module"]);  
 }
-function isSessionValid($db, $sessionid,$data=array()){
+function isSessionValid($db, $sessionid){
     // Validar sessionid activo
     $sql =  "SELECT COUNT(*) cnt, min(id) id " .
             "FROM   customers " .
@@ -91,11 +91,6 @@ function isSessionValid($db, $sessionid,$data=array()){
         header("HTTP/1.1 401");
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
-    }
-
-    if (count($data)>0){
-        $email = getEmail($sessionid,'APP',$db);
-        insertAudit($db,$email,$data['ip'],$data['app'],$data['module'],$data['dsc']);
     }
 
     return($row["id"]);
@@ -138,6 +133,7 @@ function parametrosValidos($parms, $campos){
 function parametroValidoVacio($parms, $campo){
     return isset($parms[$campo]) && trim($parms[$campo])=="";
 }
+
 function badEnd($htmlError, $output){
     header("HTTP/1.1 ".$htmlError);
     echo (json_encode($output));
@@ -212,7 +208,7 @@ function isSessionValidCust($db, $sessionid){
     }
     return($row["id"]);
 }
-function isSessionValidCMS($db, $sessionid,$data=array()){
+function isSessionValidCMS($db, $sessionid){
     // Validar sessionid activo
     $sql =  "SELECT COUNT(*) cnt, min(id) id " .
             "FROM   users " .
@@ -229,10 +225,7 @@ function isSessionValidCMS($db, $sessionid,$data=array()){
         echo (json_encode(array("msg"=>"Sesión inválida o expirada")));
         die();
     }
-    if (count($data)>0){
-        $email = getEmail($sessionid,'CMS',$db);
-        insertAudit($db,$email,$data['ip'],$data['app'],$data['module'],$data['dsc']);
-    }
+
     return($row["id"]);
 }
 function avoidInjection($param,$type) {
@@ -543,5 +536,13 @@ function jsonInvoiceList($rs){
       $records[] = $record;
   }
   return $records;
+}
+function getCustomerName($id,$db){
+    $sql ="SELECT name FROM customers WHERE id = $id";
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>4));
+    if (!$row = $rs->fetch_assoc());
+        badEnd("400", array("msg"=>'Cliente id $id no encontrado'));
+    return $row['name'];    
 }
 ?>

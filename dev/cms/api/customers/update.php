@@ -132,7 +132,7 @@
         $sessionid=$_REQUEST["sessionid"];
         
         $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
-        
+        $oldstatus=getStatus($id,$db);
         // Validar consistencia entre cantidad de series e initialcontrol
         if (!series_validate($serie,$control))
             badEnd("400", array("msg"=>"Disparidad entre numeros de serie y numeros de control"));
@@ -247,12 +247,21 @@
             $updatelist = $updatelist.",ftpusr='$ftpusr', ftppwd='$ftppwd'";
         }    
 
-        if ($id==0)
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se creó un usuario de CMS - $contactemail");        
-        else
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se modificó un usuario de CMS - $contactemail");        
 
 
+    // Auditoria
+
+        if ($_REQUEST["id"]==0)
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se creó un un cliente nuevo - $contactemail ");        
+        else{
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se modificaron los datos fiscales de un cliente - $contactemail ");        
+            if ($status==1 && $oldstatus==0)
+                insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se habilitó un cliente de CMS - $contactemail");            
+            elseif ($status==0 && $oldstatus==1)
+                insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $contactemail");            
+        }
+           
+    // Salida    
         $out = new stdClass;    
         $out->id =(integer)$id_result;
         header("HTTP/1.1 200");

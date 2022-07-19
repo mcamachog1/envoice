@@ -5,7 +5,7 @@
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
     
-    function getUserEmail($db,$customerid){
+    function getCustomerEmail($db,$customerid){
         $sql = "SELECT contactemail FROM customers WHERE id=$customerid ";
         if (!$rs=$db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
@@ -43,11 +43,11 @@
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     }
 // Audit
-    $customeremail = getUserEmail($db,$id);
+    $customeremail = getCustomerEmail($db,$id);
     if ($status==1)
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se habilitó un usuario de CMS - $customeremail");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $customeremail");        
     else
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un usuario de CMS - $customeremail");            
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $customeremail");            
 
     $out = new stdClass;    
     $out->id =(integer)$id;

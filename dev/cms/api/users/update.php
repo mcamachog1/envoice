@@ -5,6 +5,7 @@
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
+
 // Funciones locales    
     function getStatus($userid,$db){
         $sql = "SELECT status FROM users WHERE id=$userid ";
@@ -63,11 +64,8 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 // Validar sesion
-  if ($id==0)
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Crear usuario.'));    
-  else
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Actualizar usuario.'));    
-    
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
+
 // Crear usuario del Sistema para auditoria si no existe
     if (!existSystemUser($db))
         createSystemUser($db);
@@ -77,7 +75,7 @@
     $columns="id,usr,name,status";
     $values=$_REQUEST["id"].",'".$_REQUEST["usr"]."','".$_REQUEST["name"]."',".$_REQUEST["status"];
     $updatelist = "usr='".$_REQUEST["usr"]."',name='".$_REQUEST["name"]."',status=".$_REQUEST["status"];
-
+    $oldstatus=getStatus($_REQUEST['id'],$db);
     if ($_REQUEST["id"]==0) { 
         // Es un insert
         $sql =  "INSERT INTO users (usr, name, status) " .
@@ -111,7 +109,18 @@
             
         }
     }
-    
+    $usr = $_REQUEST["usr"];
+
+    if ($_REQUEST["id"]==0)
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se creó un usuario de CMS - $usr ");        
+    else{
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se modificó un usuario de CMS - $usr ");        
+        if ($status==1 && $oldstatus==0)
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se habilitó un usuario de CMS - $usr");            
+        elseif ($status==0 && $oldstatus==1)
+            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se inhabilitó un usuario de CMS - $usr");            
+    }
+        
 
     $out = new stdClass;    
     $out->id =(integer)$id;

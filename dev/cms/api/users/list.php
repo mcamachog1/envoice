@@ -9,7 +9,7 @@
     $parmsob = array("order","offset","numofrec","sessionid");
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
- 
+    $filter="";
     // parametros opcionales
     if (isset($_REQUEST["filter"])){
         $filtro = explode("+",$_REQUEST["filter"]);
@@ -26,9 +26,7 @@
         }
     }
  
-    else $filter="";        
-   
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Listar usuarios.'));    
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
 
     // order
     $strorderby="";
@@ -54,10 +52,10 @@
 
     
     $sql =  "SELECT     U.id, U.usr, U.name, U.status " .
-            "FROM       users U  WHERE U.id <> -1" ;
+            "FROM       users U  WHERE U.id <> '-1' " ;
 
     if (strlen($filter)>0)
-        $sql= $sql." WHERE ".$filter." ";
+        $sql= $sql." AND ".$filter." ";
 
     $sqlCnt =  "SELECT COUNT(*) cnt FROM (" . $sql  .") B";
     if (!$rsCnt=$db->query($sqlCnt)){

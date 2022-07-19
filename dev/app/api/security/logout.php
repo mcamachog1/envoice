@@ -11,7 +11,8 @@
     }
     
     $sessionid = $_GET["sessionid"];
-    isSessionValid($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'security','dsc'=>'Cerró sesión en DaycoPrint'));        
+    $email=getEmail($_REQUEST["sessionid"],'APP',$db);
+    isSessionValid($db, $_REQUEST["sessionid"]);        
     
     // actualizamos la base de datos blanqueando la session id y estableciendo el validthru null
     $sql =  "UPDATE customers " .
@@ -35,6 +36,9 @@
     //mostramos los datos recibidos
     $out=new stdClass;
     $out->id = 0;
+
+    // Audit
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'APP','security',"Cerró sesión en DaycoPrint");  
     //lanzamos un codigo que todo salio bien
     header("HTTP/1.1 200");
     echo (json_encode($out));
