@@ -220,20 +220,20 @@
             $detail->item->dsc = $row["dsc"];
             $detail->qty =new stdClass();
             $detail->qty->number = (integer)$row["qty"];
-            $detail->qty->formatted = $row["qty"];   
+            $detail->qty->formatted = number_format($row["qty"], 2, ",", ".");             
             $detail->item->unit = $row["unit"];
             $detail->unitprice =new stdClass();
             $detail->unitprice->number = (float)$row["unitprice"];
-            $detail->unitprice->formatted = $row["unitprice"]; 
+            $detail->unitprice->formatted = number_format($row["unitprice"], 2, ",", ".");
             $detail->tax =new stdClass();
             $detail->tax->number = (float)$row["tax"]/100;
             $detail->tax->formatted = $row["tax"]."%";        
             $detail->discount =new stdClass();
             $detail->discount->number = (float)$row["discount"]/100;
-            $detail->discount->formatted = $row["discount"]."%";  
+            $detail->discount->formatted = number_format($row["discount"], 2, ",", ".")."%";  
             $detail->total =new stdClass();
             $detail->total->number = (float)$row["total"];
-            $detail->total->formatted = $row["total"];          
+            $detail->total->formatted = number_format($row["total"], 2, ",", ".");  
     
             $details[] = $detail;
         } 

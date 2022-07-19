@@ -243,9 +243,12 @@
                         display:table-cell;
                         text-align: right;
                         padding-right: 5px;
-                        width: auto;
+                        width: 77.5%;
                         vertical-align: middle;
                     }
+                        .taxTotAmo{
+                            font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
+                        }
                     .boldClass{
                         font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
                     }
@@ -385,6 +388,7 @@
                 </div>
                 <div class="itemsDetCnt">
                     <?php 
+                        $taxamo = 0;
                         for($i=0;$i<count($record->details);$i++){
                             echo('
                             <div class="itemsTblRow">
@@ -400,7 +404,7 @@
                                 <div class="itemsDet cell7Mid itemHdNum">
                                 '.$record->details[$i]->qty->formatted.'
                                 </div>
-                                <div class="itemsDet cell10 itemHdNum">
+                                <div class="itemsDet cell10">
                                 '.$record->details[$i]->item->unit.'
                                 </div>
                                 <div class="itemsDet cell10 itemHdNum">
@@ -414,6 +418,7 @@
                                 </div>
                             </div>
                             ');
+                            $taxamo += $record->details[$i]->tax->number > 0 ? $record->details[$i]->total->number : 0;
                         }
                     ?>
                 </div>
@@ -431,7 +436,7 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">IVA </div>
+                        <div class="itemTotLbl">IVA sobre <span class="taxTotAmo"><?php echo(number_format($taxamo, 2, ",", "."))?></span></div>
                         <div class="itemTotAmo">
                             <span class="bgTot"><?php echo(($record->amounts->tax->number>0) ? $record->amounts->tax->formatted : '-'); ?></span>
                         </div>

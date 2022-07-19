@@ -468,7 +468,7 @@
                 </div>
                 <div class="itemsTotsCnt">
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">Sub-Total</div>
+                        <div class="itemTotLbl">Sub-Total (VES)</div>
                         <div class="itemTotAmo">
                             <span class="bgTot" id="subTot">0,00</span>
                         </div>
@@ -489,7 +489,7 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">IVA sobre </div>
+                        <div class="itemTotLbl">IVA sobre (VES)</div>
                         <div class="itemTotAmo" style="padding:0;font-size:100%;">
                             <div class="itemCell cell7Mid">
                                 <div class="inptFrmCnt totTblCnt totCell">
@@ -504,7 +504,7 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl" style="font-weight:bold">TOTAL</div>
+                        <div class="itemTotLbl" style="font-weight:bold">TOTAL (VES)</div>
                         <div class="itemTotAmo">
                             <span class="totAmo" id="totAmo">0,00</span>
                         </div>
