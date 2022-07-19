@@ -32,7 +32,7 @@ function badEndCsv($message){
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
-  isSessionValidCMS($db,$sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'Exportar lista de facturas a csv'));
+  isSessionValidCMS($db,$sessionid);
 
 // Filter
   $filter="";
@@ -113,7 +113,9 @@ $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);
   if (!$rs = $db->query($sql))
     badEndCsv("Error de Base de Datos\n $db->error");
 
+// Serialize  
   $records = jsonInvoiceList($rs);
+
 // Preparar archivo csv
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
   $fp = fopen('php://output', 'wb');
@@ -153,6 +155,12 @@ $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);
   foreach($csvarray as $arr){
     fputcsv($fp,$arr,';');
   }
+
+// Auditoria
+  $customer = getCustomerName($id,$db);
+  insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','invoices',"Se exportó la lista de documentos del cliente $customer");  
+
+  
 // Cerrar archivo
   fclose($fp);
   die(); 

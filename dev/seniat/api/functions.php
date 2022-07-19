@@ -29,7 +29,7 @@
 
         return $row['name'];
     }    
-    
+
     function setPassword($hash,$pwd,$db){
         // Obtener email del hash
         $sql ="SELECT name FROM preferences WHERE value = '$hash'";

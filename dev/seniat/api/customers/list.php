@@ -29,7 +29,7 @@
         }
     }
    
-    validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'customers','dsc'=>'Listar clientes.'));    
+    validSession($db, $_REQUEST["sessionid"]);
     
     // order
     $strorderby="";

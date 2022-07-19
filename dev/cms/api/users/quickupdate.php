@@ -4,7 +4,7 @@
     header("Content-Type:application/json");
     include_once("../../../settings/dbconn.php");
     include_once("../../../settings/utils.php");
-
+    include_once("functions.php");
 
     function getStatus($userid,$db){
         $sql = "SELECT status FROM users WHERE id=$userid ";
@@ -20,7 +20,7 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
-    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'users','dsc'=>'Activar-Desactivar usuario.'));    
+    $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
     
     $id = $_REQUEST["id"];
     $status = $_REQUEST["status"];    
@@ -37,6 +37,14 @@
     
     $out = new stdClass;    
     $out->id =(integer)$id;
+
+    // Audit
+    $useremail = getUserCMS($db,$id);
+    if ($status==1)
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se inhabilitó un usuario de CMS - $useremail");        
+    else
+        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se habilitó un usuario de CMS - $useremail");            
+
     header("HTTP/1.1 200");
     echo (json_encode($out));
     die();

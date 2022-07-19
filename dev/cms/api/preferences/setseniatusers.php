@@ -44,6 +44,9 @@ function insertUsers($users,$emails,$db){
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));    
             $counter++;
+            // Auditoria
+            //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se creó el Usuario '$a_users[$i]' de Seniat - '$a_emails[$i]'");        
+        
         }
         // Si existe se limpian los fails y se pone status 1
         else {
@@ -65,6 +68,8 @@ function insertUsers($users,$emails,$db){
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
 
             }
+            // Auditoria
+            //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se modificaron los datos del Usuario ".$a_users[$i]." de Seniat - ".$a_emails[$i]);        
     }
     return $counter;
 }
@@ -95,6 +100,10 @@ function deleteUsers($emails,$db){
     $sql = "DELETE FROM preferences WHERE NAME NOT IN (SELECT NAME FROM (SELECT NAME FROM preferences WHERE $condition) AS t )";
     if (!$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
+
+    // Auditoria
+    //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se eliminó el Usuario de Seniat - $emails");        
+
     return $db->affected_rows;
 }
 // Parametros obligatorios
@@ -102,7 +111,7 @@ $parmsob = array("usernames","emails","sessionid");
 if (!parametrosValidos($_GET, $parmsob))
     badEnd("400", array("msg"=>"Parámetros obligatorios " . implode(", ", $parmsob)));
 // Validar sesion
-    $userid = isSessionValidCMS($db,$_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'CMS','module'=>'invoices','dsc'=>'Actualizar usuarios SENIAT.'));
+    $userid = isSessionValidCMS($db,$_REQUEST["sessionid"]);
 // Revisar parametros
 $users = avoidInjection($_GET["usernames"],'list');
 $emails = avoidInjection($_GET["emails"],'list');

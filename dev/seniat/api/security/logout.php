@@ -6,7 +6,7 @@
 
 
     function logoutUser($sessionid,$db){
-        $email=validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'security','dsc'=>'Cerrar sesión.'));    
+        $email=validSession($db, $_REQUEST["sessionid"]);
         $name_session = $email."_session";
         $name_validthru = $email."_validthru"; 
         $name_fails = $email."_fails";           
@@ -29,9 +29,12 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
+    $email=getEmail($_REQUEST["sessionid"],'SENIAT',$db);
     $sessionid = $_GET["sessionid"];
     logoutUser($sessionid,$db);
 
+    // Audit
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'SENIAT','security',"Cerró sesión en módulo Seniat");  
 
     // Salida
     $out=new stdClass;

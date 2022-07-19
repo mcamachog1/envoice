@@ -73,19 +73,14 @@
     $currency=avoidInjection($data->currency,'str');
     $discount=avoidInjection($data->discount,'float');
     $arraydetails = $data->details;
-    
+
+// Validar user session 
+    $customerid = isSessionValid($db, $sessionid);
+
     // Apagar autocommit
     $db->autocommit(FALSE);
     $exception_id=0;
     try {
-
-
-    // Validar user session y grabar auditoria
-        if ($id==0)
-            $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>"Se creó un documento nuevo $refnumber"));
-        else
-            $customerid = isSessionValid($db, $sessionid,array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'APP','module'=>'invoices','dsc'=>"Se modificó el documento $refnumber"));
-
 
     // Si id de la factura es 0, es un insert de factura con header y detalle
          if ($id == 0){
@@ -123,9 +118,11 @@
                 " `obs`, `clientemail`, `creationdate`, `currencyrate`, `currency`, `discount`, manualload) " .
                 " VALUES (NULL, '$type',$customerid, '$issuedate', '$duedate', '$refnumber', CONCAT('$serie',LPAD($ctrnumber,10,'0')), '$ctrref','$clientrif', '$clientname', '$clientaddress', " .
                 " '$mobilephone', '$otherphone', '$obs', '$clientemail', CURRENT_TIMESTAMP, $currencyrate, '$currency',  $discount, 1)";
-            if (!$db->query($sql))
+            if (!$db->query($sql)){
+                $exception_id = 3;
                 throw new Exception("$db->error");
                 //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+            }
             $invoiceid = $db->insert_id;
             
             // Bucle para insertar los details
@@ -141,9 +138,11 @@
                 $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".
                 "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, '$unitdsc', $unitprice, $itemtax, $itemdiscount) ";  
     
-                if (!$db->query($sql))
+                if (!$db->query($sql)){
+                    $exception_id = 3;
                     throw new Exception("$db->error");
                     //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+                }
                 
             }
         }
@@ -207,9 +206,11 @@
                 $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".
                 "VALUES (NULL, $invoiceid, '$itemref', '$itemdsc', $qty, '$unitdsc', $unitprice, $itemtax, $itemdiscount) "; 
 
-                if (!$db->query($sql))
+                if (!$db->query($sql)){
+                    $exception_id = 3;
                     throw new Exception("$db->error");
                     //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));             
+                }
             }        
 
         }
@@ -240,9 +241,17 @@
     $db->commit();   
     // Prender autocommit
     $db->autocommit(TRUE); 
+
+// Auditoria
+    if ($id==0)
+        insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se creó un documento nuevo $refnumber");
+    else
+        insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se modificó el documento $refnumber");
+
 // Salida
     $out = new stdClass;    
     $out->id =(integer)$invoiceid;
+
 
     header("HTTP/1.1 200");
     echo (json_encode($out));

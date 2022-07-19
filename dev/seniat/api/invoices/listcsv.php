@@ -6,6 +6,7 @@ include("../../../settings/dbconn.php");
 include("../../../settings/utils.php");
 include("../functions.php");  
 
+
 function badEndCsv($message){
   $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
   $fp = fopen('php://output', 'wb');
@@ -33,7 +34,7 @@ function badEndCsv($message){
       badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
 
 // Validar user session
-validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'Exportar lista de facturas.'));    
+validSession($db, $_REQUEST["sessionid"]);    
 
 // Filter
   $filter="";
@@ -155,6 +156,9 @@ validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'ap
   foreach($csvarray as $arr){
     fputcsv($fp,$arr,';');
   }
+// Auditoria
+  $customer = getCustomerName($id,$db);
+  insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'SENIAT','invoices',"Se exportó la lista de documentos del cliente $customer");  
 // Cerrar archivo
   fclose($fp);
   die(); 

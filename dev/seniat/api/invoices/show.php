@@ -25,7 +25,7 @@
     $customerid = $_GET["customerid"];
 
     // Validar user session
-    validSession($db, $_REQUEST["sessionid"],array('ip'=>$_SERVER['REMOTE_ADDR'],'app'=>'SENIAT','module'=>'invoices','dsc'=>'Pre-visualizar factura.'));    
+    validSession($db, $_REQUEST["sessionid"]);
 
 
     //Funcion para formatear el nro de control

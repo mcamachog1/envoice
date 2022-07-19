@@ -82,7 +82,7 @@
 
 // Audit    
     $ip = $_SERVER['REMOTE_ADDR'];
-    insertAudit($db,$usr,$ip,'CMS','security',"Inici贸 sesi贸n en CMS: IP= $ip");    
+    insertAudit($db,strtolower($usr),$ip,'CMS','security',"Inició sesión en CMS: IP= $ip");    
 
 
     header("HTTP/1.1 200");

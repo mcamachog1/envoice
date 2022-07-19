@@ -7,6 +7,7 @@
   include_once("../../../settings/utils.php");
 
 function validateInvoicesBeforeLoad($db,$customerid){
+  // Validar documentos duplicados con mismo Tipo y misma Referencia
   $sql = "SELECT COUNT(*) AS Cnt
           FROM invoiceheader h
           INNER JOIN(
@@ -39,7 +40,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
   if ($row = $rs->fetch_assoc())
     $serie = $row['serie'];
 // Asignar ctrnumber inicial de la corrida según la serie
-  $ctrnumber = getNextControl($serie,$customerid,$db)-1;
+  $ctrnumber = getNextControl($serie,$customerid,$db);
 // Validar que las facturas (refnumber) que se van a cargar no existan
   validateInvoicesBeforeLoad($db,$customerid);
 // Copiar registros header a la tabla definitiva
