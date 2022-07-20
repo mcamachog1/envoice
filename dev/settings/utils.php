@@ -537,12 +537,23 @@ function jsonInvoiceList($rs){
   }
   return $records;
 }
+function badEndCsv($message){
+    $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
+    $fp = fopen('php://output', 'wb');
+    fwrite($fp, $BOM);  
+    $line = array(0=>$message);
+    fputcsv($fp, $line, ';', '"');
+    fclose($fp);
+    die();
+}
 function getCustomerName($id,$db){
     $sql ="SELECT name FROM customers WHERE id = $id";
     if (!$rs=$db->query($sql))
-        badEnd("500", array("sql"=>$sql,"msg"=>$db->error,"errid"=>4));
-    if (!$row = $rs->fetch_assoc());
-        badEnd("400", array("msg"=>'Cliente id $id no encontrado'));
+        badEndCsv("500 ".$sql." msg ".$db->error." errid:4 ");
+    $row = $rs->fetch_assoc();
+
+    if (count($row)==0)
+        badEndCsv("Cliente id '$id' no encontrado");
     return $row['name'];    
 }
 ?>

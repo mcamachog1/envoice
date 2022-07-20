@@ -5,20 +5,11 @@ header("Content-Disposition: attachment; filename=informe.csv");
 include("../../../settings/dbconn.php");
 include("../../../settings/utils.php");
 
-function badEndCsv($message){
-  $BOM = "\xEF\xBB\xBF"."\xEF\xBB\xBF";
-  $fp = fopen('php://output', 'wb');
-  fwrite($fp, $BOM);  
-  $line = array(0=>$message);
-  fputcsv($fp, $line, ';', '"');
-  fclose($fp);
-  die();
-}
 
 // Parametros obligatorios
   $parmsob = array("offset","numofrec","order","sessionid","datefrom","dateto","status","customerid");
   if (!parametrosValidos($_GET, $parmsob))
-      badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
+      badEndCsv("Parametros obligatorios " . implode(", ", $parmsob));
 
   $offset = $_GET["offset"];
   $numofrec = $_GET["numofrec"];
@@ -28,8 +19,8 @@ function badEndCsv($message){
   $status = $_GET["status"];  
   $customerid = $_GET["customerid"];      
 
-  if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3)
-      badEnd("400", array("msg"=>"Valor de estatus $status fuera de rango"));    
+  if (strlen($status==1) && $status!=1 && $status!=2 && $status!=3 && $status!=4)
+      badEndCsv("Valor de estatus $status fuera de rango");    
 
 // Validar user session
   isSessionValidCMS($db,$sessionid);
@@ -157,7 +148,7 @@ $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);
   }
 
 // Auditoria
-  $customer = getCustomerName($id,$db);
+  $customer = getCustomerName($customerid,$db);
   insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','invoices',"Se exportó la lista de documentos del cliente $customer");  
 
   
