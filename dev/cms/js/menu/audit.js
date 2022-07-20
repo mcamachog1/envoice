@@ -53,7 +53,7 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
 
   par.user = document.getElementById("usersList").value;
   if(par.user=="" || par.user ==undefined || par.user == null){
-    return;
+    par.user = "*";
   }
   par.module = document.getElementById("modulsList").value;
   if(par.module=="" || par.module ==undefined || par.module == null){
@@ -146,27 +146,25 @@ function drawInvoices(data){
         
         celda = document.createElement("td");
         celda.classList.add("thDate");
-        celda.id="date-"+navLink.id;
-        celda.innerHTML = '<span>'+navLink.issuedate.formatted+'</span>';
+        celda.id="date-"+navLink.id;       
+        celda.innerHTML = '<span>'+document.getElementById("modulsList").options[document.getElementById("modulsList").selectedIndex].innerHTML+'</span>';
         line.appendChild(celda);
 
         celda = document.createElement("td");
-        celda.style.textAlign = "right";
-        celda.id="mount-"+navLink.id;
-        celda.innerHTML = '<span>'+navLink.amounts.gross.formatted+'</span>';
+        celda.id="mount-"+navLink.id;         
+        celda.style.fontWeight = "bold";
+        celda.innerHTML = '<span>'+navLink.usr+'</span>';
         line.appendChild(celda);
 
         celda = document.createElement("td");
         celda.id="impto-"+navLink.id;
-        celda.style.textAlign = "right";
-        celda.innerHTML = '<span>'+navLink.amounts.tax.formatted+'</span>';
+        celda.style.textAlign = "center";
+        celda.innerHTML = '<span>'+navLink.created.formatted+'</span>';
         line.appendChild(celda);
 
         celda = document.createElement("td");
         celda.id="total-"+navLink.id;
-        celda.style.textAlign = "right";
-        celda.style.fontWeight = "bold";
-        celda.innerHTML = '<span>'+navLink.amounts.total.formatted+'</span>';
+        celda.innerHTML = '<span>'+navLink.dsc+'</span>';
         line.appendChild(celda);
         
         table.appendChild(line);
@@ -193,10 +191,10 @@ function loadModules(){
                 ele.dsc = jsonResp.records[i].application+" - Todos";
                 ele.platform = jsonResp.records[i].application;
                 newArr.push(ele);
-              for(var x=0;x<jsonResp.records[i].modules;x++){
+              for(var x=0;x<jsonResp.records[i].modules.length;x++){
                 var ele = {};
                 ele.id = jsonResp.records[i].application+"-"+jsonResp.records[i].modules[x];
-                ele.dsc = jsonResp.records[i].application+" - "+jsonResp.records[i].modules[x];
+                ele.dsc = jsonResp.records[i].application+" - "+capitalizarPrimeraLetra(jsonResp.records[i].modules[x]);
                 ele.platform = jsonResp.records[i].application;
                 newArr.push(ele);
               }
@@ -234,7 +232,6 @@ function loadUsers(platform,module){
             var dsc = 'dsc';  
             var first = 'Seleccione un Usuario';     
             var newArr = [];
-            debugger;
             for(var i=0;i<jsonResp.records.length;i++){
                 var ele = {};
                 ele.id = jsonResp.records[i];
@@ -242,6 +239,9 @@ function loadUsers(platform,module){
                 newArr.push(ele);
             }
             drawSelectCustom(newArr, select, id, dsc, first, "");
+            setTimeout(function(){
+              loadAudit();
+            },500);
         break;
         case 400:
         break;
@@ -425,6 +425,9 @@ function init() {
       if(module.split("-").length>1)module = module.split("-")[1];
       loadUsers(platform,module);
     });
+    document.getElementById("usersList").addEventListener("change",function(){  
+      loadAudit();
+    });
     /*
     document.getElementById("btnPagRight").addEventListener("click",function(){
       var actpag = document.getElementById("actPag");
@@ -556,6 +559,7 @@ function waitOff(){
   if (first !== "" && first !== null && first !== undefined) {
       opt = document.createElement("option");
       opt.setAttribute("value", "");
+      if(id=='usersList')opt.setAttribute("value", "*");
       opt.innerHTML = first;
       select.appendChild(opt);
   }

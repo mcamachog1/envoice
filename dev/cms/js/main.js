@@ -159,7 +159,9 @@ function callWS(type, service, params, response, extra = "") {
       break;
   }
 }
-
+function capitalizarPrimeraLetra(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 /*****
  * El parametro 1 debe ser el arreglo con los registros (opciones)
  * El parametro 2 debe ser el elemento (select) donde se insertaran las opciones

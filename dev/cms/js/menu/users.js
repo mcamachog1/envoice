@@ -332,8 +332,7 @@ function clearFormUser(){
 }
 
 function usersUpdate(){
-    document
-    .getElementById("stdbtnSubmit").disabled=true;
+    document.getElementById("stdbtnSubmit").disabled=true;
     let error = false;
     let name = document.getElementById("nameUser").value;
     let email = document.getElementById("emailUser").value;

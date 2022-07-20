@@ -3,3 +3,4 @@ app\api\invoices\verfactura.html
 *.txt
 *.sql
 envia*.php
+*error_log

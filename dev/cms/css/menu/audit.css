@@ -280,7 +280,7 @@ table th {
   font-family: var(--fontA);
   cursor:auto;
 }*/
-.thRef, .thControl,.thCI, .thMark,.thMount, .thImpto, .thTotal{
+.thRef,.thCI, .thMark,.thMount, .thImpto, .thTotal{
   text-align:center !important;
 }
 .thMark{

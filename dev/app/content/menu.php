@@ -92,6 +92,10 @@
                                                 <div class="boxFiltStatus"><input class="checkstatus" sid="1" type="checkbox" checked/></div>
                                                 <div class="lblFiltStatus">Pendientes</div>
                                             </div>
+                                            <div class="optStatTbl">
+                                                <div class="boxFiltStatus"><input class="checkstatus" sid="4" type="checkbox" checked/></div>
+                                                <div class="lblFiltStatus">Anulados</div>
+                                            </div>
                                         </div>
                                         <br/>
                                     </div>
