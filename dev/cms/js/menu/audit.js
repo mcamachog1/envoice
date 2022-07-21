@@ -147,7 +147,7 @@ function drawInvoices(data){
         celda = document.createElement("td");
         celda.classList.add("thDate");
         celda.id="date-"+navLink.id;       
-        celda.innerHTML = '<span>'+document.getElementById("modulsList").options[document.getElementById("modulsList").selectedIndex].innerHTML+'</span>';
+        celda.innerHTML = '<span>'+navLink.module+'</span>';
         line.appendChild(celda);
 
         celda = document.createElement("td");
