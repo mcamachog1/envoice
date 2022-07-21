@@ -587,7 +587,7 @@ function filterByOneStatus($status){
     $status_condition = "";
     switch ($status) {
         case 1:    
-            $status_condition = " AND sentdate IS NULL ";
+            $status_condition = " AND sentdate IS NULL AND canceldate IS NULL ";
             break;
         case 2:
             $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
