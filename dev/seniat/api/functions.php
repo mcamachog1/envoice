@@ -123,5 +123,41 @@
             badEnd("400", array("msg"=>"Sesi��n expirada o incorrecta"));
     }    
     
+    function validSessionCsv($db,$sessionid,$data=array()){
+        // Existe la sesion?
+        $sql= "SELECT COUNT(*) AS Cnt FROM preferences WHERE value='$sessionid' AND name LIKE '%@%.%_session'";
+        if (!$rs=$db->query($sql))
+            badEndCsv("500", array("sql"=>$sql,"msg"=>$db->error));
+        $row = $rs->fetch_assoc();  
+        // Si existe obtener email
+        if ($row['Cnt']==1){
+            // Email
+            $sql= "SELECT name FROM preferences WHERE value='$sessionid'";
+            if (!$rs=$db->query($sql))
+                badEndCsv("500", array("sql"=>$sql,"msg"=>$db->error));
+            $row = $rs->fetch_assoc();        
+            $name_session = $row['name']; 
+            $pos = strrpos($row['name'],"_");
+            $email = substr($row['name'],0,$pos);                 
+            // Buscar registro v��lido con sesion vigente
+            $name_validthru = $email."_validthru";
+            $sql= "SELECT COUNT(*) Cnt FROM preferences WHERE name='$name_validthru' AND value > NOW()" ;
+            if (!$rs=$db->query($sql))
+                badEndCsv("500", array("sql"=>$sql,"msg"=>$db->error));
+            $row = $rs->fetch_assoc();        
+            // No hay sesi��n vigente, mensaje de error
+            if ($row['Cnt']==0)
+                badEndCsv("400", array("msg"=>"Sesi��n expirada o incorrecta"));
+            // Hay sesion vigente guardar auditoria y retornar email
+            if (count($data)>0)
+                insertAudit($db,'-1',$data['ip'],$data['app'],$data['module'],$data['dsc']." - SeniatUser:".getEmail($sessionid,$data['app'],$db));
+    
+            return $email;
+        }
+            
+        // Si no existe, enviar  mensaje de error
+        elseif ($row['Cnt']==0)
+            badEndCsv("400", array("msg"=>"Sesi��n expirada o incorrecta"));
+    }      
 
 ?>

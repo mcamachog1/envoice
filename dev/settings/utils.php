@@ -67,8 +67,10 @@ function getEmail($sessionid,$module,$db){
     }
     if (!$rs = $db->query($sql))
         badEnd("500", array("msg"=>$db->error));    
-    if (!$row = $rs->fetch_assoc())
-        badEnd("400", array("msg"=>"Sesion no valida o expirada"));  
+    $row = $rs->fetch_assoc();
+
+    if (count($row)==0)
+        badEnd("400", array("msg"=>"$sql Sesion no valida o expirada"));  
     if ($module=='SENIAT'){
         $pos = strrpos($row['SENIAT'],"_");
         $row['SENIAT']=substr($row['SENIAT'],0,$pos);        
@@ -555,5 +557,48 @@ function getCustomerName($id,$db){
     if (count($row)==0)
         badEndCsv("Cliente id '$id' no encontrado");
     return $row['name'];    
+}
+function filterByStatus($status){
+    $status_list =explode("-",$status);
+    $status_condition = " AND ( 0  ";
+    foreach ($status_list as $value){
+        if ($value!=1 && $value!=2 && $value!=3 && $value!=4)
+            badEnd("400", array("msg"=>"Valor de estatus $value fuera de rango")); 
+        switch ($value) {
+            case 1:    
+                $status_condition .= " OR (sentdate IS NULL AND canceldate IS NULL)  ";
+                break;
+            case 2:
+                $status_condition .= " OR (sentdate IS NOT NULL AND viewdate IS NULL) ";            
+                break;
+            case 3:
+                $status_condition .= " OR (viewdate IS NOT NULL) ";            
+                break;
+            case 4:
+              $status_condition .= " OR (canceldate IS NOT NULL) ";            
+              break;                   
+             
+        }
+    }
+    $status_condition .= " ) ";   
+    return $status_condition;   
+}
+function filterByOneStatus($status){
+    $status_condition = "";
+    switch ($status) {
+        case 1:    
+            $status_condition = " AND sentdate IS NULL ";
+            break;
+        case 2:
+            $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
+            break;
+        case 3:
+            $status_condition = " AND viewdate IS NOT NULL ";            
+            break;
+        case 4:
+            $status_condition = " AND canceldate IS NOT NULL ";            
+            break;                   
+    }  
+    return $status_condition;  
 }
 ?>

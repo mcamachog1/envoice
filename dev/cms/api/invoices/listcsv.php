@@ -39,47 +39,11 @@ include("../../../settings/utils.php");
   }
 
 // Status un solo valor
-  if (strlen($status)==1){
-      $status_condition = "";
-      switch ($status) {
-          case 1:    
-              $status_condition = " AND sentdate IS NULL ";
-              break;
-          case 2:
-              $status_condition = " AND sentdate IS NOT NULL AND viewdate IS NULL";            
-              break;
-          case 3:
-              $status_condition = " AND viewdate IS NOT NULL ";            
-              break;
-          case 4:
-              $status_condition = " AND canceldate IS NOT NULL ";            
-              break;                
-      }
-  }
+  if (strlen($status)==1)
+    $status_condition = filterByOneStatus($status);
 // Status varios valores
-  else {
-    $status_list =explode("-",$status);
-    $status_condition = " AND ( 0  ";
-    foreach ($status_list as $value){
-        if ($value!=1 && $value!=2 && $value!=3)
-            badEnd("400", array("msg"=>"Valor de estatus $value fuera de rango")); 
-        switch ($value) {
-            case 1:    
-                $status_condition .= " OR (sentdate IS NULL) ";
-                break;
-            case 2:
-                $status_condition .= " OR (sentdate IS NOT NULL AND viewdate IS NULL) ";            
-                break;
-            case 3:
-                $status_condition .= " OR (viewdate IS NOT NULL) ";            
-                break;
-            case 4:
-              $status_condition .= " OR (canceldate IS NOT NULL) ";            
-              break;                     
-        }
-    }
-    $status_condition .= " ) ";                
-  }
+  else 
+    $status_condition = filterByStatus($status);
 // Validar el order
   $order = "";
   if (isset($_GET["order"])) {
