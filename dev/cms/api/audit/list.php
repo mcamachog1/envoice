@@ -76,6 +76,7 @@
         $record->created->date=$row['datecreation']; 
         $record->created->formatted=date("d/m/Y h:i a", strtotime($row['datecreation']));
         $record->usr=$row["userid"];
+        $record->module=$row["module"];
         $record->dsc=$row["dsc"];      
         $record->ip=$row["ip"];
         $records[]=$record;
