@@ -59,6 +59,7 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
         '$dsc',
         '$ip'
     )";
+
     if (!$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
     return $db->insert_id;
@@ -67,13 +68,13 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
 function getEmail($sessionid,$app,$db){
 
     switch ($app) {
-        case 'CMS':
+        case APP_CMS:
             $sql = "SELECT usr AS CMS FROM users WHERE sessionid='$sessionid' ";
             break;
-        case 'APP':
+        case APP_APP:
             $sql = "SELECT contactemail AS APP FROM customers WHERE sessionid='$sessionid' ";
             break;
-        case 'SENIAT':
+        case APP_SENIAT:
             $sql = "SELECT name AS SENIAT FROM preferences WHERE value='$sessionid' ";
             break;                        
     }
@@ -84,7 +85,7 @@ function getEmail($sessionid,$app,$db){
 
     if (count($row)==0)
         badEnd("400", array("msg"=>"$sql Sesion no valida o expirada"));  
-    if ($app=='SENIAT'){
+    if ($app==APP_SENIAT){
         $pos = strrpos($row['SENIAT'],"_");
         $row['SENIAT']=substr($row['SENIAT'],0,$pos);        
     }

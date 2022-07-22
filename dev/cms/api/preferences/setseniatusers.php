@@ -4,23 +4,8 @@
 header("Content-Type:application/json");
 include("../../../settings/dbconn.php");
 include("../../../settings/utils.php");
+include("functions.php");
 
-function getUsers($db){
-  $sql = "SELECT name, value FROM preferences";
-  if (!$rs=$db->query($sql))
-    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-  $records=array();
-  // Serialize
-  while ($row = $rs->fetch_assoc()){
-    if(filter_var($row['value'], FILTER_VALIDATE_EMAIL))       {
-        $record = new stdClass();
-        $record->id = $row['name'];
-        $record->value = $row['value'];
-        $records[] = $record;
-    }
-  }
-  return $records;
-}
 
 function insertUsers($users,$emails,$db){
     $counter=0;
@@ -38,6 +23,9 @@ function insertUsers($users,$emails,$db){
                 break;
             }
         }
+        // Nombre del usuario
+        $email = $a_emails[$i];
+        $user_name = $a_users[$i];
         // Si el usuario a insertar no existe se inserta
         if ($insert){    
             $sql = "INSERT INTO preferences (name, value) VALUES ('".$a_users[$i]."','".$a_emails[$i]."')";
@@ -45,31 +33,37 @@ function insertUsers($users,$emails,$db){
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));    
             $counter++;
             // Auditoria
-            //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se creó el Usuario '$a_users[$i]' de Seniat - '$a_emails[$i]'");        
+              insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se creó el Usuario $user_name de Seniat - $email");        
         
         }
         // Si existe se limpian los fails y se pone status 1
         else {
+            $updated_something = False;
             // Fails
             $email_fails = $a_emails[$i]."_fails";
             $sql = "UPDATE preferences SET value=0 WHERE name = '$email_fails' ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
+            if ($db->affected_rows > 0)
+                $updated_something= True;
             // Desbloquear
             $email_status = $a_emails[$i]."_status";
             $sql = "UPDATE preferences SET value=1 WHERE name = '$email_status' ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
-            // Nombre del usuario
-            $email = $a_emails[$i];
-            $user_name = $a_users[$i];
+            if ($db->affected_rows > 0)
+                $updated_something= True;
+            // Actualiza nombre de usuario        
             $sql = "UPDATE preferences SET name='$user_name' WHERE value = '$email' ";
             if (!$db->query($sql))
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
-
+            if ($db->affected_rows > 0)
+                $updated_something= True;
             }
+
             // Auditoria
-            //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se modificaron los datos del Usuario ".$a_users[$i]." de Seniat - ".$a_emails[$i]);        
+            if ($updated_something)
+                insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se modificaron los datos del Usuario: $user_name de Seniat - $email");        
     }
     return $counter;
 }
@@ -101,9 +95,6 @@ function deleteUsers($emails,$db){
     if (!$db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
 
-    // Auditoria
-    //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se eliminó el Usuario de Seniat - $emails");        
-
     return $db->affected_rows;
 }
 // Parametros obligatorios
@@ -115,12 +106,47 @@ if (!parametrosValidos($_GET, $parmsob))
 // Revisar parametros
 $users = avoidInjection($_GET["usernames"],'list');
 $emails = avoidInjection($_GET["emails"],'list');
+// Validar datos para crear usuarios
 checkInput($users,$emails);
+
+// Guarda usuarios actuales
+$pre_users = getUsers($db);   
+// Borra todos los usuarios
 deleteUsers($emails,$db);
+
+// Inserta todos los usuarios
+$count = insertUsers($users,$emails,$db);
+
+
+// Auditoria
+  // emails enviados
+  $a_emails= explode("-",$emails);
+  // Hacer lista de usuarios a modifcar
+  $email_list="";  
+  for ($x=0;$x<count($a_emails);$x++){
+    $email = $a_emails[$x];
+    if ($x != count($a_emails)-1) //No es el ultimo
+        $email_list .= "'$email',";
+    else
+        $email_list .= "'$email'";
+  }
+  // Tomar los usuarios que quedan
+  $sql = "SELECT value FROM preferences WHERE value IN ($email_list)";
+  if (!$rs=$db->query($sql))
+    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+  $users_array = array();
+  while ($row = $rs->fetch_assoc())
+     $users_array[] = $row['value'];
+  $audit_email=getEmail($_REQUEST["sessionid"],APP_CMS,$db);
+  // Si el usuario original no está, se va a eliminar
+  foreach ($pre_users as $object)
+    if (!in_array($object->value,$a_emails))
+      insertAudit($db,$audit_email,$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se eliminó el Usuario de Seniat - $object->value");        
+
 // Salida
-$out = new stdClass;    
-$out->count =insertUsers($users,$emails,$db);
-header("HTTP/1.1 200");
-echo (json_encode($out));
-die();      
+  $out = new stdClass;    
+  $out->count = $count;  
+  header("HTTP/1.1 200");
+  echo (json_encode($out));
+  die();      
 ?>
