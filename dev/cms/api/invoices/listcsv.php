@@ -113,7 +113,7 @@ $sql = setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order);
 
 // Auditoria
   $customer = getCustomerName($customerid,$db);
-  insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','invoices',"Se exportó la lista de documentos del cliente $customer");  
+  insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_INVOICES,"Se exportó la lista de documentos del cliente $customer");  
 
   
 // Cerrar archivo

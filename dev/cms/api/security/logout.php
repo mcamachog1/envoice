@@ -12,7 +12,7 @@
     
     //definimos las variables y las rellenamos con los datos recibidos del GET
     $sessionid = $_GET["sessionid"];
-    $email=getEmail($_REQUEST["sessionid"],'CMS',$db);
+    $email=getEmail($_REQUEST["sessionid"],APP_CMS,$db);
     isSessionValidCMS($db, $_REQUEST["sessionid"]);
     
     // actualizamos la base de datos blanqueando la session id y estableciendo el validthru null
@@ -34,7 +34,7 @@
     $out->id = 0;
     
     // Audit
-    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'CMS','security',"Cerró sesión en CMS");  
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_SECURITY,"Cerró sesión en CMS");  
 
     //lanzamos un codigo que todo salio bien
     header("HTTP/1.1 200");

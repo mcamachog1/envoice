@@ -160,7 +160,7 @@
  
 // Audit    
     $ip = $_SERVER['REMOTE_ADDR'];
-    insertAudit($db,$usr,$ip,'SENIAT','security',"Inició sesión en módulo Seniat: IP= $ip");
+    insertAudit($db,$usr,$ip,APP_SENIAT,MODULE_SECURITY,"Inició sesión en módulo Seniat: IP= $ip");
 
     header("HTTP/1.1 200");
     echo (json_encode($out));

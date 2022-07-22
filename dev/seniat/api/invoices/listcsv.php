@@ -113,7 +113,7 @@ validSessionCsv($db, $_REQUEST["sessionid"]);
   }
 // Auditoria
   $customer = getCustomerName($customerid,$db);
-  insertAudit($db,getEmail($_REQUEST["sessionid"],'SENIAT',$db),$_SERVER['REMOTE_ADDR'],'SENIAT','invoices',"Se exportó la lista de documentos del cliente $customer");  
+  insertAudit($db,getEmail($_REQUEST["sessionid"],APP_SENIAT,$db),$_SERVER['REMOTE_ADDR'],APP_SENIAT,MODULE_INVOICES,"Se exportó la lista de documentos del cliente $customer");  
 // Cerrar archivo
   fclose($fp);
   die(); 

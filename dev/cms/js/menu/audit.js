@@ -42,8 +42,8 @@ function loadAudit(offset = 0,filter="",order=-1,numrecords=10){
 
   par.datefrom = desde == "" ? now : desde;
   par.dateto = hasta == "" ? now : hasta;
-  document.getElementById('dateDesde').value = now;
-  document.getElementById('dateHasta').value = now;
+  document.getElementById('dateDesde').value = par.datefrom;
+  document.getElementById('dateHasta').value = par.dateto;
   par.offset = offset;
   par.order = order;
   par.numofrec = numrecords;

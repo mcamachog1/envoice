@@ -31,7 +31,7 @@
 
     // Auditoria
 
-    insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se eliminó un usuario de CMS $userCMS");  
+    insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se eliminó un usuario de CMS $userCMS");  
     $out = new stdClass;
     $out->id =(integer)$id;
     header("HTTP/1.1 200");

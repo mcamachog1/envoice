@@ -22,7 +22,7 @@
     // Validar session 
     $userid = isSessionValidCMS($db, $_REQUEST["sessionid"]);
     $customeremail = getCustomerEmail($db,$_REQUEST["id"]); 
-    $email=getEmail($_REQUEST["sessionid"],'CMS',$db);    
+    $email=getEmail($_REQUEST["sessionid"],APP_CMS,$db);    
     // Validar que existe el registro
     $sql="SELECT COUNT(*) Cnt FROM customers WHERE id=".$_REQUEST["id"];
     if (!$rs=$db->query($sql))
@@ -47,7 +47,7 @@
 
 // Auditoria  
    
-    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se eliminó un cliente - $customeremail");        
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se eliminó un cliente - $customeremail");        
 
     $out = new stdClass;
     $out->id =(integer)$_REQUEST["id"];

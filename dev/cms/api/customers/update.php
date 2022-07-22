@@ -252,13 +252,13 @@
     // Auditoria
 
         if ($_REQUEST["id"]==0)
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se creó un un cliente nuevo - $contactemail ");        
+            insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se creó un un cliente nuevo - $contactemail ");        
         else{
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se modificaron los datos fiscales de un cliente - $contactemail ");        
+            insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se modificaron los datos fiscales de un cliente - $contactemail ");        
             if ($status==1 && $oldstatus==0)
-                insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se habilitó un cliente de CMS - $contactemail");            
+                insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se habilitó un cliente de CMS - $contactemail");            
             elseif ($status==0 && $oldstatus==1)
-                insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $contactemail");            
+                insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se inhabilitó un cliente de CMS - $contactemail");            
         }
            
     // Salida    

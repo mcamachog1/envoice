@@ -32,9 +32,13 @@
         $refs_array[] = $row["refnumber"];
     }
     $ids=join(",",$ids_array);
-    $refs=join(",",$refs_array);
-
     $countdocs=count($ids_array);
+    if($countdocs<10){
+        for($x=0;$x<$countdocs;$x++)
+            $refs_array[$x] = "#".(string)$refs_array[$x];
+        $refs=join(",",$refs_array);
+    }
+    //$refs=join(",",$refs_array);    
     $sql="UPDATE invoiceheader SET canceldate= NOW() WHERE id IN ($ids) AND customerid=$customerid";
 
     if (!$db->query($sql)) 
@@ -42,10 +46,12 @@
     if ($db->affected_rows==0)
         badEnd("304", array('msg'=>"El registro existe pero no se pudo anular"));
     // Audit
-    if ($countdocs<10)
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos ($refs)");
+    if ($countdocs==1)
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se anuló el documento $refs");
+    elseif ($countdocs<10 && $countdocs>1) 
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se anularon $countdocs documentos ($refs)");
     else
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se anularon $countdocs documentos");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se anularon $countdocs documentos");        
 
     $out = new stdClass;
     $out->id =$ids;

@@ -11,7 +11,7 @@
     }
     
     $sessionid = $_GET["sessionid"];
-    $email=getEmail($_REQUEST["sessionid"],'APP',$db);
+    $email=getEmail($_REQUEST["sessionid"],APP_APP,$db);
     isSessionValid($db, $_REQUEST["sessionid"]);        
     
     // actualizamos la base de datos blanqueando la session id y estableciendo el validthru null
@@ -38,7 +38,7 @@
     $out->id = 0;
 
     // Audit
-    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'APP','security',"Cerró sesión en DaycoPrint");  
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_SECURITY,"Cerró sesión en DaycoPrint");  
     //lanzamos un codigo que todo salio bien
     header("HTTP/1.1 200");
     echo (json_encode($out));

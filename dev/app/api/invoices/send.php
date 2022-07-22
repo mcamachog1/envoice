@@ -139,7 +139,7 @@
       $sent=sendInvoices($_GET["invoiceids"],$homeurl,$customerid,$db);
     
     // Auditoria
-    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se enviaron $sent documentos por email");  
+    insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se enviaron $sent documentos por email");  
     // Salida
     $out = new stdClass();
     $out->invoices=new stdClass();

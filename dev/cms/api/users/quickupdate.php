@@ -41,9 +41,9 @@
     // Audit
     $useremail = getUserCMS($db,$id);
     if ($status==1)
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se inhabilitó un usuario de CMS - $useremail");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se inhabilitó un usuario de CMS - $useremail");        
     else
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se habilitó un usuario de CMS - $useremail");            
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se habilitó un usuario de CMS - $useremail");            
 
     header("HTTP/1.1 200");
     echo (json_encode($out));

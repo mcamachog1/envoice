@@ -1,5 +1,16 @@
 <?php
-// veneden api/utils
+
+define ("APP_APP", "APP");
+define ('APP_CMS', 'CMS');
+define ('APP_SENIAT', 'SENIAT');
+
+define ("MODULE_INVOICES", "Documentos");
+define ('MODULE_PREFERENCES', 'Usuarios-Seniat');
+define ('MODULE_SECURITY', 'Seguridad');
+define ('MODULE_CUSTOMERS', 'Clientes');
+define ('MODULE_USERS', 'Usuarios');
+
+// Dayco api/utils
 function randomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -53,8 +64,9 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
     return $db->insert_id;
 }
 
-function getEmail($sessionid,$module,$db){
-    switch ($module) {
+function getEmail($sessionid,$app,$db){
+
+    switch ($app) {
         case 'CMS':
             $sql = "SELECT usr AS CMS FROM users WHERE sessionid='$sessionid' ";
             break;
@@ -65,17 +77,18 @@ function getEmail($sessionid,$module,$db){
             $sql = "SELECT name AS SENIAT FROM preferences WHERE value='$sessionid' ";
             break;                        
     }
+
     if (!$rs = $db->query($sql))
         badEnd("500", array("msg"=>$db->error));    
     $row = $rs->fetch_assoc();
 
     if (count($row)==0)
         badEnd("400", array("msg"=>"$sql Sesion no valida o expirada"));  
-    if ($module=='SENIAT'){
+    if ($app=='SENIAT'){
         $pos = strrpos($row['SENIAT'],"_");
         $row['SENIAT']=substr($row['SENIAT'],0,$pos);        
     }
-    return strtolower($row["$module"]);  
+    return strtolower($row["$app"]);  
 }
 function isSessionValid($db, $sessionid){
     // Validar sessionid activo
@@ -601,4 +614,5 @@ function filterByOneStatus($status){
     }  
     return $status_condition;  
 }
+
 ?>

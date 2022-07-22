@@ -45,9 +45,9 @@
 // Audit
     $customeremail = getCustomerEmail($db,$id);
     if ($status==1)
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $customeremail");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se inhabilitó un cliente de CMS - $customeremail");        
     else
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','customers',"Se inhabilitó un cliente de CMS - $customeremail");            
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_CUSTOMERS,"Se inhabilitó un cliente de CMS - $customeremail");            
 
     $out = new stdClass;    
     $out->id =(integer)$id;

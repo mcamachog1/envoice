@@ -45,7 +45,7 @@ function insertUsers($users,$emails,$db){
                 badEnd("500", array("sql"=>$sql,"msg"=>$db->error));    
             $counter++;
             // Auditoria
-            //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se creó el Usuario '$a_users[$i]' de Seniat - '$a_emails[$i]'");        
+            //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se creó el Usuario '$a_users[$i]' de Seniat - '$a_emails[$i]'");        
         
         }
         // Si existe se limpian los fails y se pone status 1
@@ -69,7 +69,7 @@ function insertUsers($users,$emails,$db){
 
             }
             // Auditoria
-            //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se modificaron los datos del Usuario ".$a_users[$i]." de Seniat - ".$a_emails[$i]);        
+            //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se modificaron los datos del Usuario ".$a_users[$i]." de Seniat - ".$a_emails[$i]);        
     }
     return $counter;
 }
@@ -102,7 +102,7 @@ function deleteUsers($emails,$db){
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
 
     // Auditoria
-    //insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','preferences',"Se eliminó el Usuario de Seniat - $emails");        
+    //insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_PREFERENCES,"Se eliminó el Usuario de Seniat - $emails");        
 
     return $db->affected_rows;
 }

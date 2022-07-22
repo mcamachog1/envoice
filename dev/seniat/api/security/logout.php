@@ -29,12 +29,12 @@
     if (!parametrosValidos($_REQUEST, $parmsob))
         badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
 
-    $email=getEmail($_REQUEST["sessionid"],'SENIAT',$db);
+    $email=getEmail($_REQUEST["sessionid"],APP_SENIAT,$db);
     $sessionid = $_GET["sessionid"];
     logoutUser($sessionid,$db);
 
     // Audit
-    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],'SENIAT','security',"Cerró sesión en módulo Seniat");  
+    insertAudit($db,$email,$_SERVER['REMOTE_ADDR'],APP_SENIAT,MODULE_SECURITY,"Cerró sesión en módulo Seniat");  
 
     // Salida
     $out=new stdClass;

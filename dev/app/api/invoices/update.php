@@ -20,7 +20,7 @@
         $sql = "SELECT customerid,type,refnumber,ctrnumber ".
         "       FROM invoiceheader ".
         "       WHERE   ".
-        "       (customerid=$customerid AND type='$refnumber' AND refnumber='$refnumber')  ".
+        "       (customerid=$customerid AND type='$type' AND refnumber='$refnumber')  ".
         "       OR (customerid=$customerid AND TRIM(ctrnumber)='$ctrnumber')";
 
         if (!$rs = $db->query($sql))
@@ -243,10 +243,11 @@
     $db->autocommit(TRUE); 
 
 // Auditoria
+
     if ($id==0)
-        insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se creó un documento nuevo $refnumber");
+        insertAudit($db,getEmail($sessionid,APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se creó un documento nuevo $refnumber");
     else
-        insertAudit($db,getEmail($sessionid,'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se modificó el documento $refnumber");
+        insertAudit($db,getEmail($sessionid,APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se modificó el documento $refnumber");
 
 // Salida
     $out = new stdClass;    

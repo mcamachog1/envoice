@@ -112,13 +112,13 @@
     $usr = $_REQUEST["usr"];
 
     if ($_REQUEST["id"]==0)
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se creó un usuario de CMS - $usr ");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se creó un usuario de CMS - $usr ");        
     else{
-        insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se modificó un usuario de CMS - $usr ");        
+        insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se modificó un usuario de CMS - $usr ");        
         if ($status==1 && $oldstatus==0)
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se habilitó un usuario de CMS - $usr");            
+            insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se habilitó un usuario de CMS - $usr");            
         elseif ($status==0 && $oldstatus==1)
-            insertAudit($db,getEmail($_REQUEST["sessionid"],'CMS',$db),$_SERVER['REMOTE_ADDR'],'CMS','users',"Se inhabilitó un usuario de CMS - $usr");            
+            insertAudit($db,getEmail($_REQUEST["sessionid"],APP_CMS,$db),$_SERVER['REMOTE_ADDR'],APP_CMS,MODULE_USERS,"Se inhabilitó un usuario de CMS - $usr");            
     }
         
 

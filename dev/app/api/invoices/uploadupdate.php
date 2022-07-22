@@ -103,7 +103,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
 
   // Auditoria
-    insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se hizo una carga masiva de $qtyinvoices documentos");
+    insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se hizo una carga masiva de $qtyinvoices documentos");
   // Salida
   $out = new stdClass(); 
   $out->recordsupdates = $qtyinvoices;

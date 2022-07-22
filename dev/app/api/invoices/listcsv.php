@@ -112,7 +112,7 @@ include("../../../settings/utils.php");
   }
 // Auditoria
   $customer = getCustomerName($customerid,$db);
-  insertAudit($db,getEmail($_REQUEST["sessionid"],'APP',$db),$_SERVER['REMOTE_ADDR'],'APP','invoices',"Se exportó la lista de documentos del cliente $customer");  
+  insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se exportó la lista de documentos del cliente $customer");  
 // Cerrar archivo
   fclose($fp);
   die(); 
