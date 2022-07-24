@@ -405,7 +405,7 @@
                         IVA %
                     </div>
                     <div class="itemHead cell10 itemHdNum">
-                        Cant. (VES)
+                        Cant. 
                     </div>                    
                     <div class="itemHead cell10">
                         Unidad

@@ -171,7 +171,7 @@
                 }
                 elseif (!is_null($row["viewdate"])) {
                     $status=3;
-                    $status_dsc = "Le��do";            
+                    $status_dsc = "Leído";            
                 }
                 $record->status->id = $status;
                 $record->status->dsc = $status_dsc;
@@ -250,6 +250,7 @@
         $commercephn = $record->customer->phone;
         $type = $record->type->name;
         $invoiceDate = $record->issuedate->formatted;
+        $dueDate = $record->duedate->formatted;
         $invoiceCtrl = $record->ctrnumber;
         $invoiceNum =  $record->refnumber;
         $invoiceClient =  $record->client->name;

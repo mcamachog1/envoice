@@ -81,8 +81,7 @@
     $db->autocommit(FALSE);
     $exception_id=0;
     try {
-
-    // Si id de la factura es 0, es un insert de factura con header y detalle
+        // Si id de la factura es 0, es un insert de factura con header y detalle
          if ($id == 0){
             // Se calcula el numero de control del cliente para la nueva factura
             // Obtener index de la serie (no contempla series repetidas)
@@ -112,12 +111,37 @@
                 $exception_id = 4;
                 throw new Exception("El documento $refnumber ya existe o el numero de control $ctrnumber ya está asignado a otro documento");
             }
+            //Creamos la direccion del folder
+            $urlfolder = "../../../formats/customers/".str_pad($customerid,  5, "0", STR_PAD_LEFT);            
+            //Creamos el directorio en caso de que no exista
+            $printformat = "";
+            if(is_dir($urlfolder)){  
+                $files = [];
+                $filesfromdir = glob($urlfolder.'/*');        
+                //Recorremos todos los files y obtenemos solo los del tipo que se está guardando
+                foreach($filesfromdir as $filefromdir){            
+                    $extfromdir = pathinfo($filefromdir, PATHINFO_EXTENSION);
+                    $filename = basename($filefromdir,".".$extfromdir);
+                    $typeFormat = substr($filename, 0, 3);
+                    if($typeFormat == strtolower($type))$files[] = $filename;
+                }              
+                //Obtenemos el último de todos para considerar el "mas reciente"
+                $last = $files[count($files)-1];    
+                $extfromdir = pathinfo($last, PATHINFO_EXTENSION);
+                $filename = basename($last,".".$extfromdir);
+                $typeFormat = substr($filename, 0, 3);
+                //Se valida que exista el formato y si existe se guardan los números del último formato
+                //Solo aplica para nuevos
+                if($typeFormat != strtolower($type))$printformat = "";
+                else $printformat = substr($filename, 3);    
+            }
+
             // SQL del Insert
             $sql="INSERT INTO `invoiceheader` (`id`, `type`,`customerid`, `issuedate`, `duedate`, `refnumber`, `ctrnumber`,`ctrref`, `clientrif`, " .
                 " `clientname`, `clientaddress`, `mobilephone`, `otherphone`, " .
-                " `obs`, `clientemail`, `creationdate`, `currencyrate`, `currency`, `discount`, manualload) " .
+                " `obs`, `clientemail`, `creationdate`, `currencyrate`, `currency`, `discount`, `printformat`, manualload) " .
                 " VALUES (NULL, '$type',$customerid, '$issuedate', '$duedate', '$refnumber', CONCAT('$serie',LPAD($ctrnumber,10,'0')), '$ctrref','$clientrif', '$clientname', '$clientaddress', " .
-                " '$mobilephone', '$otherphone', '$obs', '$clientemail', CURRENT_TIMESTAMP, $currencyrate, '$currency',  $discount, 1)";
+                " '$mobilephone', '$otherphone', '$obs', '$clientemail', CURRENT_TIMESTAMP, $currencyrate, '$currency',  $discount, '$printformat', 1)";
             if (!$db->query($sql)){
                 $exception_id = 3;
                 throw new Exception("$db->error");
