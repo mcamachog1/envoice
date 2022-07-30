@@ -239,7 +239,7 @@
 
         }
         
-}
+    }
 // Catch exception
     catch(Exception $e){
         // Rollback Transaction
@@ -247,7 +247,7 @@
         // Prender autocommit
         $db->autocommit(TRUE); 
 
-        // Si la factura de referencia no existe, se envia 203
+        // Si la factura de referencia no existe, se envía 203
         if ($exception_id==2)
             badEnd("203", array("msg"=>$e->getMessage()));
         // Si la factura no está asociada al cliente se envía 204    
@@ -256,7 +256,7 @@
         // Si hay error de BD se envía 500    
         if ($exception_id==3)    
             badEnd("500", array("msg"=>$e->getMessage()));            
-        // Si la factura no es unica
+        // Si la factura no es unica se envía 400
         if ($exception_id==4)    
             badEnd("400", array("msg"=>$e->getMessage()));            
 

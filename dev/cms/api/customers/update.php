@@ -24,22 +24,7 @@
         $row = $rs->fetch_assoc();
         return $row['status'];
     }     
-    function getCustomers($db){
-        $sql = "SELECT id, serie, initialcontrol, nextcontrol FROM customers ";
-        if (!$rs=$db->query($sql))
-            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-        $customers = array();
-        while ($row = $rs->fetch_assoc()) {
-            $customer = new stdClass();
-            $id = $row["id"];
-            $customer->id = $id;
-            $customer->serie = $row["serie"];
-            $customer->initial= $row["initialcontrol"];
-            $customer->nextcontrol=$row["nextcontrol"];
-            $customers[$id] = $customer;
-        }
-        return $customers;
-    }
+
 
     
     function validateUpdateSerie($series,$controls,$customerid,$db){
