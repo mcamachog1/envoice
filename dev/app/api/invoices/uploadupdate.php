@@ -42,12 +42,12 @@ function validateInvoicesBeforeLoad($db,$customerid){
 // Asignar ctrnumber inicial de la corrida según la serie
   $ctrnumber = getNextControl($serie,$customerid,$db);
 // Validar que las facturas (refnumber) que se van a cargar no existan
-  validateInvoicesBeforeLoad($db,$customerid);
-// Copiar registros header a la tabla definitiva
+  validateInvoicesBeforeLoad($db,$customerid);  
+  // Copiar registros header a la tabla definitiva
   $sql = "INSERT INTO invoiceheader ( " . 
     " ctrnumber, ".
     " customerid, type, issuedate, duedate, refnumber, clientrif, clientname, clientaddress, mobilephone, ".
-    " otherphone,  clientemail, obs, currency, currencyrate, ctrref, discount )".
+    " otherphone,  clientemail, obs, currency, currencyrate, ctrref, discount, printformat )".
     " SELECT ".
     "   CONCAT('$serie',LPAD((@rn := @rn +1),10,'0')) AS ctrnumber, ".
     "   customerid,".
@@ -57,7 +57,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
     "       WHEN type = 'C' THEN 'NCR' ".
     "   END, ".
     "   issuedate,duedate,refnumber,clientrif,clientname,".
-    "   clientaddress,mobilephone,otherphone,clientemail,obs,currency,currencyrate,ctrref,discount ".
+    "   clientaddress,mobilephone,otherphone,clientemail,obs,currency,currencyrate,ctrref,discount,printformat ".
     " FROM ".
     "  ( SELECT @rn := $ctrnumber, tmp.* ".
     "    FROM ".

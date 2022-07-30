@@ -184,7 +184,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">Monto (VES)</div>
+                                    <div class="">Monto (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -192,7 +192,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">IVA (VES)</div>
+                                    <div class="">IVA (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -200,7 +200,7 @@
                             </div>
                             <div class="detLine">
                                 <div class="despLblCell">
-                                    <div class="">Total (VES)</div>
+                                    <div class="">Total (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -411,13 +411,13 @@
                         Unidad
                     </div>  
                     <div class="itemHead cell10 itemHdNum">
-                        Precio (VES)
+                        Precio (Bs.)
                     </div>
                     <div class="itemHead cell7Mid itemHdNum">
                         Desc. %
                     </div>
                     <div class="itemHead cell10 itemHdNum">
-                        Total (VES)
+                        Total (Bs.)
                     </div>
                 </div>
                 <div class="itemsListCnt" style="border-bottom: 1px solid #D7D7D7;padding-bottom: 3px;">
@@ -472,7 +472,7 @@
                 </div>
                 <div class="itemsTotsCnt">
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">Sub-Total (VES)</div>
+                        <div class="itemTotLbl">Sub-Total (Bs.)</div>
                         <div class="itemTotAmo">
                             <span class="bgTot" id="subTot">0,00</span>
                         </div>
@@ -493,7 +493,7 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">IVA sobre (VES)</div>
+                        <div class="itemTotLbl">IVA sobre (Bs.)</div>
                         <div class="itemTotAmo" style="padding:0;font-size:100%;">
                             <div class="itemCell cell7Mid">
                                 <div class="inptFrmCnt totTblCnt totCell">
@@ -508,7 +508,7 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl" style="font-weight:bold">TOTAL (VES)</div>
+                        <div class="itemTotLbl" style="font-weight:bold">TOTAL (Bs.)</div>
                         <div class="itemTotAmo">
                             <span class="totAmo" id="totAmo">0,00</span>
                         </div>

@@ -75,17 +75,17 @@
                     <div class="totsTblCnt">
                         <div class="pagCell pagLblBold">                            
                             <div class="amoBox">
-                                Base Imponible: <span id="baseAmo">400</span>
+                                Base Imponible: Bs. <span id="baseAmo">400</span>
                             </div>                            
                         </div>
                         <div class="pagCell pagLblBold">
                             <div class="amoBox">
-                                IVA: <span id="impAmo">200</span>
+                                IVA: Bs. <span id="impAmo">200</span>
                             </div>     
                         </div>
                         <div class="pagCell pagLblBold">
                             <div class="amoBox">
-                                Total: <span id="totAmo">600</span>
+                                Total: Bs. <span id="totAmo">600</span>
                             </div>     
                         </div>
                     </div>

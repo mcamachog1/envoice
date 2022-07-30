@@ -377,17 +377,17 @@ function downloadReport(){
 
         celda = document.createElement("th");
         celda.classList.add("thMount","cell7Mid");
-        celda.innerHTML = "Monto (VES)";
+        celda.innerHTML = "Monto (Bs.)";
         line.appendChild(celda);
         
         celda = document.createElement("th");
         celda.classList.add("thImpto","cell7Mid");
-        celda.innerHTML = "IVA (VES)";
+        celda.innerHTML = "IVA (Bs.)";
         line.appendChild(celda);
 
         celda = document.createElement("th");
         celda.classList.add("thTotal","cell7Mid");
-        celda.innerHTML = "Total (VES)";
+        celda.innerHTML = "Total (Bs.)";
         line.appendChild(celda);
 
         celda = document.createElement("th");
@@ -2140,7 +2140,7 @@ function blankAll(){
   });
   //Evento descargar la plantilla
   document.getElementById("btnInvExamp").addEventListener("click", function () {
-    var text = '../cms/formats/plantilla.csv';
+    var text = '../formats/plantilla.csv';
     var filename = "plantilla.csv";
     download(filename, text);
   }, false);

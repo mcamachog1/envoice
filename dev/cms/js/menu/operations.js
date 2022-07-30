@@ -138,17 +138,17 @@ function drawInvoices(data){
 
         celda = document.createElement("th");
         celda.classList.add("thMount","cell7Mid");
-        celda.innerHTML = "Monto";
+        celda.innerHTML = "Monto (Bs.)";
         line.appendChild(celda);
         
         celda = document.createElement("th");
         celda.classList.add("thImpto","cell7Mid");
-        celda.innerHTML = "IVA";
+        celda.innerHTML = "IVA (Bs.)";
         line.appendChild(celda);
 
         celda = document.createElement("th");
         celda.classList.add("thTotal","cell7Mid");
-        celda.innerHTML = "Total";
+        celda.innerHTML = "Total (Bs.)";
         line.appendChild(celda);
 
         celda = document.createElement("th");

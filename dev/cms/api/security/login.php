@@ -55,12 +55,12 @@
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
         if (!$row = $rs->fetch_assoc())
-        badEnd("401", array("msg"=>"Usuario/Clave Inv谩lidos" ));
+        badEnd("401", array("msg"=>"Usuario/Clave Inválidos" ));
         
         if ($row["status"]==0)
             badEnd("401", array("msg"=>"Usuario Inactivo" ));
         else
-            badEnd("401", array("msg"=>"Usuario/Clave Inv谩lidos" ));
+            badEnd("401", array("msg"=>"Usuario/Clave Inválidos" ));
     }
     
     $sql =  "SELECT  id, sessionid, DATE_FORMAT(validthru, '%Y%m%d%H%i%s') vt, name ".

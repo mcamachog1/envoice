@@ -48,13 +48,16 @@
             width: 17.5%;
         }
         .cell20{
-            width: 20%;
+            width: 10%;
+        }
+        .cell22Mid {
+            width: 22.5%;
         }
         .cell25 {
             width: 25%;
         }
         .cell30 {
-            width: 30%;
+            width: 40%;
         }
         .cell40 {
             width: 40%;
@@ -65,8 +68,8 @@
         .cell100 {
             width: 100%;
         }
-        html{ padding:0;margin:0; }
-        body{ padding:0;margin:0;font-size:15px;}
+        html{ padding:0;margin:0;height:100%;}
+        body{ padding:0;margin:0;font-size:15px;height:100%;}
         .page{
             height:100%;
             width:100%;  
@@ -75,7 +78,7 @@
         .header{
             display: table;
             width: 100%;
-            padding-top: 10px;
+            padding-top: 5px;
             text-align: center;
             margin-left: auto;
             margin-right: auto;
@@ -95,7 +98,11 @@
             }
             .headLogo img{display: none;}
             @media print{
-            .headLogo img{display:inline;width:80px;}
+                .header{
+                    padding-top:0;
+                }
+                .headLogo img{display:inline;width:80px;}
+                body{font-size:14px;}
             }
             .headTit{
                 display:table-cell;
@@ -236,9 +243,12 @@
                         display:table-cell;
                         text-align: right;
                         padding-right: 5px;
-                        width: auto;
+                        width: 77.5%;
                         vertical-align: middle;
                     }
+                        .taxTotAmo{
+                            font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
+                        }
                     .boldClass{
                         font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
                     }
@@ -259,13 +269,13 @@
             display: flex;
             width: 100%;
             height: calc(5vh - 20px);
-            padding-bottom: 10px;
+            padding-bottom: 5px;
             padding-top: 10px;
             text-align: center;
             margin-left: auto;
             margin-right: auto;
             align-items: center;
-            font-size: 80%;
+            font-size: 55%;
             justify-content: space-around;
             font-family:'ArialMT Regular',Sans-Serif;
             color:var(--textcolor);
@@ -334,7 +344,11 @@
                     <div class="detDate headDetTbl contHeadTbl">
                         <div class="headDetLbl">Teléfono</div>
                         <div class="headDetVal"><?php echo($customerPhn); ?> - <?php echo($customerPhn2); ?></div>
-                    </div>
+                    </div>                    
+                    <div class="detDate headDetTbl contHeadTbl">
+                        <div class="headDetLbl">Correo</div>
+                        <div class="headDetVal"><?php echo($customerEmail); ?></div>
+                    </div>  
                 </div>
             </div>
             <div class="contHeadDet" style="border:none">
@@ -348,16 +362,19 @@
             <div class="tblItemsCnt">
                 <div class="itemsTblHead">
                     <div class="itemHead cell20" style="border-left:none">
-                        Ref
+                        Ref.
                     </div>
-                    <div class="itemHead cell30">
+                    <div class="itemHead cell22Mid">
                         Descripción
                     </div>                    
-                    <div class="itemHead cell10 centerText">
+                    <div class="itemHead cell7Mid centerText">
                         IVA %
                     </div>
                     <div class="itemHead cell7Mid itemHdNum">
                         Cant.
+                    </div>
+                    <div class="itemHead cell10">
+                        Unidad
                     </div>
                     <div class="itemHead cell10 itemHdNum">
                         Precio
@@ -366,37 +383,42 @@
                         Desc. %
                     </div>
                     <div class="itemHead cell12Mid itemHdNum">
-                        Total sin IVA
+                        Total sin IVA 
                     </div>
                 </div>
                 <div class="itemsDetCnt">
                     <?php 
+                        $taxamo = 0;
                         for($i=0;$i<count($record->details);$i++){
                             echo('
                             <div class="itemsTblRow">
                                 <div class="itemsDet cell20" style="border-left:none">
                                     '.$record->details[$i]->item->ref.'
                                 </div>
-                                <div class="itemsDet cell30">
+                                <div class="itemsDet cell22Mid">
                                 '.$record->details[$i]->item->dsc.'
                                 </div>                    
-                                <div class="itemsDet cell10 centerText">
+                                <div class="itemsDet cell7Mid centerText">
                                 '.$record->details[$i]->tax->formatted.'
                                 </div>
                                 <div class="itemsDet cell7Mid itemHdNum">
                                 '.$record->details[$i]->qty->formatted.'
                                 </div>
+                                <div class="itemsDet cell10">
+                                '.$record->details[$i]->item->unit.'
+                                </div>
                                 <div class="itemsDet cell10 itemHdNum">
-                                '.$record->details[$i]->unitprice->formatted.'
+                                Bs. '.$record->details[$i]->unitprice->formatted.'
                                 </div>
                                 <div class="itemsDet cell10 centerText">
                                 '.$record->details[$i]->discount->formatted.'
                                 </div>
                                 <div class="itemsDet cell12Mid itemHdNum">
-                                '.$record->details[$i]->total->formatted.'
+                                Bs. '.$record->details[$i]->total->formatted.'
                                 </div>
                             </div>
                             ');
+                            $taxamo += $record->details[$i]->tax->number > 0 ? $record->details[$i]->total->number : 0;
                         }
                     ?>
                 </div>
@@ -404,7 +426,7 @@
                     <div class="itemTotTbl">
                         <div class="itemTotLbl">Sub-Total</div>
                         <div class="itemTotAmo">
-                            <span class="bgTot" id="subTot"><?php echo(($record->amounts->gross->number>0) ? $record->amounts->gross->formatted : '-'); ?></span>
+                            <span class="bgTot" id="subTot">Bs. <?php echo(($record->amounts->gross->number>0) ? $record->amounts->gross->formatted : '-'); ?></span>
                         </div>
                     </div>
                     <div class="itemTotTbl">
@@ -414,65 +436,66 @@
                         </div>
                     </div>
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">IVA </div>
+                        <div class="itemTotLbl">IVA sobre <span class="taxTotAmo">Bs. <?php echo(number_format($taxamo, 2, ",", "."))?></span></div>
                         <div class="itemTotAmo">
-                            <span class="bgTot"><?php echo(($record->amounts->tax->number>0) ? $record->amounts->tax->formatted : '-'); ?></span>
+                            <span class="bgTot">Bs. <?php echo(($record->amounts->tax->number>0) ? $record->amounts->tax->formatted : '-'); ?></span>
                         </div>
                     </div>
                     <div class="itemTotTbl">
                         <div class="itemTotLbl boldClass" >TOTAL</div>
                         <div class="itemTotAmo">
-                            <span class="bgTot boldClass"><?php echo($record->amounts->total->formatted); ?></span>
+                            <span class="bgTot boldClass">Bs. <?php echo($record->amounts->total->formatted); ?></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="footer">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            De conformidad con lo establecido en la PSA SNAT/2022/000012 G.O. Nro. 42.329 del 17 de Marzo del 2022, hemos sido calificados responsables del impuesto a las Grandes Transacciones Financieras (IGTF) en calidad de Agentes de Percepción, con lo cual, si el pago de esta factura se realiza en moneda distinta a la de curso legal en el país, el monto así percibido estará sujeto a un 3%, que debe ser cancelado por el cliente conjuntamente con el pago de esta factura
         </div>
     </div>
-    <script type="text/javascript">
-        window.onload = function(){
-            //Esta funcion permite asignar el "espacio restante" a la sección de los items de la factura
-            //Y así mantener su hegiht de ocupar el resto del espacio (min 100% si es más debería crecer)
-            //OJO el calculo no es exacto debído a que una vez se abre la vista de imprimir las columnas tienen resize y los rows pueden alterar su tamaño
-            //para esto se ocultó el overflow del contenedor en casode que el obejto de relleno se desborde por debajo en la vista de impresión
-            function calcRealHeigh(){
-                var padre = document.getElementsByClassName("content")[0];            
-                var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight+
-                padre.getElementsByClassName("contHeadDet")[1].offsetHeight);
-                document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
-                var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+
-                padre.getElementsByClassName("itemsTotsCnt")[0].offsetHeight + 20);
-                document.getElementsByClassName("itemsDetCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
-                sumAndFill();
-            }
+    <script type="text/javascript">        
+        //Esta funcion permite asignar el "espacio restante" a la sección de los items de la factura
+        //Y así mantener su hegiht de ocupar el resto del espacio (min 100% si es más debería crecer)
+        //OJO el calculo no es exacto debído a que una vez se abre la vista de imprimir las columnas tienen resize y los rows pueden alterar su tamaño
+        //para esto se ocultó el overflow del contenedor en casode que el obejto de relleno se desborde por debajo en la vista de impresión
+        function calcRealHeigh(){
+            var padre = document.getElementsByClassName("content")[0];    
+            var prevHeight = padre.previousElementSibling.offsetHeight+11;      
+            padre.style.height = "calc(95vh - "+prevHeight+"px)";       
+            var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight+
+            padre.getElementsByClassName("contHeadDet")[1].offsetHeight);
+            document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(98% - "+fillspace+"px)";
+            var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+
+            padre.getElementsByClassName("itemsTotsCnt")[0].offsetHeight + 20);
+            document.getElementsByClassName("itemsDetCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
+            sumAndFill();
+        }
 
-            //Esta función calcula el espacio restante entre los "items" y el contenedor de la factura y lo rellena con un item en blanco
-            //que tiene el hegiht del espacio restante para mostrar las lineas de las demás columnas
-            function sumAndFill(){
-                var padre = document.getElementsByClassName("content")[0];
-                var rows = padre.getElementsByClassName("itemsTblRow");
-                if(rows.length>0){
-                    var height = 0;
-                    for(var i=0;i<rows.length;i++){//Se suma el espacio que ocupan los items
-                        height += rows[i].offsetHeight;
-                    }
-                    var cntspace = document.getElementsByClassName("itemsDetCnt")[0].offsetHeight;
-                    //Se valída si hay algún espacio en blanco
-                    if(cntspace>height){
-                        var nodo = padre.getElementsByClassName("itemsTblRow")[0].cloneNode(true);
-                        var col = nodo.getElementsByClassName("itemsDet");
-                        for(var i=0;i<col.length;i++){//Se blanquean los campos del que se clona
-                            col[i].innerText = "";
-                        }
-                        nodo.style.height = "calc(100% - "+height+"px)";
-                        padre.getElementsByClassName("itemsDetCnt")[0].appendChild(nodo);
-                    }                    
+        //Esta función calcula el espacio restante entre los "items" y el contenedor de la factura y lo rellena con un item en blanco
+        //que tiene el hegiht del espacio restante para mostrar las lineas de las demás columnas
+        function sumAndFill(){
+            var padre = document.getElementsByClassName("content")[0];
+            var rows = padre.getElementsByClassName("itemsTblRow");
+            if(rows.length>0){
+                var height = 0;
+                for(var i=0;i<rows.length;i++){//Se suma el espacio que ocupan los items
+                    height += rows[i].offsetHeight;
                 }
+                var cntspace = document.getElementsByClassName("itemsDetCnt")[0].offsetHeight;
+                //Se valída si hay algún espacio en blanco
+                if(cntspace>height){
+                    var nodo = padre.getElementsByClassName("itemsTblRow")[0].cloneNode(true);
+                    var col = nodo.getElementsByClassName("itemsDet");
+                    for(var i=0;i<col.length;i++){//Se blanquean los campos del que se clona
+                        col[i].innerText = "";
+                    }
+                    nodo.style.height = "calc(100% - "+height+"px)";
+                    padre.getElementsByClassName("itemsDetCnt")[0].appendChild(nodo);
+                }                    
             }
+        }
+        window.onload = function(){
             calcRealHeigh();
         }
     </script>

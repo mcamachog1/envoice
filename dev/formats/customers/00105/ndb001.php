@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style rel="stylesheet">   
         :root {
-            --textcolor: #4A4A4A;
+            --textcolor: #000000;
         }     
         @font-face {
             font-family: 'ArialMT Regular';
@@ -48,16 +48,13 @@
             width: 17.5%;
         }
         .cell20{
-            width: 10%;
-        }
-        .cell22Mid {
-            width: 22.5%;
+            width: 20%;
         }
         .cell25 {
             width: 25%;
         }
         .cell30 {
-            width: 40%;
+            width: 30%;
         }
         .cell40 {
             width: 40%;
@@ -68,32 +65,33 @@
         .cell100 {
             width: 100%;
         }
-        html{ padding:0;margin:0;height:100%;}
-        body{ padding:0;margin:0;font-size:15px;height:100%;}
+        html{ padding:0;margin:0; }
+        body{ padding:0;margin:0;font-size:15px;}
         .page{
             height:100%;
-            width:100%;  
-                      
+            background-color:#FFFFFF;
+            color:var(--textcolor);
+            width:100%; 
+            overflow-x:hidden;           
         }
         .header{
             display: table;
             width: 100%;
-            padding-top: 5px;
             text-align: center;
             margin-left: auto;
             margin-right: auto;
             font-size: 90%;
             padding-bottom: 10px;
-            border-bottom: 1px solid #979797;
+            border-bottom: 1px solid #FFFFFF;
             height: 80px;
         }
             .headLogo{
                 display:table-cell;
-                width:80px;
-                vertical-align:bottom;
+                width:90px;
+                vertical-align:middle;
                 background-image:url('<?php echo($urllogo.$image); ?>');
                 background-repeat:no-repeat;
-                background-position:center bottom;
+                background-position:center center;
                 background-size:contain;
             }
             .headLogo img{display: none;}
@@ -101,7 +99,7 @@
                 .header{
                     padding-top:0;
                 }
-                .headLogo img{display:inline;width:80px;}
+                .headLogo img{display:inline;width:90px;}
                 body{font-size:14px;}
             }
             .headTit{
@@ -111,12 +109,16 @@
                 color:var(--textcolor);
                 font-family:'ArialMT Bold';
                 text-align:left;
-                padding-top: 10px;
-                font-size:113%;
-                padding-left: 5px;
+                font-size:110%;
             }
             .headTitNm{
                 padding-bottom:2px;
+                padding-left: 5px;
+            }
+            .headCntLeft{
+                max-width:150px;
+                margin-left:auto;
+                font-size:90%;
             }
             .headDet{
                 display:table-cell;
@@ -127,16 +129,18 @@
                 .typeDet{
                     width:100%;
                     text-align:right;
-                    padding-bottom:10px;
+                    padding-bottom:5px;
                     color:var(--textcolor);
                     font-family:'ArialMT Bold';
-                    font-size:120%;
+                    font-size:95%;
                 }
                 .headDetTbl{
                     display:table;
                     width:100%;
                     padding:1px 0;
+                    position:relative;
                 }
+                
                 .headDetLbl{
                     display:table-cell;
                     width:auto;
@@ -145,6 +149,13 @@
                     text-align:right;
                     font-size:90%;
                     vertical-align:middle;
+                }
+                .headDetLblTbl{
+                    display: table !important;
+                    width:100%;
+                    color:var(--textcolor);
+                    font-family:'ArialMT Bold';
+                    font-size:95%;
                 }
                 .headDetVal{
                     display:table-cell;
@@ -155,60 +166,80 @@
                     font-size:88%;
                     vertical-align:middle;
                 }
+                .headDetValTbl{
+                    display: table !important;
+                    width:100%;
+                    font-size:120%;
+                }
+                
         .content{
             width:100%;
             margin-left:auto;
             margin-right:auto;
             height:calc(95vh - 112px);
             padding-bottom: 10px;
-            border-bottom: 1px solid #979797;
+            border-bottom: 1px solid #FFFFFF;
         }   
             .contHeadDet{
+                width: 100%;
+                display: table;
                 padding-top:10px;
                 padding-bottom:10px;
-                border-bottom:1px solid #979797;
-            }     
+                border-bottom:1px solid #FFFFFF;
+            } 
+            .contCellHead{
+                display:table-cell;
+                width:50%;
+            }  
+            
                 .contHeadTbl .headDetLbl{                    
-                    width:100px;                    
+                    width:95px;                    
                     text-align:left;
-                    font-size:85%;
+                    font-size:80%;
                 }   
                 .contHeadTbl .headDetVal{                    
                     width:auto;
                     text-align:left;
-                    font-size:80%;
+                    font-size:78%;
                 } 
-            
+                .contCellHeadR .headDetLbl{
+                    text-align:right;
+                    width:auto;
+                }
+                .contCellHeadR .headDetVal{                    
+                    width:130px;
+                    text-align:right;
+                }
+                
             .itemsTblHead {
                 display: table;
-                width: calc(100% - 2px);
-                color:#0033A0;
-                border: 1px solid #979797;
-                margin-left:auto;
-                margin-right:auto;
-                font-size:79%;
+                width: calc(100% + 16px);
+                color: #0033A0;
+                border: 1px solid #FFFFFF;
+                margin-left: -9px;
+                font-size: 79%;
             }
                 .itemHead {
                     padding: 7px 9px;
-                    border-left: 1px solid #979797;
+                    border-left: 1px solid #FFFFFF;
                     display: table-cell;
                     color:var(--textcolor);
                     font-family:'ArialMT Bold';
                 }
             .itemsDetCnt{
                 display:table;
-                width:calc(100% - 2px);
+                width: calc(100% - 2px);
                 height:auto;         
-                border: 1px solid #979797;
+                border: 1px solid #FFFFFF;
                 border-top:none;
                 overflow:hidden;
             }
                 .itemsTblRow{
                     display: table;
-                    width: 100%;
+                    width: calc(100% + 18px);                    
+                    margin-left:-9px;
                     color:#0033A0;
                     border-left:none;
-                    margin-left:auto;
                     margin-right:auto;
                     font-size:80%;
                     border-top:none;
@@ -216,7 +247,7 @@
                 }
                     .itemsDet{
                         padding: 7px 9px;
-                        border-left: 1px solid #979797;
+                        border-left: 1px solid #FFFFFF;
                         display: table-cell;
                         color:var(--textcolor);
                         font-family:'ArialMT Regular',Sans-Serif;
@@ -232,7 +263,7 @@
                         display: table;
                         width: calc(100% - 1px);
                         font-size: 80%;
-                        border-right: 1px solid #979797;
+                        border-right: 1px solid #FFFFFF;
                         margin-left:auto;
                         margin-right:auto;
                     }
@@ -243,12 +274,9 @@
                         display:table-cell;
                         text-align: right;
                         padding-right: 5px;
-                        width: 77.5%;
+                        width: auto;
                         vertical-align: middle;
                     }
-                        .taxTotAmo{
-                            font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
-                        }
                     .boldClass{
                         font-family:'ArialMT Bold';font-weight:bold;font-size:100%;
                     }
@@ -261,7 +289,7 @@
                         vertical-align: middle;
                         padding: 9px 9px;
                         width: 12.5%;                        
-                        border: 1px solid #979797;
+                        border: 1px solid #FFFFFF;
                         border-top:none;
                         border-right:none;
                     }
@@ -275,7 +303,7 @@
             margin-left: auto;
             margin-right: auto;
             align-items: center;
-            font-size: 55%;
+            font-size: 65%;
             justify-content: space-around;
             font-family:'ArialMT Regular',Sans-Serif;
             color:var(--textcolor);
@@ -287,6 +315,12 @@
         .itemHdNum{
             text-align:right;
         }
+
+        .contHeadTbl .condVal{                    
+            position: absolute;
+            top: 2px;
+            width: 120%;
+        }
     </style>
     <title>Invoice - View</title>
 </head>
@@ -295,95 +329,96 @@
         <div class="header">
             <div class="headLogo"><img src='<?php echo($urllogo.$image);?>' alt="Logo" /></div>
             <div class="headTit">
-                <div class="headTitNm"><?php echo($commercename); ?></div>
-                <div class="headDetCnt">
-                    <div class="detNum headDetTbl contHeadTbl">
-                        <div class="headDetVal"><?php echo($commercerif); ?></div>
-                    </div>
+                <div class="headTitNm headCntLeft"><?php echo($commercename); ?></div>
+                <div class="headDetCnt headCntLeft">                    
                     <div class="detControl headDetTbl contHeadTbl">
                         <div class="headDetVal"><?php echo($commerceaddr); ?></div>
-                    </div>
+                    </div>                    
                     <div class="detDate headDetTbl contHeadTbl">
-                        <div class="headDetVal"><?php echo($commercephn); ?></div>
+                        <div class="headDetVal">Tel: <?php echo($commercephn); ?></div>
+                    </div>
+                    <div class="detNum headDetTbl contHeadTbl">
+                        <div class="headDetVal">RIF: <?php echo($commercerif); ?></div>
                     </div>
                 </div>
             </div>
             <div class="headDet">
-                <div class="typeDet"><?php echo($type); ?></div>
+                <div class="typeDet"><?php /*echo($type);*/echo("Forma libre"); ?></div>
                 <div class="headDetCnt">
-                    <div class="detNum headDetTbl">
-                        <div class="headDetLbl">Número</div>
-                        <div class="headDetVal"><?php echo($invoiceNum); ?></div>
-                    </div>
                     <div class="detControl headDetTbl">
-                        <div class="headDetLbl">Control</div>
-                        <div class="headDetVal"><?php echo($invoiceCtrl); ?></div>
-                    </div>
-                    <div class="detDate headDetTbl">
-                        <div class="headDetLbl">Fecha</div>
-                        <div class="headDetVal"><?php echo($invoiceDate); ?></div>
-                    </div>
+                        <div class="headDetLbl headDetLblTbl">N° de Control</div>
+                        <div class="headDetVal headDetValTbl"><?php echo($invoiceCtrl); ?></div>
+                    </div>                    
+                    
                 </div>
             </div>
         </div>
         <div class="content">
             <div class="contHeadDet">
-                <div class="headDetCnt">
-                    <div class="detNum headDetTbl contHeadTbl">
-                        <div class="headDetLbl">Facturar A</div>
-                        <div class="headDetVal"><?php echo($invoiceClient); ?></div>
+                <div class="contCellHead">
+                    <div class="headDetCnt">
+                        <div class="detNum headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Cliente:</div>
+                            <div class="headDetVal"><?php echo($invoiceClient); ?></div>
+                        </div>
+                        <div class="detControl headDetTbl contHeadTbl">
+                            <div class="headDetLbl">RIF:</div>
+                            <div class="headDetVal"><?php echo($customerRif); ?></div>
+                        </div>
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Dirección:</div>
+                            <div class="headDetVal"><?php echo($customerAddr); ?></div>
+                        </div>
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Teléfono:</div>
+                            <div class="headDetVal"><?php echo($customerPhn); ?> - <?php echo($customerPhn2); ?></div>
+                        </div>
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Correo:</div>
+                            <div class="headDetVal"><?php echo($customerEmail); ?></div>
+                        </div>                         
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Observaciones:</div>
+                            <div class="headDetVal condVal"><?php echo($conditions); ?></div>
+                        </div>
                     </div>
-                    <div class="detControl headDetTbl contHeadTbl">
-                        <div class="headDetLbl">RIF</div>
-                        <div class="headDetVal"><?php echo($customerRif); ?></div>
-                    </div>
-                    <div class="detDate headDetTbl contHeadTbl">
-                        <div class="headDetLbl">Dirección</div>
-                        <div class="headDetVal"><?php echo($customerAddr); ?></div>
-                    </div>
-                    <div class="detDate headDetTbl contHeadTbl">
-                        <div class="headDetLbl">Teléfono</div>
-                        <div class="headDetVal"><?php echo($customerPhn); ?> - <?php echo($customerPhn2); ?></div>
-                    </div>                    
-                    <div class="detDate headDetTbl contHeadTbl">
-                        <div class="headDetLbl">Correo</div>
-                        <div class="headDetVal"><?php echo($customerEmail); ?></div>
-                    </div>  
                 </div>
-            </div>
-            <div class="contHeadDet" style="border:none">
-                <div class="headDetCnt">
-                    <div class="detNum headDetTbl contHeadTbl">
-                        <div class="headDetLbl">Condiciones</div>
-                        <div class="headDetVal"><?php echo($conditions); ?></div>
+                <div class="contCellHead contCellHeadR">
+                    <div class="headDetCnt">
+                        <div class="detNum headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Factura N°:</div>
+                            <div class="headDetVal"><?php echo($invoiceNum); ?></div>
+                        </div>
+                        <div class="detControl headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Fecha Emisión:</div>
+                            <div class="headDetVal"><?php echo($invoiceDate); ?></div>
+                        </div>
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Fecha Vencimiento:</div>
+                            <div class="headDetVal"><?php echo($dueDate); ?></div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="tblItemsCnt">
-                <div class="itemsTblHead">
-                    <div class="itemHead cell20" style="border-left:none">
-                        Ref.
-                    </div>
-                    <div class="itemHead cell22Mid">
-                        Descripción
+                <div class="itemsTblHead">   
+                    <div class="itemHead cell20">
+                        Cantidad
                     </div>                    
-                    <div class="itemHead cell7Mid centerText">
-                        IVA %
-                    </div>
-                    <div class="itemHead cell7Mid itemHdNum">
-                        Cant.
-                    </div>
-                    <div class="itemHead cell10">
+                    <div class="itemHead cell25">
+                        Descripción
+                    </div>                      
+                    <div class="itemHead cell12Mid itemHdNum">
                         Unidad
-                    </div>
-                    <div class="itemHead cell10 itemHdNum">
+                    </div>          
+                    <div class="itemHead cell15 itemHdNum">
                         Precio
                     </div>
-                    <div class="itemHead cell10 centerText">
-                        Desc. %
+                    <div class="itemHead cell15 itemHdNum">
+                        Descuento
                     </div>
                     <div class="itemHead cell12Mid itemHdNum">
-                        Total sin IVA 
+                        SubTotal
                     </div>
                 </div>
                 <div class="itemsDetCnt">
@@ -391,27 +426,21 @@
                         $taxamo = 0;
                         for($i=0;$i<count($record->details);$i++){
                             echo('
-                            <div class="itemsTblRow">
-                                <div class="itemsDet cell20" style="border-left:none">
-                                    '.$record->details[$i]->item->ref.'
-                                </div>
-                                <div class="itemsDet cell22Mid">
-                                '.$record->details[$i]->item->dsc.'
-                                </div>                    
-                                <div class="itemsDet cell7Mid centerText">
-                                '.$record->details[$i]->tax->formatted.'
-                                </div>
-                                <div class="itemsDet cell7Mid itemHdNum">
+                            <div class="itemsTblRow">          
+                                <div class="itemsDet cell20">
                                 '.$record->details[$i]->qty->formatted.'
-                                </div>
-                                <div class="itemsDet cell10">
+                                </div>                                
+                                <div class="itemsDet cell25">
+                                '.$record->details[$i]->item->dsc.'
+                                </div>                                   
+                                <div class="itemsDet cell12Mid itemHdNum">
                                 '.$record->details[$i]->item->unit.'
-                                </div>
-                                <div class="itemsDet cell10 itemHdNum">
+                                </div>               
+                                <div class="itemsDet cell15 itemHdNum">
                                 Bs. '.$record->details[$i]->unitprice->formatted.'
                                 </div>
-                                <div class="itemsDet cell10 centerText">
-                                '.$record->details[$i]->discount->formatted.'
+                                <div class="itemsDet cell15 itemHdNum">
+                                Bs. '.number_format(($record->details[$i]->qty->number*$record->details[$i]->unitprice->number)*($record->details[$i]->discount->number), 2, ",", ".").'
                                 </div>
                                 <div class="itemsDet cell12Mid itemHdNum">
                                 Bs. '.$record->details[$i]->total->formatted.'
@@ -424,19 +453,20 @@
                 </div>
                 <div class="itemsTotsCnt">
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">Sub-Total</div>
+                        <div class="itemTotLbl">Subtotal</div>
                         <div class="itemTotAmo">
                             <span class="bgTot" id="subTot">Bs. <?php echo(($record->amounts->gross->number>0) ? $record->amounts->gross->formatted : '-'); ?></span>
                         </div>
                     </div>
+                    <!--
                     <div class="itemTotTbl">
                         <div class="itemTotLbl">Descuento General</div>
                         <div class="itemTotAmo">
-                            <span class="bgTot" ><?php echo(($record->amounts->discount->number>0) ? $record->amounts->discount->percentage : '-'); ?></span>
+                            <span class="bgTot" ><?php /* echo(($record->amounts->discount->number>0) ? $record->amounts->discount->percentage : '-'); */ ?></span>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="itemTotTbl">
-                        <div class="itemTotLbl">IVA sobre <span class="taxTotAmo">Bs. <?php echo(number_format($taxamo, 2, ",", "."))?></span></div>
+                        <div class="itemTotLbl">IVA sobre Bs. <span class="taxTotAmo"><?php echo(number_format($taxamo, 2, ",", "."))?></span></div>
                         <div class="itemTotAmo">
                             <span class="bgTot">Bs. <?php echo(($record->amounts->tax->number>0) ? $record->amounts->tax->formatted : '-'); ?></span>
                         </div>
@@ -454,48 +484,46 @@
             De conformidad con lo establecido en la PSA SNAT/2022/000012 G.O. Nro. 42.329 del 17 de Marzo del 2022, hemos sido calificados responsables del impuesto a las Grandes Transacciones Financieras (IGTF) en calidad de Agentes de Percepción, con lo cual, si el pago de esta factura se realiza en moneda distinta a la de curso legal en el país, el monto así percibido estará sujeto a un 3%, que debe ser cancelado por el cliente conjuntamente con el pago de esta factura
         </div>
     </div>
-    <script type="text/javascript">        
-        //Esta funcion permite asignar el "espacio restante" a la sección de los items de la factura
-        //Y así mantener su hegiht de ocupar el resto del espacio (min 100% si es más debería crecer)
-        //OJO el calculo no es exacto debído a que una vez se abre la vista de imprimir las columnas tienen resize y los rows pueden alterar su tamaño
-        //para esto se ocultó el overflow del contenedor en casode que el obejto de relleno se desborde por debajo en la vista de impresión
-        function calcRealHeigh(){
-            var padre = document.getElementsByClassName("content")[0];    
-            var prevHeight = padre.previousElementSibling.offsetHeight+11;      
-            padre.style.height = "calc(95vh - "+prevHeight+"px)";       
-            var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight+
-            padre.getElementsByClassName("contHeadDet")[1].offsetHeight);
-            document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(98% - "+fillspace+"px)";
-            var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+
-            padre.getElementsByClassName("itemsTotsCnt")[0].offsetHeight + 20);
-            document.getElementsByClassName("itemsDetCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
-            sumAndFill();
-        }
-
-        //Esta función calcula el espacio restante entre los "items" y el contenedor de la factura y lo rellena con un item en blanco
-        //que tiene el hegiht del espacio restante para mostrar las lineas de las demás columnas
-        function sumAndFill(){
-            var padre = document.getElementsByClassName("content")[0];
-            var rows = padre.getElementsByClassName("itemsTblRow");
-            if(rows.length>0){
-                var height = 0;
-                for(var i=0;i<rows.length;i++){//Se suma el espacio que ocupan los items
-                    height += rows[i].offsetHeight;
-                }
-                var cntspace = document.getElementsByClassName("itemsDetCnt")[0].offsetHeight;
-                //Se valída si hay algún espacio en blanco
-                if(cntspace>height){
-                    var nodo = padre.getElementsByClassName("itemsTblRow")[0].cloneNode(true);
-                    var col = nodo.getElementsByClassName("itemsDet");
-                    for(var i=0;i<col.length;i++){//Se blanquean los campos del que se clona
-                        col[i].innerText = "";
-                    }
-                    nodo.style.height = "calc(100% - "+height+"px)";
-                    padre.getElementsByClassName("itemsDetCnt")[0].appendChild(nodo);
-                }                    
-            }
-        }
+    <script type="text/javascript">
         window.onload = function(){
+            //Esta funcion permite asignar el "espacio restante" a la sección de los items de la factura
+            //Y así mantener su hegiht de ocupar el resto del espacio (min 100% si es más debería crecer)
+            //OJO el calculo no es exacto debído a que una vez se abre la vista de imprimir las columnas tienen resize y los rows pueden alterar su tamaño
+            //para esto se ocultó el overflow del contenedor en casode que el obejto de relleno se desborde por debajo en la vista de impresión
+            function calcRealHeigh(){
+                var padre = document.getElementsByClassName("content")[0];   
+                var prevHeight = padre.previousElementSibling.offsetHeight+padre.nextElementSibling.offsetHeight+5;      
+                padre.style.height = "calc(97vh - "+prevHeight+"px)";   
+                var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight);
+                document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
+                var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+
+                padre.getElementsByClassName("itemsTotsCnt")[0].offsetHeight + 20);
+                document.getElementsByClassName("itemsDetCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
+            }
+
+            //Esta función calcula el espacio restante entre los "items" y el contenedor de la factura y lo rellena con un item en blanco
+            //que tiene el hegiht del espacio restante para mostrar las lineas de las demás columnas
+            function sumAndFill(){
+                var padre = document.getElementsByClassName("content")[0];
+                var rows = padre.getElementsByClassName("itemsTblRow");
+                if(rows.length>0){
+                    var height = 0;
+                    for(var i=0;i<rows.length;i++){//Se suma el espacio que ocupan los items
+                        height += rows[i].offsetHeight;
+                    }
+                    var cntspace = document.getElementsByClassName("itemsDetCnt")[0].offsetHeight;
+                    //Se valída si hay algún espacio en blanco
+                    if(cntspace>height){
+                        var nodo = padre.getElementsByClassName("itemsTblRow")[0].cloneNode(true);
+                        var col = nodo.getElementsByClassName("itemsDet");
+                        for(var i=0;i<col.length;i++){//Se blanquean los campos del que se clona
+                            col[i].innerText = "";
+                        }
+                        nodo.style.height = "calc(100% - "+height+"px)";
+                        padre.getElementsByClassName("itemsDetCnt")[0].appendChild(nodo);
+                    }                    
+                }
+            }
             calcRealHeigh();
         }
     </script>

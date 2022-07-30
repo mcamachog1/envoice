@@ -100,7 +100,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">Monto</div>
+                                    <div class="">Monto (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -108,7 +108,7 @@
                             </div>
                             <div class="detLine hideOpt">
                                 <div class="despLblCell">
-                                    <div class="">IVA</div>
+                                    <div class="">IVA (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -116,7 +116,7 @@
                             </div>
                             <div class="detLine">
                                 <div class="despLblCell">
-                                    <div class="">Total</div>
+                                    <div class="">Total (Bs.)</div>
                                 </div>
                                 <div class="despValCell">                                 
                                     <div class=""><span></span></div>
@@ -167,17 +167,17 @@
                         <div class="totsTblCnt">
                             <div class="pagCell pagLblBold">                            
                                 <div class="amoBox">
-                                    Base Imponible: <span id="baseAmo">400</span>
+                                    Base Imponible: Bs. <span id="baseAmo">400</span>
                                 </div>                            
                             </div>
                             <div class="pagCell pagLblBold">
                                 <div class="amoBox">
-                                    IVA: <span id="impAmo">200</span>
+                                    IVA: Bs. <span id="impAmo">200</span>
                                 </div>     
                             </div>
                             <div class="pagCell pagLblBold">
                                 <div class="amoBox">
-                                    Total: <span id="totAmo">600</span>
+                                    Total: Bs. <span id="totAmo">600</span>
                                 </div>     
                             </div>
                         </div>

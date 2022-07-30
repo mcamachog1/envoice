@@ -71,8 +71,7 @@
             height:100%;
             background-color:#FFFFFF;
             color:var(--textcolor);
-            width:100%; 
-            overflow-x:hidden;           
+            width:100%;       
         }
         .header{
             display: table;
@@ -138,6 +137,7 @@
                     display:table;
                     width:100%;
                     padding:1px 0;
+                    position:relative;
                 }
                 
                 .headDetLbl{
@@ -170,6 +170,7 @@
                     width:100%;
                     font-size:120%;
                 }
+                
         .content{
             width:100%;
             margin-left:auto;
@@ -191,7 +192,7 @@
             }  
             
                 .contHeadTbl .headDetLbl{                    
-                    width:90px;                    
+                    width:95px;                    
                     text-align:left;
                     font-size:80%;
                 }   
@@ -208,6 +209,7 @@
                     width:130px;
                     text-align:right;
                 }
+                
             .itemsTblHead {
                 display: table;
                 width: calc(100% + 16px);
@@ -230,6 +232,9 @@
                 border: 1px solid #FFFFFF;
                 border-top:none;
                 overflow:hidden;
+            }
+            .tblItemsCnt{
+                overflow-x:hidden;
             }
                 .itemsTblRow{
                     display: table;
@@ -312,6 +317,12 @@
         .itemHdNum{
             text-align:right;
         }
+
+        .contHeadTbl .condVal{                    
+            position: absolute;
+            top: 2px;
+            width: 120%;
+        }
     </style>
     <title>Invoice - View</title>
 </head>
@@ -364,6 +375,14 @@
                             <div class="headDetLbl">Teléfono:</div>
                             <div class="headDetVal"><?php echo($customerPhn); ?> - <?php echo($customerPhn2); ?></div>
                         </div>
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Correo:</div>
+                            <div class="headDetVal"><?php echo($customerEmail); ?></div>
+                        </div>                         
+                        <div class="detDate headDetTbl contHeadTbl">
+                            <div class="headDetLbl">Observaciones:</div>
+                            <div class="headDetVal condVal"><?php echo($conditions); ?></div>
+                        </div>
                     </div>
                 </div>
                 <div class="contCellHead contCellHeadR">
@@ -379,10 +398,6 @@
                         <div class="detDate headDetTbl contHeadTbl">
                             <div class="headDetLbl">Fecha Vencimiento:</div>
                             <div class="headDetVal"><?php echo($dueDate); ?></div>
-                        </div>
-                        <div class="detDate headDetTbl contHeadTbl">
-                            <div class="headDetLbl">Condición de Pago:</div>
-                            <div class="headDetVal"><?php echo($conditions); ?></div>
                         </div>
                     </div>
                 </div>
@@ -427,7 +442,7 @@
                                 Bs. '.$record->details[$i]->unitprice->formatted.'
                                 </div>
                                 <div class="itemsDet cell15 itemHdNum">
-                                Bs. '.($record->details[$i]->item->unit*$record->details[$i]->unitprice->number)*($record->details[$i]->discount->number/100).'
+                                Bs. '.number_format(($record->details[$i]->qty->number*$record->details[$i]->unitprice->number)*($record->details[$i]->discount->number), 2, ",", ".").'
                                 </div>
                                 <div class="itemsDet cell12Mid itemHdNum">
                                 Bs. '.$record->details[$i]->total->formatted.'
@@ -479,8 +494,8 @@
             //para esto se ocultó el overflow del contenedor en casode que el obejto de relleno se desborde por debajo en la vista de impresión
             function calcRealHeigh(){
                 var padre = document.getElementsByClassName("content")[0];   
-                var prevHeight = padre.previousElementSibling.offsetHeight+padre.nextElementSibling.offsetHeight;      
-                padre.style.height = "calc(98.5vh - "+prevHeight+"px)";   
+                var prevHeight = padre.previousElementSibling.offsetHeight+padre.nextElementSibling.offsetHeight+5;      
+                padre.style.height = "calc(97vh - "+prevHeight+"px)";   
                 var fillspace = (padre.getElementsByClassName("contHeadDet")[0].offsetHeight);
                 document.getElementsByClassName("tblItemsCnt")[0].style.height = "calc(100% - "+fillspace+"px)";
                 var fillspace = (padre.getElementsByClassName("itemsDetCnt")[0].offsetHeight+

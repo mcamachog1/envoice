@@ -156,7 +156,7 @@
     $out->id = (integer)$usersession['id'];
     $out->sessionid = $usersession['sessionid'];
     $out->validthru = $usersession['validthru'];
-    $out->name = $usr;
+    $out->name = $username;
  
 // Audit    
     $ip = $_SERVER['REMOTE_ADDR'];
