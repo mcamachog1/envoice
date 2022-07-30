@@ -2,13 +2,17 @@
 include_once("../settings/dbconn.php");
 include_once("../settings/utils.php");
 include_once("../settings/uploadfunctions.php");
+require '../hooks/PHPMailer5/PHPMailerAutoload.php';
+date_default_timezone_set('Etc/UTC');
+
+
 
 function validateFileName($filename){
+
   return True;
 }
 
 function successfulLoad($email,$filefromdir,$homeurl,$db){
- 
   $name = getCustomerNameByEmail($email,$db);
   $body = 
       "<html>" .
@@ -28,7 +32,7 @@ function successfulLoad($email,$filefromdir,$homeurl,$db){
                               "</div>" .
                           "</div>" .
                           "<div style='display:table-row'>" .
-                              "<div style='display:table-cell;font-size:120%;text-align:center'><br><p>Carga exitosa del archivo <strong>$filefromdir</strong><p><br></div>" .
+                              "<div style='display:table-cell;font-size:120%;text-align:center'><br><p>Carga exitosa del archivo: <strong>".basename($filefromdir, ".txt")."</strong><p><br></div>" .
                           "</div>" .
                           "<div style='display:table-row'>" .
                               "<div style='display:table-cell'>Gracias de antemano<br />" .
@@ -41,20 +45,22 @@ function successfulLoad($email,$filefromdir,$homeurl,$db){
       "</html>";
 
 
-  $altbody = "\n\nCarga exitosa del archivo $filefromdir\n\n".
+  $altbody = "\n\nCarga exitosa del archivo: ".basename($filefromdir, ".txt")."\n\n".
         "Gracias de antemano\n" .
         "Equipo de DaycoPrint";
-  $subject ="Carga exitosa archivo $filefromdir"; 
-  //enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);  
+  $subject ="Carga exitosa archivo: ".basename($filefromdir, ".txt"); 
+  enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);  
+  //enviarCorreo("no-responder@espacioseguroDayco.com", 'developer4@totalsoftware.com.ve', $subject, $body, $altbody);
   print_r($body);
 }
 
 function errorLoad($email,$filefromdir,$homeurl,$msg,$db){
-  $description = "Error en el archivo:".$filefromdir."<br>".$msg."<br>";
+
+  $description = "Error en el archivo: ".basename($filefromdir, ".txt")."<br>".$msg."<br>";
   if (substr($msg,0,3)=="500")
-    $description = "Error interno del servidor en carga de archivo<br>".$filefromdir."<br>".$msg;
+    $description = "Error interno del servidor en carga de archivo<br>".basename($filefromdir, ".txt")."<br>".$msg;
   elseif (substr($msg,0,3)=="400")  
-    $description = "Error de formato en el archivo:".$filefromdir."<br>".$msg."<br>";
+    $description = "Error de formato en el archivo: ".basename($filefromdir, ".txt")."<br>".$msg."<br>";
   $name = getCustomerNameByEmail($email,$db);
   $body = 
       "<html>" .
@@ -87,12 +93,14 @@ function errorLoad($email,$filefromdir,$homeurl,$msg,$db){
       "</html>";
 
 
-  $altbody = "\n\nCarga exitosa del archivo $filefromdir\n\n".
+  $altbody = "\n\nCarga exitosa del archivo: ".basename($filefromdir, ".txt")."\n\n".
         "Gracias de antemano\n" .
         "Equipo de DaycoPrint";
-  $subject ="Error en la carga del archivo $filefromdir"; 
-  //enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);  
+  $subject ="Error en la carga del archivo: ".basename($filefromdir, ".txt"); 
+  enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);
+  //enviarCorreo("no-responder@espacioseguroDayco.com", 'developer4@totalsoftware.com.ve', $subject, $body, $altbody);
   print_r($body);
+
 }
 function countErrors($errors){
     $count = 0;
@@ -138,7 +146,7 @@ function validarSerie($serie,$customerid,$totalerrors,$db){
       if (strlen($serie)==0)
         $serie=' ';
       if (!in_array($serie, $customerseries) && $totalerrors==0)
-        throw new Exception("Serie seleccionada $serie no es válida para el cliente.");  
+        throw new Exception("Serie seleccionada $serie no es v&aacute;lida para el cliente.");  
 }
 function encabezadoSinDetalle($customerid,$totalerrors,$db){
         // Detectar encabezados sin detalles
@@ -148,7 +156,7 @@ function encabezadoSinDetalle($customerid,$totalerrors,$db){
 }
 // Almacenamos todos los clientes
 $customers = getCustomers($db);
-
+  
 // Estructura para guardar clientes con archivos validos colocados
 $customers_to_upload = array();
 $files_to_upload = array();
@@ -156,7 +164,8 @@ $files_to_upload = array();
 foreach ($customers as $customer) {
   $customerid=$customer->id;
   
-  $dirpath = "..\\ftpfiles\\"."$customerid";
+  $dirpath = "..".SEPARADOR."ftpfiles".SEPARADOR."$customerid";
+
   // En caso de que no exista, creamos el directorio 
   if (!is_dir($dirpath)) 
     mkdir($dirpath);
@@ -164,8 +173,8 @@ foreach ($customers as $customer) {
   //  Si ya existe obtenemos los archivos por cargar de ese directorio
   else {
     // Archivos de ese cliente
-    $filesfromdir = glob($dirpath.SEPARADOR); 
-    
+    $filesfromdir = glob($dirpath.SEPARADOR."*.txt"); 
+
     // Recorrer cada archivo por cargar
     foreach ($filesfromdir as $filefromdir) {
 
@@ -235,14 +244,15 @@ foreach ($customers as $customer) {
             $msgtosend="";
             for ($x=0;$x<count($errors);$x++) {
                 $cant=$errors[$x]['err'.$x];
-                if ($cant>0){
+                if ($cant>0 && $x!=0){
                   $errmsg="<br>Hay $cant fila(s) en el archivo con error: ".$errors[$x]['errmsg']."<br>";
                   $msgtosend.=$errmsg;
                 }
             }
 
             errorLoad(getCustomerEmail($customerid,$db),$filefromdir,$homeurl,$msgtosend,$db); 
-            fclose($handle);            
+            fclose($handle);
+            unlink($filefromdir); 
             continue;
 
           }

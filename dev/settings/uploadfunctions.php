@@ -292,7 +292,7 @@
     elseif ($type=='T') {
   
         if (substr($line[0],-1) != 'T') {
-            throw new Exception("400-"."Se espera línea de TOTALES en la primera fila"); 
+            throw new Exception("400-"."Se espera línea de TOTALES en la primera fila."); 
             
         }
    
