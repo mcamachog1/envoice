@@ -1,5 +1,6 @@
 <?php
 
+define ('SEPARADOR','\\*');
 define ("APP_APP", "APP");
 define ('APP_CMS', 'CMS');
 define ('APP_SENIAT', 'SENIAT');
@@ -295,6 +296,17 @@ function getCustomerId($clientrif,$db){
     else
         return ($row["id"]);
 }
+function getCustomerEmail($id,$db){
+    $sql =  "SELECT contactemail  " .
+            "FROM   customers " .
+            "WHERE  id = $id" ;
+    if (!$rs = $db->query($sql))
+        badEnd("500", array("msg"=>$db->error));
+    if (!$row = $rs->fetch_assoc())
+        badEnd("400", array("msg"=>"No existe cliente con id: $id"));
+    else
+        return ($row["contactemail"]);
+}
 function getInvoiceDetailIds($id,$customerid,$db){
         $sql =  "SELECT d.id  " .
             "FROM   invoicedetails d INNER JOIN invoiceheader h ON h.id=d.invoiceid " .
@@ -572,6 +584,18 @@ function getCustomerName($id,$db){
         badEndCsv("Cliente id '$id' no encontrado");
     return $row['name'];    
 }
+function getCustomerNameByEmail($email,$db){
+    $sql ="SELECT name FROM customers WHERE contactemail = '$email'";
+    if (!$rs=$db->query($sql))
+        
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));         
+    $row = $rs->fetch_assoc();
+
+    if (count($row)==0)
+        badEnd("400", array("msg"=>"Cliente email '$email' no encontrado"));         
+        
+    return $row['name'];    
+}
 function filterByStatus($status){
     $status_list =explode("-",$status);
     $status_condition = " AND ( 0  ";
@@ -615,5 +639,22 @@ function filterByOneStatus($status){
     }  
     return $status_condition;  
 }
+function getCustomers($db){
+    $sql = "SELECT id, serie, initialcontrol, nextcontrol FROM customers ";
+    if (!$rs=$db->query($sql))
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    $customers = array();
+    while ($row = $rs->fetch_assoc()) {
+        $customer = new stdClass();
+        $id = $row["id"];
+        $customer->id = $id;
+        $customer->serie = $row["serie"];
+        $customer->initial= $row["initialcontrol"];
+        $customer->nextcontrol=$row["nextcontrol"];
+        $customers[$id] = $customer;
+    }
+    return $customers;
+}
+
 
 ?>
