@@ -8,7 +8,7 @@ if(isset($_POST['submit'])){ //check if form was submitted
     if (isset($_FILES["invoicesfile"]) and count($_FILES)>0){
       $filename = $_FILES["invoicesfile"]["name"];
       if (!$_FILES["invoicesfile"]["tmp_name"])
-          badEnd("500", array(id=>0,msg=>"Archivo no enviado"));
+          badEnd("500", array(id=>0,'msg'=>"Archivo no enviado"));
       $type=$_FILES["invoicesfile"]["type"];
       switch ($_FILES["invoicesfile"]["type"]){
           case "text/plain":
@@ -18,13 +18,17 @@ if(isset($_POST['submit'])){ //check if form was submitted
               $ext = ".csv";
               break;
           default:
-              badEnd("500", array(id=>1,msg=>"El formato del documento debe ser CSV o TXT"));
+              badEnd("500", array(id=>1,'msg'=>"El formato del documento debe ser CSV o TXT"));
       }
       $ruta="../ftpfiles/$customerfolder/$filename";
+      // En caso de que no exista, creamos el directorio 
+      $dirpath = "..".SEPARADOR."ftpfiles".SEPARADOR."$customerfolder";
+      if (!is_dir($dirpath)) 
+        mkdir($dirpath);
       if(move_uploaded_file($_FILES["invoicesfile"]["tmp_name"], $ruta)){
         $message="Archivo copiado exitosamente";
       } else 
-          badEnd("500", array(id=>2,msg=>"Error en funcion move_uploaded_file"));
+          badEnd("500", array(id=>2,'msg'=>"Error en funcion move_uploaded_file"));
     }
 }    
 ?>

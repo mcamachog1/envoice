@@ -249,8 +249,7 @@ foreach ($customers as $customer) {
                   $msgtosend.=$errmsg;
                 }
             }
-
-            errorLoad(getCustomerEmail($customerid,$db),$filefromdir,$homeurl,$msgtosend,$db); 
+            errorLoad(getCustomerEmail($customerid,$db),$filefromdir,$homeurl,$msgtosend,$db);
             fclose($handle);
             unlink($filefromdir); 
             continue;
@@ -275,11 +274,14 @@ foreach ($customers as $customer) {
           if ($totalerrors == 0) {
             $msg = $e->getMessage();
             errorLoad(getCustomerEmail($customerid,$db),$filefromdir,$homeurl,$msg,$db); 
+            fclose($handle);
+            unlink($filefromdir);             
             continue;
           }
         }
         // (C) CLOSE FILE
         fclose($handle);
+        unlink($filefromdir);
         if ($totalerrors==0){
           // Grabar customerid para subirlos a la tabla invoiceheader
           $customers_to_upload[] = $customerid;
@@ -288,35 +290,6 @@ foreach ($customers as $customer) {
         }
      
       }
-      
-  /*
-
-
-      // Auditoria
-      $countdocs = 0;
-      for ($x=0;$x<count($errors);$x++)
-      $countdocs += $errors[$x]['err'.$x];
-
-      insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se validó una carga masiva de $countdocs documentos");
-
-
-      // Salida
-      $out = new stdClass(); 
-      $out->errors = $errors;
-      header("HTTP/1.1 200");
-      echo (json_encode($out));
-      die();
-
-
-
-
-
-      // Carga exitosa
-      // sendSuccessfulEmail();
-
-      // Carga no exitosa
-      // sendErrorsEmail();
-  */  
     }
   }
 }

@@ -212,7 +212,7 @@
                         }
                     break; 
                     case 6:
-                        if (strlen($line[$i])==0) {
+                        if (strlen(trim($line[$i]))==0) {
                             $err = 4;
                             $errmsg = $fieldmsgs[$i] ;                            
                             $line[$i]= "";

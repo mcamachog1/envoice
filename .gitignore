@@ -1,5 +1,5 @@
-dev\settings\dbconn.php
-app\api\invoices\verfactura.html
+.\dev\settings\dbconn.php
+.\dev\app\api\invoices\verfactura.html
 *.txt
 *.sql
 envia*.php

@@ -1,6 +1,6 @@
 <?php
 
-define ('SEPARADOR','/');
+define ('SEPARADOR','\\');
 define ("APP_APP", "APP");
 define ('APP_CMS', 'CMS');
 define ('APP_SENIAT', 'SENIAT');
