@@ -3,7 +3,8 @@ include_once("../settings/dbconn.php");
 include_once("../settings/utils.php");
 include_once("../settings/uploadfunctions.php");
 require '../hooks/PHPMailer5/PHPMailerAutoload.php';
-date_default_timezone_set('Etc/UTC');
+date_default_timezone_set('America/Caracas');
+
 
 
 
@@ -51,7 +52,7 @@ function successfulLoad($email,$filefromdir,$homeurl,$db){
   $subject ="Carga exitosa archivo: ".basename($filefromdir, ".txt"); 
   enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);  
   //enviarCorreo("no-responder@espacioseguroDayco.com", 'developer4@totalsoftware.com.ve', $subject, $body, $altbody);
-  print_r($body);
+  echo "Carga exitosa del archivo: ".$filefromdir." en fecha: ".date("d-m-Y H:i:s")."\n";
 }
 
 function errorLoad($email,$filefromdir,$homeurl,$msg,$db){
@@ -93,13 +94,13 @@ function errorLoad($email,$filefromdir,$homeurl,$msg,$db){
       "</html>";
 
 
-  $altbody = "\n\nCarga exitosa del archivo: ".basename($filefromdir, ".txt")."\n\n".
+  $altbody = "\n\nError en la carga del archivo: ".basename($filefromdir, ".txt")."\n\n".
         "Gracias de antemano\n" .
         "Equipo de DaycoPrint";
   $subject ="Error en la carga del archivo: ".basename($filefromdir, ".txt"); 
   enviarCorreo("no-responder@espacioseguroDayco.com", $email, $subject, $body, $altbody);
   //enviarCorreo("no-responder@espacioseguroDayco.com", 'developer4@totalsoftware.com.ve', $subject, $body, $altbody);
-  print_r($body);
+  echo "Error en la carga del archivo: ".$filefromdir." en fecha: ".date("d-m-Y H:i:s")."\n";
 
 }
 function countErrors($errors){

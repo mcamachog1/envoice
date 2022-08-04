@@ -9,3 +9,4 @@
 [18-Jul-2022 19:00:41 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/cms/api/security/login.php:27) in /home/envoice/public_html/dev/cms/api/security/login.php on line 88
 [25-Jul-2022 12:26:07 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 86
 [25-Jul-2022 16:20:37 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 86
+[03-Aug-2022 14:45:12 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 87
