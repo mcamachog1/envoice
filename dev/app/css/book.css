@@ -75,13 +75,10 @@ body {
 }
 
 .leaveSect {
-  display: flex;
-  align-self: center;
-  position: absolute;
   color: white;
   font-weight: 600;
   right: 8%;
-  font-size: 90%;
+  font-size: 80%;
 }
 
 .itemMenu {
@@ -109,9 +106,29 @@ body {
   align-items: center;
   align-content: center;
   background-image: linear-gradient(180deg, #0033A0 0%, #0054A6 100%);
-  height: 56px;
+  height: 45px;
 }
-
+.menuTbl{
+  display: table;
+  width: 230px;
+  height:100%;
+  margin-right: 30px;
+  margin-left:  auto;
+}
+.cellMenu{
+  display:  table-cell;
+  width:50%;
+  text-align: center;
+  color: #FFFFFF;
+  font-family: Lato;
+  font-weight: 600;
+  font-size: 80%;
+  vertical-align:  middle;
+  cursor:pointer;
+}
+.cellSel{
+  background-color: #2A76D0;
+}
 .footer {
   font-size: 75%;
   background-color: #ffffff;
@@ -333,7 +350,7 @@ select {
   border-radius: 6px;
   margin-right: 12px;
   padding: 10px 10px;
-  font-size: 90%;
+  font-size: 85%;
   text-align:center;
 }
 .btnLblSubh{
@@ -401,18 +418,22 @@ select {
 .stdbtnSubmit.update {
   float: right;
 }
-
-.containerHome table th {
-  color: #0033A0;
-  border-bottom: 2px solid #0033A0;
-  background-color: #fff;
-  height: 34px;
-  text-align: left;
-  font-weight: 400;
-  font-size: 90%;
-  padding: 5px;
-  padding-bottom: 0;
-  font-family: "Lato", sans-serif;
+.regCnt{
+  margin:0;
+  display:table;
+  width:100%;
+}
+.hideSect{
+  background-image: linear-gradient(90deg, rgba(238, 238, 238, 0) 0%, rgba(255, 255, 255, 0.45) 100%);
+  width: 16px;
+  height: 100%;
+  position:absolute;
+  left:55%;
+}
+.headCnt{
+  display:table;
+  width:100%;
+  font-size:90%;
 }
 .thRef, .thControl,.thCI, .thMark,.thMount, .thImpto, .thTotal{
   text-align:center !important;
@@ -420,6 +441,23 @@ select {
 .thMark{
   cursor:auto;
 }
+.headCnt .cellNo,.headCnt .cellDate,.headCnt .cellRif,
+.headCnt .cellName,.headCnt .cellDetails{
+  display:table-cell;
+  color: #0033A0;
+  border-bottom: 2px solid #0033A0;
+  background-color: #fff;
+  height: auto;
+  text-align: left;
+  font-weight: 400;
+  font-size: 82%;
+  padding: 5px;
+  padding-top: 35px;
+  font-family: "Lato", sans-serif;
+}
+.cellNo ,.cellDate ,.cellRif ,.cellName ,.cellDetails{
+  display:table-cell;
+} 
 /*
 .thMount, .thImpto, .thTotal{
   text-align:right !important;
@@ -433,9 +471,9 @@ select {
   cursor:pointer;
 }
 
-.containerHome table td {
+.containerHome td {
   color: #4A4A4A;
-  font-size: 90%;
+  font-size: 85%;
   text-align: left;
   font-weight: 500;
   padding: 0px 5px;
@@ -443,42 +481,20 @@ select {
 }
 
 .containerHome tr {
-  cursor:pointer;
-  height: 40px;
+  cursor:auto;
+  height: 35px;
   font-size: 85%;
   background-color: #F3F5F9;
 }
 
-.containerHome tr:hover td{
-  border:1px solid #000;
-  border-left:none;
-  border-right:none;
-}
 .lineDis td{
   border:none !important;
 }
-.containerHome tr:hover td{
-  border:1px solid #000;
-  border-left:none;
-  border-right:none;
-}
 .lineDis td{
   border:none !important;
-}
-.userLine:hover{
-  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
 }
 .lineDis{
   cursor: auto !important;
-}
-.lineDis:hover{
-  box-shadow: none !important;
-}
-.userLine:hover .thAction{
-  border-right: 1px solid #0033A0;
-}
-.userLine:hover .thMark{
-  border-left: 1px solid #0033A0;
 }
 .respveTbl .respveRow:nth-child(even),
 .containerHome tr:nth-child(even) {
@@ -777,6 +793,15 @@ input:checked+.slider:before {
 .centerTable {
   width: 100%;
   border-spacing: 0px;
+  position:relative;
+}
+.hideSect{
+  transform: rotate(180deg);
+  background-image: linear-gradient(90deg, rgba(228, 228, 228, 0) 0%, rgba(216, 216, 216, 0.30) 90%);
+  width: 8px;
+  height: 100%;
+  position: absolute;
+  left:45%;
 }
 
 .status-color-1 {
@@ -1047,6 +1072,15 @@ input[type=number]{
 }
 .cell40 {
   width: 40%;
+}
+.cell45 {
+  width: 45%;
+}
+.cell45Mid{
+  width: 42.5%;
+}
+.cell50 {
+  width: 50%;
 }
 .cell80 {
   width: 80%;
@@ -1805,6 +1839,206 @@ input[type=number]{
   font-size:85%;
 }
 
+.subTit{
+  color:#0033A0;
+  font-family:'Montserrat';
+  font-weight: bold;
+  font-size:115%;
+  display: inline-block;
+}
+.periodSubTit{
+  font-size: 70%;
+  font-weight: 400;
+  color: #0033A0;
+  font-family: 'Montserrat';
+  display: inline-block;
+  margin-left:10px;
+}
+.blankTblImg{
+  width:200px;
+  height:200px;
+  margin-left: auto;
+  margin-right: auto;
+  background-image: url('../img/blankimg.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin-top: 45px;
+}
+.blankTblMsg{
+  color:  rgba(0, 0, 0, 0.5);
+  display:  table;
+  margin-left:  auto;
+  margin-right:  auto;
+  width: 300px;
+  text-align: center;
+}
+.cellDetails{
+  position:relative;
+
+}
+.cellDetails{
+  position:relative;
+
+}
+.blockTblCnt{
+  position:absolute;
+  left:0;
+  top:5px;
+  width:100%;
+  display:block;
+  overflow-x:auto;
+}
+.subtblHeadCnt {
+  padding-top: 25px;
+  width:  auto;
+  display: table;
+  overflow: visible;
+  border-bottom: 2px solid transparent;
+}
+.subtblRow{
+  width: auto;
+  display: table;
+  overflow: visible;
+  height: 35px;
+}
+.bottomTblRow{
+  font-size:85%;
+}
+.bottomTbl .subTblCnt{
+  font-size:80%;
+}
+.bottomTbl .headCnt .cellTbl{
+  border-bottom: 2px solid #0033A0;
+}
+.bottomTbl .cellNo{
+  padding-top:5px;
+  width:100%;
+  padding-bottom:5px;
+  vertical-align:middle;
+  font-size:90%;
+  padding-left:5px;
+}
+.subtblRow .cellTbl{
+  color: #4A4A4A;
+  font-size: 100%;
+  font-weight: 500;
+  vertical-align: middle;
+  text-align: center;
+  min-width: 80px;
+  position: relative;
+  display: table-cell;
+}
+.subtblRow .cellEle{  
+  border-color:#DEE4E8;
+}
+
+.cellTbl {
+  min-width:80px;
+  position: relative;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.cellTblRight{
+  text-align: right;
+}
+.cellTblCnt {display: table;height:100%;min-width: 210px;}
+
+.subTblCnt {
+  border-left: 1px solid;
+  bottom: 100%;
+  position: absolute;
+  line-height: 25px;
+  height: 25px;
+  width: calc(100% - 1px);
+  background-color: #0033A0;
+  color: #FFFFFF;
+  text-align: center;
+  font-size:95%;
+  font-family: 'Lato';
+}
+
+.cellTblCnt .cellEle {
+  padding-bottom: 5px;
+  display: table-cell;
+  padding-top: 5px;
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.subtblRow .cellTblRight,
+.cellTblCnt .cellTblRight{
+  text-align: right;
+}
+
+.boderLeft{
+  border-left:1px solid;
+}
+.cell100px{
+  width:100px;
+}
+.cell125px{
+  width:125px;
+}
+.cell150px{
+  width:150px;
+}
+.cell220px{
+  width:200px;
+}
+.cell250px{
+  width:250px;
+}
+/*Formato scroll lista de error*/
+.blockTblCnt::-webkit-scrollbar {
+  width: 7px;     /* TamaÃ±o del scroll en vertical */
+  height: 8px;    /* TamaÃ±o del scroll en horizontal */
+  display: block;  /* Ocultar scroll */
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
+.blockTblCnt::-webkit-scrollbar-thumb {
+  background: #D8D8D8;
+  border-radius: 4px;
+}
+/* Cambiamos el fondo y agregamos una sombra cuando estÃ© en hover */
+.blockTblCnt::-webkit-scrollbar-thumb:hover {
+  background: #D8D8D8;
+}
+
+/* Cambiamos el fondo cuando estÃ© en active */
+.blockTblCnt::-webkit-scrollbar-thumb:active {
+  background-color: #D8D8D8;
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del track */
+.blockTblCnt::-webkit-scrollbar-track {
+  background: #FFFFFF;
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo cuando estÃ© en active o hover */
+.blockTblCnt::-webkit-scrollbar-track:hover,
+.blockTblCnt::-webkit-scrollbar-track:active {
+  background: #FFFFFF;
+}
+.bgCellOpt1{
+  background-color: rgb(223 235 239 / 24%);
+}
+.bgCellOpt2{
+  
+}
+.bottomTbl .cellEle{
+  color: #4A4A4A;
+  font-size: 85%;
+  text-align: left;
+  font-weight: 500;
+}
+.totRow{
+  background-color: rgb(232, 232, 232,0.7);
+  font-weight: 600 !important;
+}
+.bottomTbl .cellTblRight{
+  text-align: right;
+}
 @media print{
   .frameView body{
     padding: 10px 20px;

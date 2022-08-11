@@ -1,6 +1,10 @@
 
 <div class="pageCnt">
     <div class="menuSect">
+        <div class="menuTbl">
+            <div class="cellMenu cellSel" style="width:40%" id="menu">Facturas</div> 
+            <div class="cellMenu" id="book">Libro de Ventas</div>  
+        </div>
         <div class="leaveSect">
             <span id="usernameMenu"></span>
             <i id="logOut" class="fa-solid fa-right-from-bracket"></i>
@@ -258,7 +262,7 @@
         </div>
         <div class="invoiceFrm">
             <div class="invoiceRow">
-                <div class="invoiceCell cell25">
+                <div class="invoiceCell cell20">
                     <div class="inptCnt">
                         <div class="inptLbl">CI / RIF</div>
                         <div class="inptFrmCnt">
@@ -266,11 +270,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="invoiceCell cell30">
+                <div class="invoiceCell cell25">
                     <div class="inptCnt">
                         <div class="inptLbl">NOMBRE / RAZÓN SOCIAL</div>
                         <div class="inptFrmCnt">
                             <input class="inptFrm" placeholder="Agregar nombre / razón social" type="text" id="customname"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoiceCell cell10">
+                    <div class="inptCnt">
+                        <div class="inptLbl" style="visiblity:hidden">-</div>
+                        <div class="checkTblInpt">
+                            <div class="cellCheck">
+                                <div class="inptCheckCnt">
+                                    <input class="inptFrm" type="checkbox" id="invoiceexent"/>
+                                </div>
+                            </div>
+                            <div class="cellCheck">
+                                <div class="inptLbl">IVA EXONERADO</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -395,12 +414,15 @@
         <div class="invoiceTbl">
             <div class="tblItems">
                 <div class="itemsTblHead">
-                    <div class="itemHead cell20">
+                    <div class="itemHead cell15">
                         Ref
                     </div>
-                    <div class="itemHead cell25">
+                    <div class="itemHead cell20">
                         Descripción
-                    </div>                  
+                    </div>    
+                    <div class="itemHead cell10">
+                        
+                    </div>                 
                     <div class="itemHead cell7Mid itemHdNum">
                         IVA %
                     </div>
@@ -422,16 +444,28 @@
                 </div>
                 <div class="itemsListCnt" style="border-bottom: 1px solid #D7D7D7;padding-bottom: 3px;">
                     <div class="itemsRow">
-                        <div class="itemCell cell20">
+                        <div class="itemCell cell15">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptRef" placeholder="0000000000" id="inptAddRef" type="number"/>
                             </div>
                         </div>
-                        <div class="itemCell cell25">
+                        <div class="itemCell cell20">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptDsc" placeholder="Descripción…" id="inptAddDsc" type="text" />
                             </div>
-                        </div>                     
+                        </div>   
+                        <div class="itemCell cell10">
+                            <div class="checkTblInpt">
+                                <div class="cellCheck">
+                                    <div class="inptCheckCnt">
+                                        <input class="inptFrm inptCheck" type="checkbox" id="inptAddCheck"/>
+                                    </div>
+                                </div>
+                                <div class="cellCheck itemHead">
+                                    <div class="inptLbl">Percibido</div>
+                                </div>
+                            </div>
+                        </div>        
                         <div class="itemCell cell7Mid">
                             <div class="inptFrmCnt">
                                 <input class="inptFrm inptNum inptIVA" placeholder="0,00" id="inptAddTax" type="text"/>
@@ -537,7 +571,7 @@
 <div class="popupCnt">
     <div class="popupCell">
         <div class="popupCard" id="uploadPopup">
-            <div class="popupClose" popup="uploadPopup"><i class="fa fa-times"></i></div>
+            <div class="popupClose" data-popup="uploadPopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Cargar Documentos</div>
             <div class="popUpSect">
                 <div class="popupDsc">Seleccione los documentos a importar desde:</div>            
@@ -568,7 +602,7 @@
             
         </div>
         <div class="popupCard" id="uploadCnfrPopup">
-            <div class="popupClose" popup="uploadCnfrPopup"><i class="fa fa-times"></i></div>
+            <div class="popupClose" data-popup="uploadCnfrPopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Cargar Documentos</div>
             <div class="popUpSect">
                 <div class="popupDsc">Su archivo se ha cargado exitosamente.<br><span id="numberInvc"></span><br>¿Está seguro que quiere procesar este archivo?</div>            
@@ -596,7 +630,7 @@
             
         </div>
         <div class="popupCard" id="errUplPopup">
-            <div class="popupClose" popup="errUplPopup"><i class="fa fa-times"></i></div>
+            <div class="popupClose" data-popup="errUplPopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Cargar Documentos</div>
             <div class="popupErrSect">
                 <div class="cntrLblProg">
@@ -649,7 +683,7 @@
             </div>
         </div>
         <div class="popupCard" id="deletePopup">
-            <div class="popupClose" popup="deletePopup"><i class="fa fa-times"></i></div>
+            <div class="popupClose" data-popup="deletePopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Anular Documentos</div>
             <div class="popupDsc">¿Está seguro que desea anular los documentos seleccionados?</div>
             <div class="popupBtns">
@@ -668,7 +702,7 @@
             </div>
         </div>
         <div class="popupCard" id="sendPopup">
-            <div class="popupClose" popup="sendPopup"><i class="fa fa-times"></i></div>
+            <div class="popupClose" data-popup="sendPopup"><i class="fa fa-times"></i></div>
             <div class="popupTit">Enviar Documentos</div>
             <div class="popupDsc">¿Está seguro que desea enviar los <span id="sendNro"></span>por correo electrónico?</div>
             <div class="popupBtns">

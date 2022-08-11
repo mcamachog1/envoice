@@ -1,0 +1,46 @@
+body {
+    background-color: #fafafa;
+    background-image:none;
+    overflow-x: hidden;
+  }
+
+  .waitScreen{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.3);
+      z-index: 99;
+      color: lightgray;
+      font-size: 200%;
+      text-align: center;
+  }
+
+.titleHome{
+    margin: 18px 18px 16px;
+    color: #03244d;
+    font-size: 38px;
+    line-height: 1.5;
+}
+.containerImg{
+      margin: 0 auto;
+      width: 54%;
+}
+.imgHome{
+      width: 100%;
+      margin-bottom: -7px;
+}
+.footer{
+      background-color: #FFFFFF;
+      opacity: 0.5;
+      margin: -28px 0 0;
+      padding: 5px;
+}
+.footer p{
+      color: #666a82;
+      font-size: 12px;
+      margin: 0;
+}
+
+

@@ -75,13 +75,10 @@ body {
 }
 
 .leaveSect {
-  display: flex;
-  align-self: center;
-  position: absolute;
   color: white;
   font-weight: 600;
   right: 8%;
-  font-size: 90%;
+  font-size: 80%;
 }
 
 .itemMenu {
@@ -103,13 +100,35 @@ body {
   padding-left: 42px;
 }
 
+
 .menuSect {
   padding: 0% 8%;
   display: flex;
   align-items: center;
   align-content: center;
   background-image: linear-gradient(180deg, #0033A0 0%, #0054A6 100%);
-  height: 56px;
+  height: 45px;
+}
+.menuTbl{
+  display: table;
+  width: 230px;
+  height:100%;
+  margin-right: 30px;
+  margin-left:  auto;
+}
+.cellMenu{
+  display:  table-cell;
+  width:50%;
+  text-align: center;
+  color: #FFFFFF;
+  font-family: Lato;
+  font-weight: 600;
+  font-size: 80%;
+  vertical-align:  middle;
+  cursor:pointer;
+}
+.cellSel{
+  background-color: #2A76D0;
 }
 
 .footer {
@@ -1063,6 +1082,11 @@ input[type=number]{
   font-size: 68%;
   text-transform: uppercase;
 }
+.itemHead .inptLbl{
+  font-size:90%;
+  color:#0033A0;
+  text-transform:none;
+}
 .lblOpt{
   text-transform: none;
 }
@@ -1073,6 +1097,25 @@ input[type=number]{
   height: 29px;  
   padding: 3px 0px;
   position: relative;
+}
+.checkTblInpt{
+  height: 29px;
+  padding: 3px 0px;
+  display:  table;
+  width:100%;
+  border: 1px solid transparent;
+}
+
+.inptCheckCnt{
+  border: none;
+  background: transparent;
+  width: auto;
+  height: auto;
+  text-align: left;
+  display: table;
+  margin: 0;
+  margin-left:auto;
+  margin-right:auto;
 }
 .totTblCnt{/*Para El contendor del total en la tabla de items*/
   border:none;
@@ -1090,6 +1133,10 @@ input[type=number]{
   font-family: 'Lato';
   font-weight: 300;
   color:#4A4A4A;
+}
+.inptCheckCnt .inptFrm{
+  width: 20px !important;
+  height:20px !important;
 }
 .inptFrm::placeholder{
   color:#AEBECA;
@@ -1128,6 +1175,14 @@ input[type=number]{
 .itemHead {
   padding: 3px 9px;
   display: table-cell;
+  color:#0033A0;
+  font-family: 'Lato';
+  font-weight: 300;
+}
+.cellCheck{
+  display: table-cell;
+  vertical-align: middle;
+  padding:0;
 }
 .itemHdNum{
   text-align:right;
@@ -1139,9 +1194,8 @@ input[type=number]{
 }
 .itemsRow{
   padding-right: 50px;
-    display: table;
-    width: calc(100% - 50px);
-  
+  display: table;
+  width: calc(100% - 50px);  
   font-size:85%;
   font-family: 'Lato';
   font-weight: 300;
@@ -1150,6 +1204,7 @@ input[type=number]{
 .itemCell{
   padding: 5px 8px;
   display: table-cell;
+  vertical-align: middle;
 }
 .totCell{
   background-color: #F8FAFB;

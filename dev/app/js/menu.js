@@ -6,6 +6,14 @@ window.addEventListener("keydown", function(e) {
 }, false);
 
 window.onload = function () {
+  var menuCells = document.getElementsByClassName("cellMenu");
+  for(var i=0;i<menuCells.length;i++){
+    menuCells[i].addEventListener("click",function(){
+      var sessid;
+      sessid = getParameterByName("sessid");    
+      gotoPage(this.getAttribute("id"), "main", { sessid: sessid });
+    });
+  }
    
   //Descargar
   document.getElementById("downloadButton").addEventListener("click",function(){
@@ -862,6 +870,20 @@ function downloadReport(){
     itemLine.getElementsByClassName("inptDisc")[0].addEventListener("keyup",function(){
       recalcTotLine(this.parentElement.parentElement.parentElement);
     });
+    itemLine.getElementsByClassName("inptCheck")[0].addEventListener("click",function(){
+      var itemLine = this.parentElement.parentElement.parentElement;
+      if(this.checked){
+        itemLine.getElementsByClassName("inptIVA")[0].value = "0,00";
+        itemLine.getElementsByClassName("inptIVA")[0].setAttribute("datanumber",0);
+        itemLine.getElementsByClassName("inptIVA")[0].setAttribute("disabled","");
+        recalcTotAdd();
+      }else{
+        itemLine.getElementsByClassName("inptIVA")[0].value = "";
+        itemLine.getElementsByClassName("inptIVA")[0].setAttribute("datanumber","");
+        itemLine.getElementsByClassName("inptIVA")[0].removeAttribute("disabled");
+      }
+      recalcTotLine(this.parentElement.parentElement.parentElement);
+    });
     
     var items = document.getElementById("itemsList").children;
     if(items.length<=0)document.getElementById("itemsList").appendChild(itemLine);  
@@ -871,7 +893,13 @@ function downloadReport(){
     var inptsAdd = document.getElementById("addItemDetails").parentElement.getElementsByTagName("input");
     for(var x=0;x<inptsAdd.length;x++){
       inptsAdd[x].value = "";
+      inptsAdd[x].checked = false;
       inptsAdd[x].setAttribute("datanumber","");
+      inptsAdd[x].removeAttribute("disabled");
+    }
+    if(document.getElementById("invoiceexent").checked){
+      document.getElementById("inptAddCheck").setAttribute("disabled","");
+      document.getElementById("inptAddTax").setAttribute("disabled","");
     }
 
     //Actualizar btn por un menos y evento de eliminar la linea    
@@ -1021,6 +1049,18 @@ function downloadReport(){
   document.getElementById("inptAddTax").addEventListener("keyup",function(){
     recalcTotAdd();
   });
+  document.getElementById("inptAddCheck").addEventListener("click",function(){
+    if(this.checked){
+      document.getElementById("inptAddTax").value = "0,00";
+      document.getElementById("inptAddTax").setAttribute("datanumber",0);
+      document.getElementById("inptAddTax").setAttribute("disabled","");
+      recalcTotAdd();
+    }else{
+      document.getElementById("inptAddTax").value = "";
+      document.getElementById("inptAddTax").setAttribute("datanumber","");
+      document.getElementById("inptAddTax").removeAttribute("disabled");
+    }
+  });
   document.getElementById("inptAddDisc").addEventListener("keyup",function(){
     recalcTotAdd();
   });
@@ -1141,7 +1181,13 @@ function downloadReport(){
       detail.unitprice = parseFloat(details[i].getElementsByClassName("inptPrice")[0].getAttribute("datanumber"));
       if(isEmpty(details[i].getElementsByClassName("inptPrice")[0],"Ingrese un precio") && !falta)falta = true;
       var tax = details[i].getElementsByClassName("inptIVA")[0].getAttribute("datanumber");
-      if(tax==null||tax==""||isNaN(tax)){
+      var percibe = details[i].getElementsByClassName("inptCheck")[0].checked;
+      var excento = document.getElementById("invoiceexent").checked;
+      if(excento){
+        tax = -2;
+      }else if(percibe){
+        tax = -1;
+      }else if(tax==null||tax==""||isNaN(tax)){
         tax = 0;
       }
       detail.tax = parseFloat(tax);
@@ -1325,7 +1371,20 @@ function downloadReport(){
       setValueByClass("inptQty",details[i].qty.formatted,itemLine,{'datanumber':details[i].qty.number});
       setValueByClass("inptUnit",details[i].unit,itemLine);
       setValueByClass("inptPrice",details[i].unitprice.formatted,itemLine,{'datanumber':details[i].unitprice.number});
-      setValueByClass("inptIVA",details[i].tax.formatted,itemLine,{'datanumber':(details[i].tax.number*100)});
+      debugger;
+      if((details[0].tax.number*100)=='-2'){
+        document.getElementById("invoiceexent").checked = true;
+        setValueByClass("inptCheck",'',itemLine,{'disabled':''});
+        setValueByClass("inptIVA",'0,00',itemLine,{'datanumber':(0),'disabled':''});
+        document.getElementById("inptAddCheck").setAttribute("disabled","");
+        document.getElementById("inptAddTax").setAttribute("disabled","");
+      }else if((details[i].tax.number*100)=='-1'){
+        setValueByClass("inptCheck",'',itemLine,{});
+        itemLine.getElementsByClassName("inptCheck")[0].checked = true;
+        setValueByClass("inptIVA",'0,00',itemLine,{'datanumber':(0),'disabled':''});
+      }else{
+        setValueByClass("inptIVA",details[i].tax.formatted,itemLine,{'datanumber':(details[i].tax.number*100)});
+      }
       setValueByClass("inptDisc",details[i].discount.formatted,itemLine,{'datanumber':(details[i].discount.number*100)});
       setValueByClass("inptTot",details[i].total.formatted,itemLine,{'datanumber':details[i].total.number});
 
@@ -1340,6 +1399,20 @@ function downloadReport(){
         recalcTotLine(this.parentElement.parentElement.parentElement);
       });
       itemLine.getElementsByClassName("inptQty")[0].addEventListener("keyup",function(){
+        recalcTotLine(this.parentElement.parentElement.parentElement);
+      });
+      itemLine.getElementsByClassName("inptCheck")[0].addEventListener("click",function(){
+        var itemLine = this.parentElement.parentElement.parentElement;
+        if(this.checked){
+          itemLine.getElementsByClassName("inptIVA")[0].value = "0";
+          itemLine.getElementsByClassName("inptIVA")[0].setAttribute("datanumber",0);
+          itemLine.getElementsByClassName("inptIVA")[0].setAttribute("disabled","");
+          recalcTotAdd();
+        }else{
+          itemLine.getElementsByClassName("inptIVA")[0].value = "";
+          itemLine.getElementsByClassName("inptIVA")[0].setAttribute("datanumber","");
+          itemLine.getElementsByClassName("inptIVA")[0].removeAttribute("disabled");
+        }
         recalcTotLine(this.parentElement.parentElement.parentElement);
       });
       itemLine.getElementsByClassName("inptIVA")[0].addEventListener("keyup",function(){
@@ -1366,6 +1439,8 @@ function blankAll(){
   for(var x=0;x<inpts.length;x++){
     inpts[x].value = "";
     inpts[x].removeAttribute("datanumber");
+    inpts[x].removeAttribute("disabled");
+    inpts[x].checked = false;
   }
   document.getElementById("itemsList").innerHTML = "";
   document.getElementById("subTot").innerHTML = "0,00";
@@ -1593,6 +1668,28 @@ function blankAll(){
         sbfac.style.display = "";
       }
   });
+  //Evento bloquear ivas en items si está excento
+  document.getElementById("invoiceexent").addEventListener("change",function(){    
+    if(this.checked){
+      var items = document.getElementsByClassName("itemsRow");
+      for(var i=0;i<items.length;i++){ 
+        items[i].getElementsByClassName("inptCheck")[0].checked = false;
+        setValueByClass("inptCheck",'',items[i],{'disabled':''});
+        setValueByClass("inptIVA",'0,00',items[i],{'datanumber':(0),'disabled':''});
+      }  
+      document.getElementById("inptAddCheck").setAttribute("disabled","");
+      document.getElementById("inptAddTax").setAttribute("disabled","");
+    }else{
+      document.getElementById("inptAddCheck").removeAttribute("disabled");
+      document.getElementById("inptAddTax").removeAttribute("disabled");
+      var items = document.getElementsByClassName("itemsRow");
+      for(var i=0;i<items.length;i++){        
+        items[i].getElementsByClassName("inptCheck")[0].removeAttribute("disabled");
+        items[i].getElementsByClassName("inptIVA")[0].removeAttribute("disabled");
+      }
+    }
+  });
+  
 
   //Recibe el id del "card" (data del popup a mostrar)
   function showPopup(popname){
@@ -1609,7 +1706,7 @@ function blankAll(){
   var popClose = document.getElementsByClassName("popupClose");
   for(var i=0;i<popClose.length;i++){
     popClose[i].addEventListener("click",function(){
-      closePopup(this.getAttribute("popup"));
+      closePopup(this.getAttribute("data-popup"));
     });
   }
 
@@ -2148,7 +2245,7 @@ function blankAll(){
   //Evento de ver todos los status del filtro
   document.getElementById("allStatus").addEventListener("click",function(){
     var checks = document.getElementsByClassName("checkstatus");
-    for(var i=0;i<checks.length;i++){
+    for(var i=0;i<checks.length;i++){dra
       if(this.checked){
         checks[i].checked = true;
       }else{
