@@ -70,7 +70,9 @@
                 " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, H.printformat, ".
                 " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, ".
                 " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
-                " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
+                " SUM( unitprice*qty*(".
+                " (CASE WHEN itemtax<0 THEN 0 ELSE itemtax END)".
+                "/100)*(1-itemdiscount/100) ) tax, ".
                 " H.discount, H.type, H.ctrref, ".
                 " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
                 " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".            
@@ -204,11 +206,8 @@
         }
         $record->details = [];
         // Details
-        $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unitprice, unit, ".
-        " itemtax tax, itemdiscount discount, ".
-        //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
-        " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
-        " FROM invoicedetails WHERE invoiceid = $id";
+        $sql = setQueryDetail($id);
+
         if (!$rs = $db->query($sql))
             badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
         $details = array(); // $details=[]

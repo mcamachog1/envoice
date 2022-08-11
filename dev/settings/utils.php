@@ -485,7 +485,11 @@ function setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order
         " H.id, H.issuedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
         " H.type, H.ctrref, manualload, ".            
         " SUM((unitprice*qty*(1-itemdiscount/100))) gross, ".
-        " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
+        " SUM( unitprice*qty*(".
+        
+        " (CASE WHEN itemtax<0 THEN 0 ELSE itemtax END)".
+        
+        "/100)*(1-itemdiscount/100) ) tax, ".
         " H.discount discount, ".
         " 100 * SUM( unitprice*qty*(itemdiscount/100) )/SUM(unitprice*qty) discount_percentage, ".
         " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
@@ -500,6 +504,34 @@ function setQuery($customerid,$datefrom,$dateto,$status_condition,$filter,$order
         "   H.sentdate, H.viewdate, H.canceldate " .
             $order;
     return $sql;                    
+}
+function setQueryEntry($customerid,$id){
+    $sql = "SELECT " .
+        " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
+        " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, manualload, ".
+        " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
+        " SUM( unitprice*qty*(".
+            " (CASE WHEN itemtax<0 THEN 0 ELSE itemtax END)".
+            "/100)*(1-itemdiscount/100) ) tax, ".
+        " H.discount, H.type, H.ctrref, ".
+        " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
+        " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".      
+        " DATE_FORMAT(H.sentdate, '%d/%m/%Y') formattedsentdate, ".
+        " DATE_FORMAT(H.viewdate, '%d/%m/%Y') formattedviewdate, ".                    
+        " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
+        " FROM    invoiceheader H ".
+        " INNER JOIN invoicedetails D ON ".
+            " D.invoiceid = H.id ".
+        " WHERE H.customerid=$customerid AND H.id = $id ";
+    return $sql;        
+}
+function setQueryDetail($id) {
+    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unit, unitprice, ".
+        " (CASE WHEN itemtax<0 THEN 0 ELSE itemtax END) tax, ".
+        " itemdiscount discount, ".
+        " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
+        " FROM invoicedetails WHERE invoiceid = $id";
+    return $sql;        
 }
 // Prepara el JSON para los 3 modulos (CMS-APP-Seniat)
 function jsonInvoiceList($rs){    
@@ -553,13 +585,18 @@ function jsonInvoiceList($rs){
       $record->amounts->gross->number = (float)$row["gross"]*(1-(float)$row["discount"]/100);
       $record->amounts->gross->formatted = number_format($row["gross"]*(1-(float)$row["discount"]/100), 2, ",", ".");
       
+      if ($row["tax"]==-1 || $row["tax"]==-2 )
+        $tax=(float)0;
+      else 
+        $tax = (float)$row["tax"];
+
       $record->amounts->tax = new stdClass(); 
-      $record->amounts->tax->number = (float)$row["tax"];
-      $record->amounts->tax->formatted = number_format($row["tax"], 2, ",", ".");         
+      $record->amounts->tax->number = $tax;
+      $record->amounts->tax->formatted = number_format($tax, 2, ",", ".");         
 
       $record->amounts->total = new stdClass(); 
-      $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"];
-      $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");          
+      $record->amounts->total->number = (float)$row["gross"]*(1-(float)$row["discount"]/100) + $tax;
+      $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + $tax, 2, ",", ".");          
 
       $records[] = $record;
   }

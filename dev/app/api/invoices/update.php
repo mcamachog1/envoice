@@ -29,7 +29,12 @@
             return true;
         return false;        
     }
-
+    function esFacturaExonerada ($arraydetails) {
+        foreach($arraydetails as $index => $object) 
+            if ($object->tax==-2)
+                return True;
+        return False;
+    }
     //Recibir JSON y convertir a objeto
     $data = json_decode(file_get_contents('php://input'), false);
 
@@ -148,7 +153,7 @@
                 //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
             }
             $invoiceid = $db->insert_id;
-            
+            $exonerado = esFacturaExonerada($arraydetails);
             // Bucle para insertar los details
             foreach($arraydetails as $index => $object) {
                 $itemref = $object->itemref;
@@ -156,7 +161,10 @@
                 $qty = $object->qty;
                 $unitdsc = $object->unit;
                 $unitprice = $object->unitprice;
-                $itemtax = $object->tax;
+                if ($exonerado)
+                    $itemtax=-2;
+                else                    
+                    $itemtax = $object->tax;
                 $itemdiscount = $object->discount;
                 
                 $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".
@@ -218,13 +226,17 @@
                 //badEnd("500", array("sql"=>$sql,"msg"=>$db->error));        
             
             // 2.- Insertar los nuevos
+            $exonerado = esFacturaExonerada($arraydetails);
             foreach($arraydetails as $index => $object) {
                 $itemref = $object->itemref;
                 $itemdsc = $object->itemdsc;
                 $qty = $object->qty;
                 $unitdsc = $object->unit;
                 $unitprice = $object->unitprice;
-                $itemtax = $object->tax;
+                if ($exonerado)
+                    $itemtax=-2;
+                else                    
+                    $itemtax = $object->tax;
                 $itemdiscount = $object->discount;
                 
                 $sql="INSERT INTO `invoicedetails` (`id`, `invoiceid`, `itemref`, `itemdsc`, `qty`, `unit`,`unitprice`, `itemtax`, `itemdiscount`) ".

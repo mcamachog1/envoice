@@ -40,21 +40,7 @@
         die();        
     }
     //Incluir fechas de leido y enviado
-    $sql =  "SELECT " .
-            " H.id, H.issuedate, H.duedate, H.refnumber, H.ctrnumber, H.clientrif, H.clientname, ".
-            " mobilephone, otherphone, clientemail, clientaddress, obs, currency, currencyrate, manualload, ".
-            " SUM( (unitprice*qty*(1-itemdiscount/100)) ) gross, ".
-            " SUM( unitprice*qty*(itemtax/100)*(1-itemdiscount/100) ) tax, ".
-            " H.discount, H.type, H.ctrref, ".
-            " DATE_FORMAT(H.issuedate, '%d/%m/%Y') formatteddate, ".
-            " DATE_FORMAT(H.duedate, '%d/%m/%Y') formattedduedate, ".      
-            " DATE_FORMAT(H.sentdate, '%d/%m/%Y') formattedsentdate, ".
-            " DATE_FORMAT(H.viewdate, '%d/%m/%Y') formattedviewdate, ".                    
-            " H.sentdate, H.viewdate, SUM(D.qty) qty   ".
-            " FROM    invoiceheader H ".
-            " INNER JOIN invoicedetails D ON ".
-                " D.invoiceid = H.id ".
-            " WHERE H.customerid=$customerid AND H.id = $id ";
+    $sql =  setQueryEntry($customerid,$id);
     if (!$rs = $db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));   
         
@@ -125,6 +111,7 @@
         $record->amounts->gross->number = (float)$row["gross"];
         $record->amounts->gross->formatted = number_format($row["gross"], 2, ",", ".");
         
+
         $record->amounts->tax = new stdClass(); 
         $record->amounts->tax->number = (float)$row["tax"];
         $record->amounts->tax->formatted = number_format($row["tax"], 2, ",", ".");          
@@ -140,11 +127,7 @@
         $record->amounts->total->formatted = number_format((float)$row["gross"]*(1-(float)$row["discount"]/100) + (float)$row["tax"], 2, ",", ".");        
     }
     // Details
-    $sql = "SELECT id, itemref ref, itemdsc dsc, qty, unit, unitprice, ".
-    " itemtax tax, itemdiscount discount, ".
-    //" ROUND(unitprice*qty*(1+itemtax/100)*(1-itemdiscount/100),2) total ". 
-    " ROUND(unitprice*qty*(1-itemdiscount/100),2) total ".     
-    " FROM invoicedetails WHERE invoiceid = $id";
+    $sql = setQueryDetail($id);
     if (!$rs = $db->query($sql))
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
     $details = array(); // $details=[]
@@ -162,8 +145,14 @@
         $detail->unitprice->number = (float)$row["unitprice"];
         $detail->unitprice->formatted = $row["unitprice"]; 
         $detail->tax =new stdClass();
-        $detail->tax->number = (float)$row["tax"]/100;
-        $detail->tax->formatted = $row["tax"]."%";        
+
+        if ($row["tax"]==-1 || $row["tax"]==-2 )
+            $tax=0;
+        else 
+            $tax = (float)$row["tax"];
+
+        $detail->tax->number = $tax/100;
+        $detail->tax->formatted = (string)$tax."%";        
         $detail->discount =new stdClass();
         $detail->discount->number = (float)$row["discount"]/100;
         $detail->discount->formatted = $row["discount"]."%";  
