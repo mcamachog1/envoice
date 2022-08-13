@@ -79,6 +79,20 @@
                     <div class="boxTit">
                         <div class="boxTitCell">Estatus de documentos</div>
                     </div>
+                    <div class="chartTblCnt"  id="statusDonut">
+                        <div class="cellChart cell50">
+                            <div class="donut-chart-block block"> 
+                                <div class="donut-chart">
+                                </div> 
+                            </div>   
+                        </div>
+                        <div class="cellChart cell50">
+                            <div class="donut-chart-block block"> 
+                                <div class="donut-chart">                                    
+                                </div> 
+                            </div>   
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

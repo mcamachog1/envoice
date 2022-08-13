@@ -118,8 +118,8 @@
             }
             //Creamos la direccion del folder
             $urlfolder = "../../../formats/customers/".str_pad($customerid,  5, "0", STR_PAD_LEFT);            
-            //Creamos el directorio en caso de que no exista
-            $printformat = "";
+            //Se utiliza el 000 para que ubique el directorio default
+            $printformat = "000";
             if(is_dir($urlfolder)){  
                 $files = [];
                 $filesfromdir = glob($urlfolder.'/*');        

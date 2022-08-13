@@ -99,17 +99,71 @@ var inf = [
   }
   },
 ];
+var infStatus =  {
+  "bysendstatus": {
+      "sent": {
+          "qty": {
+              "number": 391211,
+              "formatted": "391.211"
+          },
+          "pct": {
+              "number": 90,
+              "formatted": "90%"
+          }
+      },
+      "notsent": {
+          "qty": {
+              "number": 43468,
+              "formatted": "43.468"
+          },
+          "pct": {
+              "number": 10,
+              "formatted": "10%"
+          }
+      }
+  },
+  "byreadstatus": {
+      "readed": {
+          "qty": {
+              "number": 391211,
+              "formatted": "391.211"
+          },
+          "pct": {
+              "number": 90,
+              "formatted": "90%"
+          }
+      },
+      "unreaded": {
+          "qty": {
+              "number": 43468,
+              "formatted": "43.468"
+          },
+          "pct": {
+              "number": 10,
+              "formatted": "10%"
+          }
+      }
+  }
+}
+var colors = ['#F5A623','#D0021B','#1A3867','#A5E65D','#CC89E8','#D3D3D3'];
+var donutAColors = ["#5FB748",'#0033A0']; 
+var donutBColors = ["#1890FF",'#D3D3D3']; 
+var actColor = [
+  {id:2,color:'#7CC36A'},
+  {id:3,color:'#0033A0'},
+  {id:1,color:'#D3D3D3'}
+];
 function init(){
   var sessid = getParameterByName('sessid');
  // document.getElementById("goToPolicy").addEventListener("click", function(){
      // gotoPage("menu","policy",  {"sessid":sessid});
  // });
-  chartBarsV(inf)
+  chartBarsV(inf);
+  var donutLeft = document.getElementById("statusDonut").children[0];
+  chartDonut(donutLeft,infStatus.bysendstatus,donutAColors);
+  var donutLeft = document.getElementById("statusDonut").children[1];
+  chartDonut(donutLeft,infStatus.byreadstatus,donutBColors);
 }
-var colors = ['#F5A623','#D0021B','#1A3867','#A5E65D','#CC89E8','#D3D3D3'];
-var actColor = [
-  {id:2,color:'#7CC36A'},{id:3,color:'#0033A0'},{id:1,color:'#D3D3D3'}
-];
 function chartBarsV(inf){
   var clone = document.getElementById("qtyMailsChart");
   //Grafico barras
@@ -337,26 +391,75 @@ function chartBarsV(inf){
   chartList.getElementsByClassName("lblYCnt")[0].style.width = bigW+"px";
 }
 
-		function marcarCoords(testPosRaton,output, x, y) {
-		  var cssString = "";
-		  cssString += "top:" + (y) + "px;";
-		  cssString += "left:" + (x + 10) + "px;";
-		  cssString += "opacity:1;";
-      cssString += "display:block;";
-		  output.style.cssText = cssString;
+function marcarCoords(testPosRaton,output, x, y) {
+  var cssString = "";
+  cssString += "top:" + (y) + "px;";
+  cssString += "left:" + (x + 10) + "px;";
+  cssString += "opacity:1;";
+  cssString += "display:block;";
+  output.style.cssText = cssString;
 
-		  testPosRaton.style.cursor = "pointer";
-		}
+  testPosRaton.style.cursor = "pointer";
+}
 
-		function limpiarCoords(testPosRaton,output) {
-		  output.style.cssText = "";
-		  testPosRaton.style.cursor = "default";
-		}
+function limpiarCoords(testPosRaton,output) {
+  output.style.cssText = "";
+  testPosRaton.style.cursor = "default";
+}
 
-		function oMousePos(element, evt) {
-		  var ClientRect = element.getBoundingClientRect();
-		  return { //objeto
-		    x: Math.round(evt.clientX - ClientRect.left),
-		    y: Math.round(evt.clientY - ClientRect.top)
-		  }
-		}
+function oMousePos(element, evt) {
+  var ClientRect = element.getBoundingClientRect();
+  return { //objeto
+    x: Math.round(evt.clientX - ClientRect.left),
+    y: Math.round(evt.clientY - ClientRect.top)
+  }
+}
+
+
+function chartDonut(clone,inf,colors){
+  //Grafico barras
+  var donutList = clone.getElementsByClassName("donut-chart-block")[0].children[0];
+  clone.getElementsByClassName("donut-chart-block")[0].children[0].innerHTML = "";
+  
+  var start = 0;
+  var i = 0;
+  for (var key in inf) {
+      //Pintar barras
+      var slice = document.createElement("div");
+      slice.classList.add("slice");
+      slice.style.transform = "rotate("+start+"deg)";
+          quesito = document.createElement("span");
+          quesito.innerHTML = "";
+          //Obtener que valor del circulo esporcentual es.
+          var val = inf[key].pct.number;
+          var valdeg = (val*360)/100;
+          var maxDeg = 180;
+          
+          if(valdeg>=maxDeg){
+              slice.style.transform = "rotate("+(start)+"deg) translate3d(0,0,0)";
+              quesito.style.transform = "rotate(0deg) translate3d(0,0,0)";
+              quesito.style.backgroundColor = colors[i];
+              slice.appendChild(quesito);
+              
+              var clonePie = slice.cloneNode(true);
+              var dif = (valdeg-maxDeg);
+              clonePie.style.transform = "rotate("+(start+maxDeg)+"deg) translate3d(0,0,0)";
+              clonePie.children[0].style.transform = "rotate("+(dif-maxDeg)+"deg) translate3d(0,0,0)";
+              clonePie.children[0].style.backgroundColor = colors[i];
+          }else{
+              slice.style.transform = "rotate("+(start)+"deg) translate3d(0,0,0)";
+              quesito.style.transform = "rotate("+(parseFloat(valdeg-maxDeg)+1)+"deg) translate3d(0,0,0)";
+              quesito.style.backgroundColor = colors[i];
+              slice.appendChild(quesito);
+          }
+          
+          start += valdeg;
+      
+      donutList.appendChild(slice);
+      //Agrega complemento de circulo
+      if(valdeg>maxDeg)donutList.appendChild(clonePie);
+          
+      i++;
+  }
+  
+}

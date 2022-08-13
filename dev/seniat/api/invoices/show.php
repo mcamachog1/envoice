@@ -262,6 +262,7 @@
         $urllogo = "../../../cms/uploads/";
         $iddir = str_pad($record->customer->id,5,"0", STR_PAD_LEFT);
         //Lo primero que debemos hacer es construir la url con la plantilla almacenada en la tabla
+        if ($printformat=="") $printformat="000";
         $customerview = "../../../formats/customers/".$iddir."/".$pre.$printformat.".php";
         //Si no existe validamos que exista ese formato en el directorio default 00000
         $defaultview = "../../../formats/customers/00000/".$pre.$printformat.".php";

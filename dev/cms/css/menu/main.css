@@ -349,3 +349,105 @@
   font-weight:400;
   right: 0;
 }
+
+.donut-chart {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 10px;
+  border-radius: 100%;
+}
+.donut-chart::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 1;
+  width: 104px;
+  height: 104px;
+  background: #F8F8F8;
+  border-radius: 50%;
+  top: 18px;
+  left: 18px;
+}
+p.center-date {
+  position: absolute;
+  text-align: center;
+  font-size: 28px;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+  border-radius: 50%;
+  line-height: 35px;
+  background-color: #ffffff;
+}
+.center-date span.scnd-font-color {
+ line-height: 0; 
+}
+.slice {
+    position: absolute;
+    width: 141px;
+    height: 140px;
+    clip: rect(0px, 140px, 140px, 70px);
+    animation: bake-pie 1s;
+}
+.slice span {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    clip: rect(0px, 140px, 140px, 70px);
+}
+.recorte {
+    border-radius: 50%;
+    clip: rect(0px, 140px, 140px, 70px);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    
+  }
+.quesito {
+    border-radius: 50%;
+    clip: rect(0px, 70px, 140px, 0px);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    font-family: monospace;
+    font-size: 1.5rem;
+  }
+#porcion1 {
+    transform: rotate(0deg);
+  }
+
+#porcion1 .quesito {
+    background-color: #E64C65;
+    transform: rotate(76deg);
+  }
+#porcion2 {
+    transform: rotate(76deg);
+  }
+#porcion2 .quesito {
+    background-color: #11A8AB;
+    transform: rotate(140deg);
+  }
+#porcion3 {
+    transform: rotate(216deg);
+  }
+#porcion3 .quesito {
+    background-color: #4FC4F6;
+    transform: rotate(112deg);
+  }
+#porcionFin {
+    transform:rotate(-32deg);
+  }
+#porcionFin .quesito {
+    background-color: #FCB150;
+    transform: rotate(32deg);
+  }

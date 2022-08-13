@@ -367,7 +367,41 @@
     return($line);  
   }
   function insertHeader($line,$customerid,$serie,$db){
-
+        switch($line[1]){
+            case 'F':
+                $type = 'fac';
+            break;
+            case 'D':
+                $type = 'ndb';
+            break;
+            case 'C':
+                $type = 'ncr';
+            break;
+        }
+        //Creamos la direccion del folder
+        $urlfolder = "../../../formats/customers/".str_pad($customerid,  5, "0", STR_PAD_LEFT);   
+        //Se utiliza el default
+        $printformat = "000";
+        if(is_dir($urlfolder)){  
+            $files = [];
+            $filesfromdir = glob($urlfolder.'/*');        
+            //Recorremos todos los files y obtenemos solo los del tipo que se está guardando
+            foreach($filesfromdir as $filefromdir){            
+                $extfromdir = pathinfo($filefromdir, PATHINFO_EXTENSION);
+                $filename = basename($filefromdir,".".$extfromdir);
+                $typeFormat = substr($filename, 0, 3);
+                if($typeFormat == strtolower($type))$files[] = $filename;
+            }              
+            //Obtenemos el último de todos para considerar el "mas reciente"
+            $last = $files[count($files)-1];    
+            $extfromdir = pathinfo($last, PATHINFO_EXTENSION);
+            $filename = basename($last,".".$extfromdir);
+            $typeFormat = substr($filename, 0, 3);
+            //Se valida que exista el formato y si existe se guardan los números del último formato
+            //Solo aplica para nuevos
+            if($typeFormat != strtolower($type))$printformat = "000";
+            else $printformat = substr($filename, 3);    
+        }
  
 
     $sql = "INSERT INTO loadinvoiceheader ".
