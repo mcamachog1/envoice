@@ -25,7 +25,10 @@ function validateInvoicesBeforeLoad($db,$customerid){
   $count=$row['Cnt'];
   if ($count>0)
     badEnd("400", array("msg"=>"existen $count documentos con códigos duplicados "));
-}  
+}
+
+
+
 // Parametros obligatorios
   $parmsob = array("sessionid");
   if (!parametrosValidos($_REQUEST, $parmsob))
@@ -41,6 +44,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
     $serie = $row['serie'];
 // Asignar ctrnumber inicial de la corrida según la serie
   $ctrnumber = getNextControl($serie,$customerid,$db);
+
 // Validar que las facturas (refnumber) que se van a cargar no existan
   validateInvoicesBeforeLoad($db,$customerid);  
   // Copiar registros header a la tabla definitiva
@@ -59,7 +63,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
     "   issuedate,duedate,refnumber,clientrif,clientname,".
     "   clientaddress,mobilephone,otherphone,clientemail,obs,currency,currencyrate,ctrref,discount,printformat ".
     " FROM ".
-    "  ( SELECT @rn := $ctrnumber, tmp.* ".
+    "  ( SELECT @rn := $ctrnumber-1, tmp.* ".
     "    FROM ".
     "      loadinvoiceheader tmp ".
     "    WHERE ".
@@ -85,7 +89,9 @@ function validateInvoicesBeforeLoad($db,$customerid){
 
   if (!$db->query($sql))
     badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
-
+  
+  incrementNextControl($customerid,$serie,$qtyinvoices,$db);
+/*    
 // Obtener y actualizar next control
   $series = getSeries($customerid,$db);
   $index=array_search($serie, $series);
@@ -101,7 +107,7 @@ function validateInvoicesBeforeLoad($db,$customerid){
     $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
     if (!$db->query($update)) 
       badEnd("500", array("sql"=>$sql,"msg"=>$db->error)); 
-
+*/
   // Auditoria
     insertAudit($db,getEmail($_REQUEST["sessionid"],APP_APP,$db),$_SERVER['REMOTE_ADDR'],APP_APP,MODULE_INVOICES,"Se hizo una carga masiva de $qtyinvoices documentos");
   // Salida

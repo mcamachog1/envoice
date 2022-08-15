@@ -88,29 +88,15 @@
     try {
         // Si id de la factura es 0, es un insert de factura con header y detalle
          if ($id == 0){
-            // Se calcula el numero de control del cliente para la nueva factura
-            // Obtener index de la serie (no contempla series repetidas)
-            $series = getSeries($customerid,$db);
-            $index=array_search($serie, $series);
-            if (is_null($index))
-                throw new Exception("Serie no existe para este cliente");
-                //badEnd("400", array("msg"=>"Serie no existe para este cliente"));
-            
-            
+           
+
             // Obtener el nextcontrol actual
             $ctrnumber = getNextControl($serie,$customerid,$db);
             // Completar a 10 digitos
             $ctrnumber = str_pad($ctrnumber,10,"0",STR_PAD_LEFT);
-            // Ubicar el next control
-            $nexts=getNextControls($customerid,$db);
-            $next = $nexts[$index];
-            // Construir nextcontrol en string
-            $nexts[$index] = $next + 1;
-            $str_nextcontrol = implode("-",$nexts);
             // Se actualiza el nextcontrol del cliente
-            $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
-            if (!$db->query($update)) 
-                throw new Exception("$db->error");
+            if (incrementNextControl($customerid,$serie,1,$db) === False)
+                throw new Exception("Serie $serie no existe para este cliente $customerid");                        
 
             if (!isUniqueInvoice($customerid,$type,$refnumber,trim($ctrnumber),$db)){
                 $exception_id = 4;

@@ -387,33 +387,54 @@ function getNextControls($customerid,$db){
         return null;        
 } 
 function getNextControl($serie,$customerid,$db){
-    $sql = "SELECT serie, nextcontrol FROM customers WHERE id=$customerid ";
 
-    if (!$rs = $db->query($sql))
-        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));     
-    $records=array();
-    if ($row = $rs->fetch_assoc()){
-        $series = explode("-",$row['serie']);
-        $nexts = explode("-",$row['nextcontrol']);
-        for ($i = 0; $i < count($series); $i++) {
-            $record = new stdClass();
-            if (strlen($series[$i])==0)
-                $record->serie = ' ';
-            else
-                $record->serie = $series[$i];
-            $record->nextcontrol = $nexts[$i];
-            $records[] = $record;
-        }
-    }
+    // Obtener string de nextControl y de series
+    $sql = "SELECT serie, nextcontrol
+            FROM customers WHERE id=$customerid";
+    if (!$rs=$db->query($sql))
+      badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+    $row = $rs->fetch_assoc();
+    // Convertirlos en arreglo
+    $array_serie = explode("-",$row['serie']);
+    $array_next = explode("-",$row['nextcontrol']);
+    // Ubicar el index de la serie
+    $i = array_search(trim($serie),$array_serie);
+    if ($i === False)
+        return null;
+    else
+        // Con ese indice, obtener el nextcontrol
+        return $array_next[$i];
+}
+function incrementNextControl($customerid,$serie,$n,$db){
+  $next = getNextControl($serie,$customerid,$db);
+  if ($next===null)
+    badEnd("400", array("msg"=>"Serie $serie no existe para este cliente $customerid"));
+  $next = $next + $n;
+  // Obtener string de nextControl y de series
+  $sql = "SELECT serie, nextcontrol
+          FROM customers WHERE id=$customerid";
+  if (!$rs=$db->query($sql))
+    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+  $row = $rs->fetch_assoc();
+  // Convertirlos en arreglo
+  $array_serie = explode("-",$row['serie']);
+  $array_next = explode("-",$row['nextcontrol']);
+  // Ubicar el index de la serie
+  $i = array_search(trim($serie),$array_serie);
+  // Con ese indice, actualizar el nextcontrol
+  if ($i===False)
+    return $i;
+  $array_next[$i] = $next;
+  // Convertir nextcontrol a string
+  $str_next = implode("-",$array_next);
+  // Update la tabla customers con el nuevo valor del nextcontrol
+  $sql = "UPDATE customers SET nextcontrol='$str_next' WHERE id=$customerid";
 
-    foreach ($records as $record) {
-        if (strlen($serie)==0)
-            $serie=' ';
-        if ($record->serie == "$serie" )
-           return $record->nextcontrol;
-    }
-    return null;
-}  
+  if (!$db->query($sql)) 
+    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+  return $db->affected_rows;   
+}
+
 function loadDataByInvoice($invoices,$customerid,$db){
     $condition="";
     if (!is_null($invoices)) 

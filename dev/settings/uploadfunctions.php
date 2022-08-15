@@ -41,7 +41,8 @@
                 SUM(
                     D.qty * D.unitprice *(1 - D.itemdiscount / 100)
                 ) *(1 - H.discount / 100) + SUM(
-                    D.qty * D.unitprice *(1 - D.itemdiscount / 100) *(D.itemtax / 100)
+                    D.qty * D.unitprice *(1 - D.itemdiscount / 100) *
+                    ((CASE WHEN itemtax<0 THEN 0 ELSE itemtax END) / 100)
                 ),
                 2
             ) AS detailsTotal
