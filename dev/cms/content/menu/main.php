@@ -83,13 +83,85 @@
                         <div class="cellChart cell50">
                             <div class="donut-chart-block block"> 
                                 <div class="donut-chart">
+                                    <div class="borderDonut" >
+                                        <div class="hideEle">
+                                            <div class="lblEleBord"></div>
+                                            <div class="lineEleBord"></div>
+                                            <div class="hideBox"></div>
+                                        </div>
+                                        <div class="hideEleBot">
+                                            <div class="lblEleBord"></div>
+                                            <div class="lineEleBord"></div>
+                                            <div class="hideBox"></div>
+                                        </div>
+                                    </div>
                                 </div> 
+                                <div class="leyDonut">
+                                    <div class="leyDonCell cell50">
+                                        <div class="leyTblDon">
+                                            <div class="leyColCell">
+                                                <div class="colorBoxLey"></div>
+                                            </div>
+                                            <div class="leyDscCell">
+                                                <b>Enviadas</b>
+                                                <div class="leyVal">(391.211)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="leyDonCell cell50">
+                                        <div class="leyTblDon">
+                                            <div class="leyColCell">
+                                                <div class="colorBoxLey"></div>
+                                            </div>
+                                            <div class="leyDscCell">
+                                                <b>Pendientes</b>
+                                                <div class="leyVal">(41.211)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>   
                         </div>
                         <div class="cellChart cell50">
-                            <div class="donut-chart-block block"> 
-                                <div class="donut-chart">                                    
+                            <div class="donut-chart-block block" style="border-left: 1px solid #E6E6E6;"> 
+                                <div class="donut-chart" > 
+                                    <div class="borderDonut" >
+                                        <div class="hideEle">
+                                            <div class="lblEleBord"></div>
+                                            <div class="lineEleBord"></div>
+                                            <div class="hideBox"></div>
+                                        </div>
+                                        <div class="hideEleBot">
+                                            <div class="lblEleBord"></div>
+                                            <div class="lineEleBord"></div>
+                                            <div class="hideBox"></div>
+                                        </div>
+                                    </div>                                   
                                 </div> 
+                                <div class="leyDonut">
+                                    <div class="leyDonCell cell50">
+                                        <div class="leyTblDon">
+                                            <div class="leyColCell">
+                                                <div class="colorBoxLey"></div>
+                                            </div>
+                                            <div class="leyDscCell">
+                                                <b>Leídas</b>
+                                                <div class="leyVal">(391.211)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="leyDonCell cell50">
+                                        <div class="leyTblDon">
+                                            <div class="leyColCell">
+                                                <div class="colorBoxLey"></div>
+                                            </div>
+                                            <div class="leyDscCell">
+                                                <b>Sin leer</b>
+                                                <div class="leyVal">(41.211)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>   
                         </div>
                     </div>

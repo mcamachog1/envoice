@@ -107,8 +107,8 @@ var infStatus =  {
               "formatted": "391.211"
           },
           "pct": {
-              "number": 90,
-              "formatted": "90%"
+              "number": 77.50,
+              "formatted": "77,50%"
           }
       },
       "notsent": {
@@ -117,30 +117,30 @@ var infStatus =  {
               "formatted": "43.468"
           },
           "pct": {
-              "number": 10,
-              "formatted": "10%"
+              "number": 22.5,
+              "formatted": "22,5%"
           }
       }
   },
   "byreadstatus": {
       "readed": {
           "qty": {
-              "number": 391211,
+              "number": 381211,
               "formatted": "391.211"
           },
           "pct": {
-              "number": 90,
-              "formatted": "90%"
+              "number": 85,
+              "formatted": "85%"
           }
       },
       "unreaded": {
           "qty": {
-              "number": 43468,
-              "formatted": "43.468"
+              "number": 53468,
+              "formatted": "53.468"
           },
           "pct": {
-              "number": 10,
-              "formatted": "10%"
+              "number": 15,
+              "formatted": "15%"
           }
       }
   }
@@ -160,9 +160,9 @@ function init(){
  // });
   chartBarsV(inf);
   var donutLeft = document.getElementById("statusDonut").children[0];
-  chartDonut(donutLeft,infStatus.bysendstatus,donutAColors);
+  chartDonut(donutLeft,"Cargados",infStatus.bysendstatus,donutAColors);
   var donutLeft = document.getElementById("statusDonut").children[1];
-  chartDonut(donutLeft,infStatus.byreadstatus,donutBColors);
+  chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
 }
 function chartBarsV(inf){
   var clone = document.getElementById("qtyMailsChart");
@@ -279,7 +279,6 @@ function chartBarsV(inf){
             barVal.style.height =  "calc("+altprc+"%)";
             barVal.style.backgroundColor = "transparent";                
             bar.appendChild(barVal);
-
             
             bot = true;
           break;
@@ -416,13 +415,15 @@ function oMousePos(element, evt) {
 }
 
 
-function chartDonut(clone,inf,colors){
+function chartDonut(clone,tit,inf,colors){
   //Grafico barras
   var donutList = clone.getElementsByClassName("donut-chart-block")[0].children[0];
-  clone.getElementsByClassName("donut-chart-block")[0].children[0].innerHTML = "";
+  //clone.getElementsByClassName("donut-chart-block")[0].children[0].innerHTML = "";
   
   var start = 0;
   var i = 0;
+  var sum = 0;  
+  var rotBord = "";
   for (var key in inf) {
       //Pintar barras
       var slice = document.createElement("div");
@@ -431,11 +432,11 @@ function chartDonut(clone,inf,colors){
           quesito = document.createElement("span");
           quesito.innerHTML = "";
           //Obtener que valor del circulo esporcentual es.
-          var val = inf[key].pct.number;
-          var valdeg = (val*360)/100;
+          var valPct = inf[key].pct.number;
+          sum = sum+inf[key].qty.number;
+          var valdeg = (valPct*360)/100;
           var maxDeg = 180;
-          
-          if(valdeg>=maxDeg){
+          if(valdeg>maxDeg){
               slice.style.transform = "rotate("+(start)+"deg) translate3d(0,0,0)";
               quesito.style.transform = "rotate(0deg) translate3d(0,0,0)";
               quesito.style.backgroundColor = colors[i];
@@ -445,21 +446,95 @@ function chartDonut(clone,inf,colors){
               var dif = (valdeg-maxDeg);
               clonePie.style.transform = "rotate("+(start+maxDeg)+"deg) translate3d(0,0,0)";
               clonePie.children[0].style.transform = "rotate("+(dif-maxDeg)+"deg) translate3d(0,0,0)";
-              clonePie.children[0].style.backgroundColor = colors[i];
+              clonePie.children[0].style.backgroundColor = colors[i]; 
           }else{
+              var val = (parseFloat(valdeg-maxDeg)+1);              
+              if(i==0){
+                rotBord = ((val-(valdeg/2)));
+              }else{
+                rotBord = -((360-start)/2);
+              }
               slice.style.transform = "rotate("+(start)+"deg) translate3d(0,0,0)";
-              quesito.style.transform = "rotate("+(parseFloat(valdeg-maxDeg)+1)+"deg) translate3d(0,0,0)";
+              quesito.style.transform = "rotate("+val+"deg) translate3d(0,0,0)";
               quesito.style.backgroundColor = colors[i];
               slice.appendChild(quesito);
           }
+          var size = 3;
+          if(valPct>50){
+            size = 5;
+          }else if(valPct > 15){
+            size = 3;
+          }else if(valPct > 10){
+            size = 2;
+          }else if(valPct > 5){
+            size = 1;
+          }else if(valPct >1){
+            size = 0.5;
+          }else{
+            size = 0;
+          }
+
+          //Se inserta el label en el bloque al extremo correspondiente según lo determine el paso.
+          if(i==0){
+            clone.getElementsByClassName("borderDonut")[0].children[1].children[0].innerHTML = inf[key].pct.formatted;
+            clone.getElementsByClassName("borderDonut")[0].children[1].children[2].style.top = -(20+size)+"px";
+          }else{
+            clone.getElementsByClassName("borderDonut")[0].children[0].children[0].innerHTML = inf[key].pct.formatted;
+            clone.getElementsByClassName("borderDonut")[0].children[0].children[2].style.top = size+"px";
+          }
+  
           
           start += valdeg;
       
       donutList.appendChild(slice);
       //Agrega complemento de circulo
       if(valdeg>maxDeg)donutList.appendChild(clonePie);
-          
+        
+      var eleVal = clone.getElementsByClassName("leyDonut")[0].getElementsByClassName("leyVal")[i];
+      eleVal.innerHTML = "("+inf[key].qty.formatted+")";
+      eleVal.parentElement.previousElementSibling.children[0].style.backgroundColor = colors[i];
       i++;
   }
+  //Se Rota el circulo con los labels y el borde 
+  clone.getElementsByClassName("borderDonut")[0].style.rotate = rotBord+"deg";
+  //Se colorea el label, borde y la linea del top con el primer color
+  clone.getElementsByClassName("borderDonut")[0].children[0].style.color = (colors[1]=='#D3D3D3' ? "#818285" : colors[1]);
+  clone.getElementsByClassName("borderDonut")[0].style.borderTopColor = colors[1];                
+  clone.getElementsByClassName("borderDonut")[0].children[0].children[1].style.backgroundColor = colors[1];
+  //Se colorea el label, borde y la linea del top con el segundo color
+  clone.getElementsByClassName("borderDonut")[0].style.borderBottomColor = colors[0];
+  clone.getElementsByClassName("borderDonut")[0].children[1].style.color = (colors[0]=='#D3D3D3' ? "#818285" : colors[0]);
+  clone.getElementsByClassName("borderDonut")[0].children[1].children[1].style.backgroundColor = colors[0];
+      
+  //Se orientan verticalmente de nuevo los lbls
+  clone.getElementsByClassName("borderDonut")[0].children[0].children[0].style.rotate = (-(rotBord))+"deg"; 
+  clone.getElementsByClassName("borderDonut")[0].children[1].children[0].style.rotate = (-(rotBord))+"deg"; 
   
+  var donutIn = document.createElement("div");
+  donutIn.classList.add("in");
+    var donutInCell = document.createElement("div");
+    donutInCell.classList.add("inCell");
+      var inTit = document.createElement("div");
+      inTit.classList.add("inTit");
+      inTit.innerHTML = tit;
+      donutInCell.appendChild(inTit);
+      var inVal = document.createElement("div");
+      inVal.classList.add("inVal");
+      inVal.innerHTML = formatNumberES(sum,0);
+      donutInCell.appendChild(inVal);
+    donutIn.appendChild(donutInCell);
+  clone.getElementsByClassName("donut-chart-block")[0].children[0].appendChild(donutIn);
+
+}
+
+function formatNumberES(n, d=0){
+  n=new Intl.NumberFormat("es-ES").format(parseFloat(n).toFixed(d))
+  if (d>0) {
+      // Obtenemos la cantidad de decimales que tiene el numero
+      const decimals=n.indexOf(",")>-1 ? n.length-1-n.indexOf(",") : 0;
+
+      // añadimos los ceros necesios al numero
+      n = (decimals==0) ? n+","+"0".repeat(d) : n+"0".repeat(d-decimals);
+  }
+  return n;
 }

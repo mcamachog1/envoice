@@ -349,25 +349,103 @@
   font-weight:400;
   right: 0;
 }
-
+.donut-chart-block{
+  padding-left: 25px;
+  padding-right: 25px;
+}
 .donut-chart {
   position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 10px;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 35px;
   border-radius: 100%;
 }
-.donut-chart::before {
-  content: "";
-  display: block;
+.borderDonut{    
+  left: -4px;
+  position: absolute;
+  width: 137px;
+  height: 137px;
+  border-radius: 100%;
+  top: -4px;
+  background-color: #f8f8f8;
+  border-left: 1px solid #f8f8f8;
+  border-right: 1px solid #f8f8f8;
+  border-top: 1px solid #f8f8f8;
+  border-bottom: 1px solid #f8f8f8;
+}
+.hideEle {
+  position:relative;
+  width: 100%;
+  background-color: #f8f8f8;
+}
+.lblEleBord {
+  position: absolute;
+  left: calc(50% - 20px);
+  width: 40px;
+  height:40px;
+  line-height:40px;
+  font-size: 67%;
+  text-align: center;
+  font-weight:bold;
+}
+.lineEleBord {
+  height: 9px;
+  position: absolute;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  font-size: 75%;
+  rotate: 0deg;
+  text-align: center;
+}
+.hideEle .lblEleBord{  
+  top: -40px;
+}
+.hideEle .lineEleBord{
+  top: -9px;
+}
+.hideEleBot {
+  width: 100%;
+  position:absolute;
+  background-color: #f8f8f8;
+  bottom:0;
+}
+.hideEleBot .lblEleBord{  
+  bottom: -41px;
+}
+.hideEleBot .lineEleBord{
+  bottom: -9px;
+}
+.hideBox{
+  position:absolute;
+  top:3px;  
+  width:100%;
+  height:20px;
+  background-color: #f8f8f8;
+}
+.donut-chart .in{
+  display: table;
   position: absolute;
   z-index: 1;
-  width: 104px;
-  height: 104px;
+  width: 94px;
+  height: 94px;
   background: #F8F8F8;
   border-radius: 50%;
   top: 18px;
   left: 18px;
+}
+.inCell{
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+}
+.inTit{
+  font-weight:400;
+  color:#4A4A4A;
+  font-size:70%;
+}
+.inVal {
+  font-weight: bold;
+  font-size: 100%;
 }
 p.center-date {
   position: absolute;
@@ -389,9 +467,9 @@ p.center-date {
 }
 .slice {
     position: absolute;
-    width: 141px;
-    height: 140px;
-    clip: rect(0px, 140px, 140px, 70px);
+    width: 131px;
+    height: 130px;
+    clip: rect(0px, 130px, 130px, 65px);
     animation: bake-pie 1s;
 }
 .slice span {
@@ -400,14 +478,14 @@ p.center-date {
     top: 0;
     left: 0;
     background-color: black;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
-    clip: rect(0px, 140px, 140px, 70px);
+    clip: rect(0px, 130px, 130px, 65px);
 }
 .recorte {
     border-radius: 50%;
-    clip: rect(0px, 140px, 140px, 70px);
+    clip: rect(0px, 130px, 130px, 65px);
     height: 100%;
     position: absolute;
     width: 100%;
@@ -415,7 +493,7 @@ p.center-date {
   }
 .quesito {
     border-radius: 50%;
-    clip: rect(0px, 70px, 140px, 0px);
+    clip: rect(0px, 65px, 130px, 0px);
     height: 100%;
     position: absolute;
     width: 100%;
@@ -451,3 +529,43 @@ p.center-date {
     background-color: #FCB150;
     transform: rotate(32deg);
   }
+
+.leyDonut {
+    display: table;
+    width: auto;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.leyDonCell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.leyTblDon {
+    display: table;
+    width: auto;
+    height:auto;
+}
+
+.colorBoxLey {
+    width: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 26px;
+}
+
+.leyColCell {
+    display: table-cell;
+    width: 20px;
+    vertical-align: middle;
+    padding-right: 3px;
+}
+
+.leyDscCell {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 65%;
+}
