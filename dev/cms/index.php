@@ -36,5 +36,6 @@
         include_once("./content/".$id.".php");
 ?>
 <script type="text/javascript" src="./js/all.js"></script>
+<script type="text/javascript" src="./js/chart.min.js"></script>
 </body>
 </html>

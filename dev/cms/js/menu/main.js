@@ -75,7 +75,7 @@ var inf = [
         "existente": 65,
         "baja": -20
     }
-  },
+  },  
   {
   "label": {
       "short": "Jul 22",
@@ -145,6 +145,52 @@ var infStatus =  {
       }
   }
 }
+var dataValues = [
+  {
+      "label": {
+          "short": "Jul 55",
+          "long": "25 de Julio de 2022"
+      },
+      "values": {
+          "Simple TV": 42,
+          "Telefónica Venezuela": 18,
+          "Corporación Telemic": 5
+      }
+  },
+  {
+    "label": {
+        "short": "Jul 55",
+        "long": "25 de Julio de 2022"
+    },
+    "values": {
+        "Simple TV": 42,
+        "Telefónica Venezuela": 18,
+        "Corporación Telemic": 5
+    }
+  },
+  {
+    "label": {
+        "short": "Jul 55",
+        "long": "25 de Julio de 2022"
+    },
+    "values": {
+        "Simple TV": 42,
+        "Telefónica Venezuela": 18,
+        "Corporación Telemic": 5
+    }
+  },
+  {
+    "label": {
+        "short": "Jul 55",
+        "long": "25 de Julio de 2022"
+    },
+    "values": {
+        "Simple TV": 42,
+        "Telefónica Venezuela": 18,
+        "Corporación Telemic": 5
+    }
+  },
+];
 var colors = ['#F5A623','#D0021B','#1A3867','#A5E65D','#CC89E8','#D3D3D3'];
 var donutAColors = ["#5FB748",'#0033A0']; 
 var donutBColors = ["#1890FF",'#D3D3D3']; 
@@ -163,6 +209,8 @@ function init(){
   chartDonut(donutLeft,"Cargados",infStatus.bysendstatus,donutAColors);
   var donutLeft = document.getElementById("statusDonut").children[1];
   chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
+  var chartLine = document.getElementById("chartLine").children[1];
+  plotChart("chartLine",dataValues);
 }
 function chartBarsV(inf){
   var clone = document.getElementById("qtyMailsChart");
@@ -538,3 +586,293 @@ function formatNumberES(n, d=0){
   }
   return n;
 }
+
+function plotChart(id,dataValues){
+  const DATA_COUNT = 7;
+  const NUMBER_CFG = {count: DATA_COUNT, min: -100, max: 100};
+
+  const labels = ["Jun","Feb","Mar","Apr","Jun","Jul","Agu","Sep"];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Simple V Comunicaciones Móviles. C.A.',
+        data: ["50","45","70","90","25","55","33","92"],               
+        pointRadius: 1,
+        pointHoverRadius: 4,
+        borderColor: "#0033A0",
+        backgroundColor:"#0033A0",
+      },
+      {
+        label: 'Telefónica de Venezuela, C.A.',
+        data: ["55","25","63","85","25","55","13","67"],               
+        pointRadius: 1,
+        pointHoverRadius: 4,
+        borderColor: "#2FC25B",
+        backgroundColor: "#2FC25B",
+      },
+      {
+        label: 'Corporación Telemic, C.A.',
+        data: ["35","45","13","82","30","55","5","22"],               
+        pointRadius: 1,
+        pointHoverRadius: 4,
+        borderColor: "#1890FF",
+        backgroundColor: "#1890FF",
+      }
+    ]
+  };
+
+  dataValues = dataValues.reverse();
+  var canva = document.getElementById(id);
+  canva.width = canva.offsetWidth;
+  canva.height = canva.offsetHeight;
+  //Cantidad de divisiones o labels eje x
+  var labelsOld = ["","","","","","","","","",""];
+
+  //Valores eje Y
+  //var dataval = [65, 59, 80, 81, 56, 55, 40, 56, 55, 40];
+  var dataOld = {
+      labels: labels,
+      datasets: [{
+          yAxisID: 'yAxis',
+          xAxisID: 'xAxis',
+          data: dataValues,
+          fill: false,
+          borderColor: '#FFFFFF',
+          pointBackgroundColor: "#FFFFFF",   
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          pointHoverBorderColor:"#26ECA3",
+          pointHoverBackgroundColor: "#26ECA3"
+      }]
+  }       
+    
+  var min = 0;
+  var options = {
+      responsive: false,   
+      animation:{
+          duration:0,
+      },     
+      scales: { 
+          xAxis: {
+              grid:{
+                  display:false,                                            
+                  borderColor:'transparent'
+              },
+              ticks: {
+                  display:false,            
+              }
+          },
+          yAxis:{
+              grid:{
+                  display:false,                                            
+                  borderColor:'transparent'
+              },
+              ticks: {
+                  display:false,
+                  maxTicksLimit: 10,
+                  padding: 0,
+                  color: '#FFFFFF',
+                  borderColor:'transparent'
+              },
+          },
+      },
+      plugins:{
+          tooltip:{
+              enabled:true,
+              position:'average',
+              yAlign:'top',
+              backgroundColor:'transparent',//'rgba(0, 0, 0, 0.5)',
+              displayColors:false,
+              caretPadding:5,
+              bodyFont:{
+                  size:12,
+                  family:'Poppins',
+                  weight:'500'
+              },
+              callbacks: {
+                  label: function(context) {
+                      var decim = (context.raw).toString().split(".");
+                      if(decim.length>1)decim = decim[1].length;
+                      else decim = 2;
+                      label = app.utils.number_format(context.raw,decim);
+                      return label;
+                  }
+              }
+          },
+          title: {
+              display: false,
+              text:''
+          },
+          legend: {
+              display: false,
+          },                    
+      },
+      
+  }
+  var config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: false,
+      scales: { 
+        x:{
+          ticks: {
+            font:{size: 9.5,family:"'Lato'",weight:400},
+            padding:7
+          },
+          grid:{
+              display:true,                                            
+              color:'transparent',    
+              borderColor:'transparent'
+          },          
+        },
+        y:{                    
+          min:0,
+          ticks: {
+            font:{size: 9.5,family:"'Lato'",weight:400},
+            count:6,
+          },
+          grid:{
+            display:true,
+            borderDash: [3, 3],
+            color:"#E9E9E9",
+            borderColor:'transparent',
+          },          
+        }
+      },
+      plugins: {
+        legend: {
+          display:false,
+          position: 'top',
+        },
+        title: {
+          display: false,
+          text: ''
+        },
+        tooltip: {
+          enabled: false,
+          position: 'nearest',   
+          external: externalTooltipHandler
+        }
+      }
+    },
+  };
+  //Chart.defaults.borderColor = "transparent";
+  //Chart.defaults.color = "transparent";
+  var myLine = new Chart(document.getElementById(id).getContext("2d"),config);
+
+}
+
+const getOrCreateTooltip = (chart) => {
+  let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    tooltipEl.style.background = 'rgba(255, 255, 255, 0.95)';
+    tooltipEl.style.borderRadius = '4px';
+    tooltipEl.style.color = '#000000';
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.pointerEvents = 'none';
+    tooltipEl.style.position = 'absolute';
+    tooltipEl.style.transform = 'translate(-50%, 0)';
+    tooltipEl.style.transition = 'all .1s ease';
+    tooltipEl.style.width = "130px";
+    tooltipEl.style.boxShadow = '0 2px 8px 0 rgba(0, 0, 0, 0.15)';
+
+    const table = document.createElement('table');
+    table.style.margin = '0px';
+
+    tooltipEl.appendChild(table);
+    chart.canvas.parentNode.appendChild(tooltipEl);
+  }
+
+  return tooltipEl;
+};
+
+const externalTooltipHandler = (context) => {
+  // Tooltip Element
+  const {chart, tooltip} = context;
+  const tooltipEl = getOrCreateTooltip(chart);
+
+  // Hide if no tooltip
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return;
+  }
+
+  // Set Text
+  if (tooltip.body) {
+    const titleLines = tooltip.title || [];
+    const bodyLines = tooltip.body.map(b => b.lines);
+
+    const tableHead = document.createElement('thead');
+    titleLines.forEach(title => {
+      const tr = document.createElement('tr');
+      tr.style.borderWidth = 0;
+
+      const th = document.createElement('th');
+      th.style.borderWidth = 0;
+      const text = document.createTextNode(title+" long");
+
+      th.appendChild(text);
+      tr.appendChild(th);
+      tableHead.appendChild(tr);
+    });
+
+    const tableBody = document.createElement('tbody');
+    bodyLines.forEach((body, i) => {
+      const colors = tooltip.labelColors[i];
+
+      const span = document.createElement('span');
+      span.style.background = colors.backgroundColor;
+      span.style.borderColor = colors.borderColor;
+      span.style.borderWidth = '2px';
+      span.style.borderRadius = '100%';
+      span.style.marginRight = '3px';
+      span.style.height = '5px';
+      span.style.width = '5px';
+      span.style.display = 'inline-block';
+      span.style.marginBottom = '2.5px';
+      
+
+      const tr = document.createElement('tr');
+      tr.style.backgroundColor = 'inherit';
+      tr.style.borderWidth = 0;
+
+      const td = document.createElement('td');
+      td.style.borderWidth = 0;
+      var valArr = body[0].split(":");
+      const val = document.createElement("strong");
+      val.appendChild(document.createTextNode(valArr[1]+" "));
+      const text = document.createTextNode(valArr[0]);
+
+      td.appendChild(span);
+      td.appendChild(val);
+      td.appendChild(text);
+      tr.appendChild(td);
+      tableBody.appendChild(tr);
+    });
+
+    const tableRoot = tooltipEl.querySelector('table');
+
+    // Remove old children
+    while (tableRoot.firstChild) {
+      tableRoot.firstChild.remove();
+    }
+
+    // Add new children
+    tableRoot.appendChild(tableHead);
+    tableRoot.appendChild(tableBody);
+  }
+
+  const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+
+  // Display, position, and set styles for font
+  tooltipEl.style.opacity = 1;
+  tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+  tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+  tooltipEl.style.font = tooltip.options.bodyFont.string;
+  tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+};

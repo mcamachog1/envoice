@@ -5,7 +5,7 @@
        
     </div> 
     <div class="menuSect">
-        <a class="itemMenu itemMenuDisabled" id="dashboard"><b>Dashboard</b></a>
+        <a class="itemMenu itemMenuReady" id="main"><b>Dashboard</b></a>
         <a class="itemMenu itemMenuReady" id="clients"><b>Clientes</b></a>
         <a class="itemMenu itemMenuReady" id="operations"><b>Operaciones</b></a>
         <a class="itemMenu itemMenuReady" id="users"><b>Usuarios</b></a>

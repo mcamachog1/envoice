@@ -76,7 +76,7 @@
         <div class="cellCnt cell50">
             <div class="chartBoxInf">
                 <div class="tblBoxInf">
-                    <div class="boxTit">
+                    <div class="boxTit chartTit">
                         <div class="boxTitCell">Estatus de documentos</div>
                     </div>
                     <div class="chartTblCnt"  id="statusDonut">
@@ -171,8 +171,13 @@
         <div class="cellCnt cell50">
             <div class="chartBoxInf">
                 <div class="tblBoxInf">
-                    <div class="boxTit">
+                    <div class="boxTit chartTit">
                         <div class="boxTitCell">Actividad usuarios en el sistema</div>
+                    </div>
+                    <div class="graphic" >
+                        <div class="graphicCell">
+                            <canvas class="graphicCanva" id="chartLine"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,7 +187,7 @@
         <div class="cellCnt cell50">
             <div class="chartBoxInf">
                 <div class="tblBoxInf">
-                    <div class="boxTit">
+                    <div class="boxTit chartTit">
                         <div class="boxTitCell">Cantidad de correos electrónicos</div>
                     </div>
                     <div class="chartTblCnt" id="qtyMailsChart">
