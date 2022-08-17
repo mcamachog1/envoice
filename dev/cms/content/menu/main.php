@@ -5,15 +5,17 @@
         </div>
         <div class="dateCell cell25">
             <div class="inptCnt">
-                <select id="modulsList">
-                    <option selected value="">Seleccionar Módulo</option>
+                <select id="periodoSelect">
+                    <option value="7">Últimos 7 días</option>
+                    <option value="15">Últimos 15 días</option>
+                    <option value="30" selected>Últimos 30 días</option>           
                 </select>
             </div>
         </div>
         <div class="userCell cell50">
             <div class="inptCnt">
-                <select id="usersList">
-                    <option selected value="">Seleccionar Usuario</option>
+                <select id="customersList">
+                    <option selected value="">Seleccionar Contribuyente</option>
                 </select>
             </div>
         </div>
@@ -26,8 +28,8 @@
                         <div class="boxTitCell">Total de documentos cargados</div>
                     </div>
                     <div class="boxValCnt">
-                        <div class="valCell cell80">434.679</div>
-                        <div class="chgCell greenChg">+ 12%</div>
+                        <div class="valCell cell80" id="loadedTotal">434.679</div>
+                        <div class="chgCell greenChg" id="loadedIncrement">+ 12%</div>
                     </div>
                 </div>
             </div>
@@ -39,8 +41,8 @@
                         <div class="boxTitCell">Total de Documentos enviados</div>
                     </div>
                     <div class="boxValCnt">
-                        <div class="valCell cell80">434.679</div>
-                        <div class="chgCell redChg">- 20%</div>
+                        <div class="valCell cell80" id="sentTotal">434.679</div>
+                        <div class="chgCell redChg" id="sentIncrement">- 20%</div>
                     </div>
                 </div>
             </div>
@@ -52,8 +54,8 @@
                         <div class="boxTitCell">Acceso  de usuarios al sistema</div>
                     </div>
                     <div class="boxValCnt">
-                        <div class="valCell cell80">34</div>
-                        <div class="chgCell redChg">- 7%</div>
+                        <div class="valCell cell80" id="accessTotal">34</div>
+                        <div class="chgCell redChg"  id="accessIncrement">- 7%</div>
                     </div>
                 </div>
             </div>
@@ -65,8 +67,8 @@
                         <div class="boxTitCell">Acceso de agentes SENIAT al sistema</div>
                     </div>
                     <div class="boxValCnt">
-                        <div class="valCell cell80">13</div>
-                        <div class="chgCell greenChg">+ 23%</div>
+                        <div class="valCell cell80" id="seniatTotal">13</div>
+                        <div class="chgCell greenChg" id="seniatIncrement">+ 23%</div>
                     </div>
                 </div>
             </div>
@@ -95,6 +97,7 @@
                                             <div class="hideBox"></div>
                                         </div>
                                     </div>
+                                    <div class="piesCnt"></div>
                                 </div> 
                                 <div class="leyDonut">
                                     <div class="leyDonCell cell50">
@@ -136,7 +139,8 @@
                                             <div class="lineEleBord"></div>
                                             <div class="hideBox"></div>
                                         </div>
-                                    </div>                                   
+                                    </div>      
+                                    <div class="piesCnt"></div>                             
                                 </div> 
                                 <div class="leyDonut">
                                     <div class="leyDonCell cell50">

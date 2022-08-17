@@ -42,6 +42,25 @@ function dlookup($db, $campo, $tabla, $where){
 
 
 function insertAudit($db,$userid,$ip,$app,$module,$dsc){
+    
+    // Si es un login en la descripción viene la palabra Inició
+    if(substr_count($dsc,"Inici")>0 && $module=='Seguridad') {
+        // Validar que modulo se logueó
+        switch($app){
+            case 'CMS':
+                $loginaction = 0;
+                break;
+            case 'APP':
+                $loginaction = 1;
+                break;
+            case 'SENIAT':
+                $loginaction = 2;
+                break;
+            default:
+                $loginaction = 'NULL';
+        }
+    }
+    
     $sql = "INSERT INTO `audit`(
         `id`,
         `datecreation`,
@@ -49,7 +68,8 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
         `app`,
         `module`,
         `dsc`,
-        `ip`
+        `ip`,
+        `loginaction`
     )
     VALUES(
         NULL,
@@ -58,7 +78,8 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
         '$app',
         '$module',
         '$dsc',
-        '$ip'
+        '$ip',
+        $loginaction
     )";
 
     if (!$db->query($sql))

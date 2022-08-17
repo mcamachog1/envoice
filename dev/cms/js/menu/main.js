@@ -148,7 +148,7 @@ var infStatus =  {
 var dataValues = [
   {
       "label": {
-          "short": "Jul 55",
+          "short": "Jul 25",
           "long": "25 de Julio de 2022"
       },
       "values": {
@@ -159,35 +159,35 @@ var dataValues = [
   },
   {
     "label": {
-        "short": "Jul 55",
-        "long": "25 de Julio de 2022"
+        "short": "Jul 26",
+        "long": "26 de Julio de 2022"
     },
     "values": {
-        "Simple TV": 42,
-        "Telefónica Venezuela": 18,
-        "Corporación Telemic": 5
+        "Simple TV": 13,
+        "Telefónica Venezuela": 58,
+        "Corporación Telemic": 75
     }
   },
   {
     "label": {
-        "short": "Jul 55",
-        "long": "25 de Julio de 2022"
+        "short": "Jul 27",
+        "long": "27 de Julio de 2022"
     },
     "values": {
         "Simple TV": 42,
-        "Telefónica Venezuela": 18,
-        "Corporación Telemic": 5
+        "Telefónica Venezuela": 28,
+        "Corporación Telemic": 25
     }
   },
   {
     "label": {
-        "short": "Jul 55",
-        "long": "25 de Julio de 2022"
+        "short": "Jul 28",
+        "long": "28 de Julio de 2022"
     },
     "values": {
-        "Simple TV": 42,
-        "Telefónica Venezuela": 18,
-        "Corporación Telemic": 5
+        "Simple TV": 32,
+        "Telefónica Venezuela": 28,
+        "Corporación Telemic": 55
     }
   },
 ];
@@ -200,18 +200,12 @@ var actColor = [
   {id:1,color:'#D3D3D3'}
 ];
 function init(){
-  var sessid = getParameterByName('sessid');
- // document.getElementById("goToPolicy").addEventListener("click", function(){
-     // gotoPage("menu","policy",  {"sessid":sessid});
- // });
-  chartBarsV(inf);
-  var donutLeft = document.getElementById("statusDonut").children[0];
-  chartDonut(donutLeft,"Cargados",infStatus.bysendstatus,donutAColors);
-  var donutLeft = document.getElementById("statusDonut").children[1];
-  chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
-  var chartLine = document.getElementById("chartLine").children[1];
-  plotChart("chartLine",dataValues);
+  document.getElementById("customersList").addEventListener("change",function(){      
+    loadReports();
+  });
+  loadCustomers();
 }
+
 function chartBarsV(inf){
   var clone = document.getElementById("qtyMailsChart");
   //Grafico barras
@@ -465,7 +459,7 @@ function oMousePos(element, evt) {
 
 function chartDonut(clone,tit,inf,colors){
   //Grafico barras
-  var donutList = clone.getElementsByClassName("donut-chart-block")[0].children[0];
+  var donutList = clone.getElementsByClassName("donut-chart-block")[0].children[0].getElementsByClassName("piesCnt")[0];
   //clone.getElementsByClassName("donut-chart-block")[0].children[0].innerHTML = "";
   
   var start = 0;
@@ -587,130 +581,49 @@ function formatNumberES(n, d=0){
   return n;
 }
 
+var lineColors = ["#0033A0","#2FC25B","#1890FF"];
+var longLabel = [];
+var customers = [];
+var labels = [];
 function plotChart(id,dataValues){
-  const DATA_COUNT = 7;
-  const NUMBER_CFG = {count: DATA_COUNT, min: -100, max: 100};
+  dataValues.forEach(ele=>{
+    labels.push(ele.label.short);
+    longLabel.push(ele.label.long);
+    var i = 0;
+    for (var key in ele.values) {
+      var nw = true;
+      var line = {};
+      line.label = key;
+      line.data = [ele.values[key]];
+      line.pointRadius= 1;
+      line.pointHoverRadius = 4;
+      line.borderColor =  lineColors[i];
+      line.backgroundColor = lineColors[i];
+      //Validamos si es nuevo
+      customers.forEach(lbl=>{
+        if(lbl.label == key)nw = false;
+      });
 
-  const labels = ["Jun","Feb","Mar","Apr","Jun","Jul","Agu","Sep"];
+      if(nw)customers.push(line);
+      else{
+        //Si no es ubicamos el valor solo dentro del data
+        customers.forEach(customer=>{
+          if(customer.label == key)customer.data.push(ele.values[key]);
+        });
+      }      
+      i++;
+    }
+  });
+
   const data = {
     labels: labels,
-    datasets: [
-      {
-        label: 'Simple V Comunicaciones Móviles. C.A.',
-        data: ["50","45","70","90","25","55","33","92"],               
-        pointRadius: 1,
-        pointHoverRadius: 4,
-        borderColor: "#0033A0",
-        backgroundColor:"#0033A0",
-      },
-      {
-        label: 'Telefónica de Venezuela, C.A.',
-        data: ["55","25","63","85","25","55","13","67"],               
-        pointRadius: 1,
-        pointHoverRadius: 4,
-        borderColor: "#2FC25B",
-        backgroundColor: "#2FC25B",
-      },
-      {
-        label: 'Corporación Telemic, C.A.',
-        data: ["35","45","13","82","30","55","5","22"],               
-        pointRadius: 1,
-        pointHoverRadius: 4,
-        borderColor: "#1890FF",
-        backgroundColor: "#1890FF",
-      }
-    ]
-  };
+    datasets: customers
+  }
 
-  dataValues = dataValues.reverse();
   var canva = document.getElementById(id);
   canva.width = canva.offsetWidth;
   canva.height = canva.offsetHeight;
-  //Cantidad de divisiones o labels eje x
-  var labelsOld = ["","","","","","","","","",""];
 
-  //Valores eje Y
-  //var dataval = [65, 59, 80, 81, 56, 55, 40, 56, 55, 40];
-  var dataOld = {
-      labels: labels,
-      datasets: [{
-          yAxisID: 'yAxis',
-          xAxisID: 'xAxis',
-          data: dataValues,
-          fill: false,
-          borderColor: '#FFFFFF',
-          pointBackgroundColor: "#FFFFFF",   
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 5,
-          pointHoverBorderColor:"#26ECA3",
-          pointHoverBackgroundColor: "#26ECA3"
-      }]
-  }       
-    
-  var min = 0;
-  var options = {
-      responsive: false,   
-      animation:{
-          duration:0,
-      },     
-      scales: { 
-          xAxis: {
-              grid:{
-                  display:false,                                            
-                  borderColor:'transparent'
-              },
-              ticks: {
-                  display:false,            
-              }
-          },
-          yAxis:{
-              grid:{
-                  display:false,                                            
-                  borderColor:'transparent'
-              },
-              ticks: {
-                  display:false,
-                  maxTicksLimit: 10,
-                  padding: 0,
-                  color: '#FFFFFF',
-                  borderColor:'transparent'
-              },
-          },
-      },
-      plugins:{
-          tooltip:{
-              enabled:true,
-              position:'average',
-              yAlign:'top',
-              backgroundColor:'transparent',//'rgba(0, 0, 0, 0.5)',
-              displayColors:false,
-              caretPadding:5,
-              bodyFont:{
-                  size:12,
-                  family:'Poppins',
-                  weight:'500'
-              },
-              callbacks: {
-                  label: function(context) {
-                      var decim = (context.raw).toString().split(".");
-                      if(decim.length>1)decim = decim[1].length;
-                      else decim = 2;
-                      label = app.utils.number_format(context.raw,decim);
-                      return label;
-                  }
-              }
-          },
-          title: {
-              display: false,
-              text:''
-          },
-          legend: {
-              display: false,
-          },                    
-      },
-      
-  }
   var config = {
     type: 'line',
     data: data,
@@ -759,9 +672,12 @@ function plotChart(id,dataValues){
       }
     },
   };
-  //Chart.defaults.borderColor = "transparent";
-  //Chart.defaults.color = "transparent";
-  var myLine = new Chart(document.getElementById(id).getContext("2d"),config);
+  var ctx = document.getElementById(id).getContext('2d');
+  if (window.grafica) {
+    window.grafica.clear();
+    window.grafica.destroy();
+  }
+  window.grafica = new Chart(ctx,config);
 
 }
 
@@ -814,7 +730,7 @@ const externalTooltipHandler = (context) => {
 
       const th = document.createElement('th');
       th.style.borderWidth = 0;
-      const text = document.createTextNode(title+" long");
+      const text = document.createTextNode(longLabel[labels.indexOf(title)]);
 
       th.appendChild(text);
       tr.appendChild(th);
@@ -876,3 +792,137 @@ const externalTooltipHandler = (context) => {
   tooltipEl.style.font = tooltip.options.bodyFont.string;
   tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
 };
+function blankCharts(){
+  document.getElementById("chartLine").innerHTML = "";
+  document.getElementById("qtyMailsChart").getElementsByClassName("listBarrasV")[0].innerHTML = "";
+  document.getElementById("qtyMailsChart").getElementsByClassName("lblFootTbl")[0].innerHTML = "";
+  document.getElementById("statusDonut").children[0].getElementsByClassName("piesCnt")[0].innerHTML = "";
+  document.getElementById("statusDonut").children[1].getElementsByClassName("piesCnt")[0].innerHTML = "";
+}
+function drawReport(rsp){
+  /*
+  chartBarsV(inf);
+  var donutLeft = document.getElementById("statusDonut").children[0];
+  chartDonut(donutLeft,"Cargados",infStatus.bysendstatus,donutAColors);
+  var donutLeft = document.getElementById("statusDonut").children[1];
+  chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
+  var chartLine = document.getElementById("chartLine").children[1];
+  plotChart("chartLine",dataValues);*/
+  //Total de documentos cargados
+  document.getElementById("loadedTotal").innerText = rsp.documentsloaded.total.formatted;
+  document.getElementById("loadedIncrement").innerText = rsp.documentsloaded.increment.formatted;
+
+  //Total de Documentos enviados
+  document.getElementById("sentTotal").innerText = rsp.documentssent.total.formatted;
+  document.getElementById("sentIncrement").innerText = rsp.documentssent.increment.formatted;
+
+  //Total de accesos de usuarios al sistema
+  document.getElementById("accessTotal").innerText = rsp.logins.customers.total.formatted;
+  document.getElementById("accessIncrement").innerText = rsp.logins.customers.increment.formatted;
+
+  //Total de accesos de usuarios al sistema de SENIAT
+  document.getElementById("seniatTotal").innerText = rsp.logins.customers.total.formatted;
+  document.getElementById("seniatIncrement").innerText = rsp.logins.customers.increment.formatted;
+
+  
+  //Grafico de barras verticales
+  chartBarsV(rsp.targets);
+  //Gráficos de donas se pintan por separado
+  var donutLeft = document.getElementById("statusDonut").children[0];
+  chartDonut(donutLeft,"Cargados",rsp.documentsstatus.bysendstatus,donutAColors);
+  var donutLeft = document.getElementById("statusDonut").children[1];
+  chartDonut(donutLeft,"Enviados",rsp.documentsstatus.byreadstatus,donutBColors);
+  //Grafico de lineas
+  plotChart("chartLine",rsp.customers);
+}
+
+function loadReports() {
+  var par = {};
+  var sessid = getParameterByName('sessid');
+  let fechas = getDates(document.getElementById("periodoSelect").value);
+  par.datefrom = fechas[0];
+  par.dateto = fechas[1];
+  par.customerid = document.getElementById("customersList").value;
+  par.sessionid = sessid;
+  let success = (status,response) =>{
+    var rsp = (response != "") ? JSON.parse(response) : "";  
+    switch(status){
+      case 200:
+        //Si es exitoso lo pintamos
+        drawReport(rsp);
+      break;
+      default:
+        console.log(status);
+        console.log(rsp);
+      break;
+    }
+  }
+  callWS("GET", "reports/maindashboard", par, success);
+  return;
+}
+function getDates(days) {
+  let end = new Date();
+  let start = sumarDias(new Date(),-days);
+  return [start.toISOString().split('T')[0],end.toISOString().split('T')[0]];
+}
+const sumarDias = (fecha, dias) =>{
+  fecha.setDate(fecha.getDate() + dias);
+  return fecha;
+};
+
+function loadCustomers(filter="",offset=0,order=2,numrecords=100000){
+  var par = {};  
+  par.filter = filter;
+  par.status = "1"
+  par.offset = offset;
+  par.order = order;
+  par.numofrec = numrecords;
+  par.sessionid = getParameterByName("sessid");
+
+  var success = function(status, respText, offset){
+    var jsonResp;
+    if(respText!="")jsonResp = JSON.parse(respText);
+    switch (status){
+        case 200:     
+            var select = document.getElementById("customersList");
+            var id = 'id';
+            var dsc = 'name';  
+            var first = 'Todos';     
+            drawSelectCustom(jsonResp.records, select, id, dsc, first, "");
+            loadReports();
+        break;
+        case 400:
+        break;
+        case 401:
+            gotoPage("login","main",{});
+        break;
+        case 500:
+        break;
+        default:
+        break;
+    }
+  }
+
+  callWS("GET", "customers/list", par, success, offset );
+  return;
+}
+function drawSelectCustom(rsp, select, id, dsc, first="", selected="") {
+  select.innerHTML = "";
+  var opt;
+  if (first !== "" && first !== null && first !== undefined) {
+      opt = document.createElement("option");
+      opt.setAttribute("value", "0");
+      opt.innerHTML = first;
+      select.appendChild(opt);
+  }
+  for (var i = 0; i < rsp.length; i++) {
+      opt = document.createElement("option");
+      opt.setAttribute("value", rsp[i][id]);
+      if(id.indexOf("err")>-1){
+          opt.setAttribute("errid", id);
+      }
+      if (rsp[i][id] == selected) opt.setAttribute("selected", true);
+      opt.innerHTML = rsp[i][dsc] + " - " + rsp[i]['rif'];
+      select.appendChild(opt);
+  }
+}
