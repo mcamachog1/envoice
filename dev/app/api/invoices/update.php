@@ -88,20 +88,23 @@
     try {
         // Si id de la factura es 0, es un insert de factura con header y detalle
          if ($id == 0){
-           
+            $invoiceid=0;
 
             // Obtener el nextcontrol actual
             $ctrnumber = getNextControl($serie,$customerid,$db);
+       
             // Completar a 10 digitos
             $ctrnumber = str_pad($ctrnumber,10,"0",STR_PAD_LEFT);
             // Se actualiza el nextcontrol del cliente
-            if (incrementNextControl($customerid,$serie,1,$db) === False)
+            
+            if (incrementNextControl($customerid,trim($serie),1,$db) === False)
                 throw new Exception("Serie $serie no existe para este cliente $customerid");                        
-
+          
             if (!isUniqueInvoice($customerid,$type,$refnumber,trim($ctrnumber),$db)){
                 $exception_id = 4;
                 throw new Exception("El documento $refnumber ya existe o el numero de control $ctrnumber ya está asignado a otro documento");
             }
+        
             //Creamos la direccion del folder
             $urlfolder = "../../../formats/customers/".str_pad($customerid,  5, "0", STR_PAD_LEFT);            
             //Se utiliza el 000 para que ubique el directorio default
@@ -126,13 +129,14 @@
                 if($typeFormat != strtolower($type))$printformat = "";
                 else $printformat = substr($filename, 3);    
             }
-
+     
             // SQL del Insert
             $sql="INSERT INTO `invoiceheader` (`id`, `type`,`customerid`, `issuedate`, `duedate`, `refnumber`, `ctrnumber`,`ctrref`, `clientrif`, " .
                 " `clientname`, `clientaddress`, `mobilephone`, `otherphone`, " .
                 " `obs`, `clientemail`, `creationdate`, `currencyrate`, `currency`, `discount`, `printformat`, manualload) " .
                 " VALUES (NULL, '$type',$customerid, '$issuedate', '$duedate', '$refnumber', CONCAT('$serie',LPAD($ctrnumber,10,'0')), '$ctrref','$clientrif', '$clientname', '$clientaddress', " .
                 " '$mobilephone', '$otherphone', '$obs', '$clientemail', CURRENT_TIMESTAMP, $currencyrate, '$currency',  $discount, '$printformat', 1)";
+
             if (!$db->query($sql)){
                 $exception_id = 3;
                 throw new Exception("$db->error");

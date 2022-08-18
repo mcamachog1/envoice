@@ -13,7 +13,7 @@ $invoice = new stdClass();
 
 $invoice->id=0;
 
-$invoice->sessionid='tlFGcB3SlsCUSJAcouQIbXX595bciszp';
+$invoice->sessionid='sWjcNtVUyJFrlOh5W7isoBYPNjw8b8sF';
 
 
 $invoice->seriecontrol = new stdClass();
@@ -41,7 +41,7 @@ $invoice->duedate = "2022-07-26";
 
 $invoice->obs = "OBS";
 
-$invoice->refnumber = "501";
+$invoice->refnumber = "801";
 
 
 

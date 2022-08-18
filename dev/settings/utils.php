@@ -44,6 +44,7 @@ function dlookup($db, $campo, $tabla, $where){
 function insertAudit($db,$userid,$ip,$app,$module,$dsc){
     
     // Si es un login en la descripción viene la palabra Inició
+    $loginaction = 'NULL';
     if(substr_count($dsc,"Inici")>0 && $module=='Seguridad') {
         // Validar que modulo se logueó
         switch($app){
@@ -56,8 +57,6 @@ function insertAudit($db,$userid,$ip,$app,$module,$dsc){
             case 'SENIAT':
                 $loginaction = 2;
                 break;
-            default:
-                $loginaction = 'NULL';
         }
     }
     
@@ -419,7 +418,14 @@ function getNextControl($serie,$customerid,$db){
     $array_serie = explode("-",$row['serie']);
     $array_next = explode("-",$row['nextcontrol']);
     // Ubicar el index de la serie
-    $i = array_search(trim($serie),$array_serie);
+    $i = False;
+    for ($x=0; $x < count($array_serie); $x++) { 
+        if (trim($array_serie[$x]) == trim($serie)) {
+            $i = $x;
+            break;
+        }
+    }
+
     if ($i === False)
         return null;
     else
@@ -428,9 +434,11 @@ function getNextControl($serie,$customerid,$db){
 }
 function incrementNextControl($customerid,$serie,$n,$db){
   $next = getNextControl($serie,$customerid,$db);
+
   if ($next===null)
-    badEnd("400", array("msg"=>"Serie $serie no existe para este cliente $customerid"));
+    badEnd("400", array("msg"=>"Serie $serie no existe para este cliente $customerid (utils.php)"));
   $next = $next + $n;
+
   // Obtener string de nextControl y de series
   $sql = "SELECT serie, nextcontrol
           FROM customers WHERE id=$customerid";
@@ -441,11 +449,19 @@ function incrementNextControl($customerid,$serie,$n,$db){
   $array_serie = explode("-",$row['serie']);
   $array_next = explode("-",$row['nextcontrol']);
   // Ubicar el index de la serie
-  $i = array_search(trim($serie),$array_serie);
+  $i = False;
+  for ($x=0; $x < count($array_serie); $x++) { 
+      if (trim($array_serie[$x]) == trim($serie)) {
+          $i = $x;
+          break;
+      }
+  }
+
   // Con ese indice, actualizar el nextcontrol
   if ($i===False)
     return $i;
   $array_next[$i] = $next;
+ 
   // Convertir nextcontrol a string
   $str_next = implode("-",$array_next);
   // Update la tabla customers con el nuevo valor del nextcontrol
