@@ -203,6 +203,9 @@ function init(){
   document.getElementById("customersList").addEventListener("change",function(){      
     loadReports();
   });
+  document.getElementById("periodoSelect").addEventListener("change",function(){      
+    loadReports();
+  });
   loadCustomers();
 }
 
@@ -861,7 +864,7 @@ function loadReports() {
   return;
 }
 function getDates(days) {
-  let end = new Date();
+  let end = sumarDias(new Date(),1);
   let start = sumarDias(new Date(),-days);
   return [start.toISOString().split('T')[0],end.toISOString().split('T')[0]];
 }

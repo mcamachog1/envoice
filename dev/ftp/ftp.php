@@ -14,6 +14,7 @@ function validateFileName($filename){
 }
 
 function successfulLoad($email,$filefromdir,$homeurl,$db){
+
   $name = getCustomerNameByEmail($email,$db);
   $body = 
       "<html>" .
@@ -155,9 +156,10 @@ function encabezadoSinDetalle($customerid,$totalerrors,$db){
         if (count($withoutDetails)>0 && $totalerrors==0)
           throw new Exception("Factura[s] sin detalle[s] ".implode(",",$withoutDetails)."");
 }
+
 // Almacenamos todos los clientes
 $customers = getCustomers($db);
-  
+
 // Estructura para guardar clientes con archivos validos colocados
 $customers_to_upload = array();
 $files_to_upload = array();
@@ -175,7 +177,7 @@ foreach ($customers as $customer) {
   else {
     // Archivos de ese cliente
     $filesfromdir = glob($dirpath.SEPARADOR."*.txt"); 
-
+    
     // Recorrer cada archivo por cargar
     foreach ($filesfromdir as $filefromdir) {
 
@@ -331,6 +333,7 @@ for ($x=0; $x<count($customers_to_upload);$x++) {
           $serie = $row['serie'];
       // Asignar ctrnumber inicial de la corrida según la serie
         $ctrnumber = getNextControl($serie,$customerid,$db);
+
       // Validar que las facturas (refnumber) que se van a cargar no existan
         $duplicadas = validateInvoicesBeforeLoad($db,$customerid);
         if ($duplicadas>0)
@@ -377,7 +380,8 @@ for ($x=0; $x<count($customers_to_upload);$x++) {
 
         if (!$db->query($sql))
           throw new Exception("500-".$db->error);  
-
+     incrementNextControl($customerid,$serie,$qtyinvoices,$db);
+     /*
       // Obtener y actualizar next control
         $series = getSeries($customerid,$db);
         $index=array_search($serie, $series);
@@ -393,7 +397,7 @@ for ($x=0; $x<count($customers_to_upload);$x++) {
           $update = "UPDATE customers SET nextcontrol = '$str_nextcontrol' WHERE id=$customerid ";
           if (!$db->query($update)) 
             throw new Exception("500-".$db->error);  
-
+    */
   }
 
   catch (Exception $e){

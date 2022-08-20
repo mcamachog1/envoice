@@ -57,3 +57,8 @@
 [24-Jul-2022 19:21:51 UTC] PHP Warning:  A non-numeric value encountered in /home/envoice/public_html/dev/formats/customers/00105/fac001.php on line 430
 [24-Jul-2022 19:22:49 UTC] PHP Warning:  A non-numeric value encountered in /home/envoice/public_html/dev/formats/customers/00105/fac001.php on line 430
 [24-Jul-2022 19:23:22 UTC] PHP Warning:  A non-numeric value encountered in /home/envoice/public_html/dev/formats/customers/00105/fac001.php on line 430
+[17-Aug-2022 19:22:03 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/listcsv.php:77) in /home/envoice/public_html/dev/settings/utils.php on line 176
+[17-Aug-2022 19:23:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/listcsv.php:77) in /home/envoice/public_html/dev/settings/utils.php on line 176
+[17-Aug-2022 19:24:49 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/listcsv.php:77) in /home/envoice/public_html/dev/settings/utils.php on line 176
+[17-Aug-2022 19:25:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/listcsv.php:77) in /home/envoice/public_html/dev/settings/utils.php on line 176
+[17-Aug-2022 19:27:20 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/envoice/public_html/dev/app/api/invoices/listcsv.php:77) in /home/envoice/public_html/dev/settings/utils.php on line 176
