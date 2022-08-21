@@ -354,7 +354,7 @@ for ($x=0; $x<count($customers_to_upload);$x++) {
           "   issuedate,duedate,refnumber,clientrif,clientname,".
           "   clientaddress,mobilephone,otherphone,clientemail,obs,currency,currencyrate,ctrref,discount ".
           " FROM ".
-          "  ( SELECT @rn := $ctrnumber, tmp.* ".
+          "  ( SELECT @rn := $ctrnumber-1, tmp.* ".
           "    FROM ".
           "      loadinvoiceheader tmp ".
           "    WHERE ".

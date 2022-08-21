@@ -129,8 +129,8 @@ var infStatus =  {
               "formatted": "391.211"
           },
           "pct": {
-              "number": 85,
-              "formatted": "85%"
+              "number": 50,
+              "formatted": "50%"
           }
       },
       "unreaded": {
@@ -139,8 +139,8 @@ var infStatus =  {
               "formatted": "53.468"
           },
           "pct": {
-              "number": 15,
-              "formatted": "15%"
+              "number": 50,
+              "formatted": "50%"
           }
       }
   }
@@ -243,9 +243,32 @@ function chartBarsV(inf){
   }
   var maxval = Math.max.apply(null, myArray);
   var minval = Math.min.apply(null, myArray);
-  var dif = maxval - minval;  
-  var minprc = (Math.abs(minval)*100)/dif;
-  var points = 6;
+  var minpoints = 2;
+  var maxpoints = 9;
+  var pointset = true;
+  var range = maxval + Math.abs(minval);
+  var fperiod = 0;
+  var period = 0;
+  while(pointset){
+    fperiod = 1;
+    for(var x=2;(x<=(range/minpoints)||(x==2));x++){
+      var res = (range%x);
+      period = range/x;
+      if(res==0 && (period%1)==0){
+        if(period<maxpoints){
+          pointset = false;          
+          break;
+        }        
+      }
+    }
+    if(pointset)range = range + fperiod;
+  }
+
+  
+  //var dif = maxval - minval;  
+  var minprc = (Math.abs(minval)*100)/range;
+
+  points = period+1;
   //Label eje Y izquierda
   var barCell = document.createElement("div");
   barCell.classList.add("barCell");
@@ -261,11 +284,11 @@ function chartBarsV(inf){
               var pct = ((100/(points-1))*x);
               if(pct==0){
                 barSectLbl.style.bottom = "-7.5px";                
-                barSectLbl.innerHTML = Math.round(minval);
+                barSectLbl.innerHTML = (minval).toFixed(0);
               }else{
-                barSectLbl.style.bottom = "calc("+((100/(points-1))*x)+"% - 7.5px)";                
-                var lessPorcion = dif/(points-1);
-                barSectLbl.innerHTML = Math.round(maxval-(lessPorcion*((points-1)-x)));
+                barSectLbl.style.bottom = "calc("+pct+"% - 7.5px)";                
+                var lessPorcion = range/(points-1);
+                barSectLbl.innerHTML = (minval+(lessPorcion*x)).toFixed(0);
               }
 
           bar.appendChild(barSectLbl);
@@ -316,7 +339,7 @@ function chartBarsV(inf){
             barVal.innerHTML = "";
             
             //Obtener que valor porcentual del contenido real
-            var valprc = (Math.abs(inf[i].values[lbl])*100)/dif;
+            var valprc = (Math.abs(inf[i].values[lbl])*100)/range;
             var altprc = minprc-valprc; //Saco la diferencia del espacio restante respecto al mas bajo
             if(prevsize==0)barVal.style.bottom = "0"; //Ese espacio siempre se ocupa por el bloque oculto pos 0
             
@@ -333,7 +356,7 @@ function chartBarsV(inf){
         barVal.innerHTML = "";
         
          //Obtener que valor porcentual del contenido real
-        var valprc = (Math.abs(inf[i].values[lbl])*100)/dif;
+        var valprc = (Math.abs(inf[i].values[lbl])*100)/range;
         if(prevsize==0)barVal.style.bottom = "0"; //Si es 0 se ubica en la base
         else{
           
@@ -469,6 +492,11 @@ function chartDonut(clone,tit,inf,colors){
   var i = 0;
   var sum = 0;  
   var rotBord = "";
+  //Necesito recorrerlo antes para ver si ambos vienen en 0 o solo 1
+  var zero = 0;
+  for (var key in inf) {
+    if(inf[key].qty.number==0)zero++;
+  }
   for (var key in inf) {
       //Pintar barras
       var slice = document.createElement("div");
@@ -478,6 +506,7 @@ function chartDonut(clone,tit,inf,colors){
           quesito.innerHTML = "";
           //Obtener que valor del circulo esporcentual es.
           var valPct = inf[key].pct.number;
+          if(zero==2)valPct = 50;
           sum = sum+inf[key].qty.number;
           var valdeg = (valPct*360)/100;
           var maxDeg = 180;
@@ -505,6 +534,7 @@ function chartDonut(clone,tit,inf,colors){
               slice.appendChild(quesito);
           }
           var size = 3;
+          //Dependiendo del % que comprende el borde exterior del circulo se muestra más o menos
           if(valPct>50){
             size = 5;
           }else if(valPct > 15){
@@ -588,7 +618,10 @@ var lineColors = ["#0033A0","#2FC25B","#1890FF"];
 var longLabel = [];
 var customers = [];
 var labels = [];
-function plotChart(id,dataValues){
+function plotChart(id,dataValues){  
+  customers = [];
+  labels = [];
+  longLabel = [];
   dataValues.forEach(ele=>{
     labels.push(ele.label.short);
     longLabel.push(ele.label.long);
@@ -648,7 +681,7 @@ function plotChart(id,dataValues){
           min:0,
           ticks: {
             font:{size: 9.5,family:"'Lato'",weight:400},
-            count:6,
+            precision:0
           },
           grid:{
             display:true,
@@ -811,6 +844,7 @@ function drawReport(rsp){
   chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
   var chartLine = document.getElementById("chartLine").children[1];
   plotChart("chartLine",dataValues);*/
+  console.log(rsp);
   //Total de documentos cargados
   document.getElementById("loadedTotal").innerText = rsp.documentsloaded.total.formatted;
   document.getElementById("loadedIncrement").innerText = rsp.documentsloaded.increment.formatted;
@@ -824,8 +858,8 @@ function drawReport(rsp){
   document.getElementById("accessIncrement").innerText = rsp.logins.customers.increment.formatted;
 
   //Total de accesos de usuarios al sistema de SENIAT
-  document.getElementById("seniatTotal").innerText = rsp.logins.customers.total.formatted;
-  document.getElementById("seniatIncrement").innerText = rsp.logins.customers.increment.formatted;
+  document.getElementById("seniatTotal").innerText = rsp.logins.seniat.total.formatted;
+  document.getElementById("seniatIncrement").innerText = rsp.logins.seniat.increment.formatted;
 
   
   //Grafico de barras verticales
@@ -834,6 +868,7 @@ function drawReport(rsp){
   var donutLeft = document.getElementById("statusDonut").children[0];
   chartDonut(donutLeft,"Cargados",rsp.documentsstatus.bysendstatus,donutAColors);
   var donutLeft = document.getElementById("statusDonut").children[1];
+  //chartDonut(donutLeft,"Enviados",infStatus.byreadstatus,donutBColors);
   chartDonut(donutLeft,"Enviados",rsp.documentsstatus.byreadstatus,donutBColors);
   //Grafico de lineas
   plotChart("chartLine",rsp.customers);

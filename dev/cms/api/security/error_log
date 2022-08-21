@@ -12,3 +12,11 @@
 [03-Aug-2022 14:45:12 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 87
 [04-Aug-2022 19:26:44 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 87
 [17-Aug-2022 12:01:28 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 108
+[20-Aug-2022 20:35:28 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:35:28 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:14 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:14 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:19 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:20 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:22 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
+[20-Aug-2022 20:37:23 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/envoice/public_html/dev/settings/utils.php on line 107
