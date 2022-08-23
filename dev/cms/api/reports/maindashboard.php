@@ -6,7 +6,6 @@ include_once("../../../settings/dbconn.php");
 include_once("../../../settings/utils.php");
 
 //Tratar que el mes se vea en espanol. No sirve
-setlocale(LC_ALL,"VE");
 define('APP_TIME_ZONE', 'America/Caracas');
 
 
@@ -114,9 +113,9 @@ function targetValuesNuevos($from,$to,$customerid,$interval,$db) {
       invoiceheader 
     WHERE
      
-      creationdate BETWEEN '$from' AND '$to' AND clientemail NOT IN(
+      creationdate BETWEEN '$from' AND '$to' AND clientrif NOT IN(
       SELECT
-          clientemail
+          clientrif
       FROM
           invoiceheader 
       WHERE
@@ -138,13 +137,13 @@ function targetValuesExistente($from,$to,$customerid,$interval,$db) {
   if ($customerid != 0)
     $condition = " AND customerid = $customerid ";
   $sql = "  SELECT
-      COUNT(DISTINCT clientemail, customerid) existentes
+      COUNT(DISTINCT clientemail, clientrif) existentes
     FROM
       invoiceheader
     WHERE
-      creationdate BETWEEN '$from' AND '$to' AND clientemail IN (
+      creationdate BETWEEN '$from' AND '$to' AND clientrif IN (
       SELECT
-          clientemail
+          clientrif
       FROM
           invoiceheader
       WHERE
@@ -166,9 +165,9 @@ function targetValuesExistenteFirstBar($from,$to,$customerid,$interval,$db) {
   if ($customerid != 0)
     $condition = " AND customerid = $customerid ";
   $sql = "  SELECT
-      COUNT(DISTINCT clientemail, rif) existentes
+      COUNT(DISTINCT clientemail, clientrif) existentes
     FROM
-      invoiceheader INNER JOIN customers c ON c.id=invoiceheader.customerid 
+      invoiceheader 
     WHERE
       creationdate BETWEEN '$from' AND '$to' $condition
     ";
@@ -189,13 +188,13 @@ function targetValuesBaja($from,$to,$customerid,$interval,$db) {
   if ($customerid != 0)
     $condition = " AND customerid = $customerid ";
   $sql = "  SELECT
-      COUNT(DISTINCT clientemail, customerid) baja
+      COUNT(DISTINCT clientemail, clientrif) baja
     FROM
       invoiceheader
     WHERE
-      creationdate BETWEEN '$from_previous' AND '$to_previous' AND clientemail NOT IN (
+      creationdate BETWEEN '$from_previous' AND '$to_previous' AND clientrif NOT IN (
       SELECT
-          clientemail
+          clientrif
       FROM
           invoiceheader
       WHERE
@@ -209,14 +208,37 @@ function targetValuesBaja($from,$to,$customerid,$interval,$db) {
   return $row['baja']; 
 }
 function customersRanking($fromIni,$toIni,$from,$to,$customerid,$db) {
-// CASO CON customerid == 0
-if ($customerid==0) {
-  //1.- Seleccionar los top 3 o el top 1
-    $condition = "";
-    if ($customerid != 0)
-      $condition = " AND c.id = $customerid ";
+  // CASO CON customerid == 0
+  if ($customerid==0) {
+    //1.- Seleccionar los top 3 o el top 1
+      $condition = "";
+      if ($customerid != 0)
+        $condition = " AND c.id = $customerid ";
+        $sql = "SELECT
+            c.name, c.id, 
+            COUNT(c.contactemail) total
+          FROM
+            `audit` a
+          INNER JOIN customers c ON
+            a.userid = c.contactemail
+          WHERE
+            loginaction = 1 AND datecreation 
+            BETWEEN '$fromIni' AND '$toIni' $condition
+          GROUP BY
+            c.contactname ORDER BY COUNT(c.contactemail) DESC LIMIT 3; ";
+        
+        $rs = $db->query($sql);
+        if (!$rs)
+          badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+        $customersid = [];
+        while ($row = $rs->fetch_assoc()) 
+          $customersid[] = $row['id'];
+        
+
+      //2.- Sacar los datos de esos clientes en el periodo solicitado (se puede mejorar)
+      $idlist = implode(',',$customersid);
       $sql = "SELECT
-          c.name, c.id, 
+          c.name,
           COUNT(c.contactemail) total
         FROM
           `audit` a
@@ -224,89 +246,66 @@ if ($customerid==0) {
           a.userid = c.contactemail
         WHERE
           loginaction = 1 AND datecreation 
-          BETWEEN '$fromIni' AND '$toIni' $condition
+          BETWEEN '$from' AND '$to' AND c.id IN ($idlist) $condition
         GROUP BY
           c.contactname ORDER BY COUNT(c.contactemail) DESC LIMIT 3; ";
       
       $rs = $db->query($sql);
       if (!$rs)
         badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-      $customersid = [];
-      while ($row = $rs->fetch_assoc()) 
-        $customersid[] = $row['id'];
-      
-
-    //2.- Sacar los datos de esos clientes en el periodo solicitado (se puede mejorar)
-    $idlist = implode(',',$customersid);
-    $sql = "SELECT
-        c.name,
-        COUNT(c.contactemail) total
-      FROM
-        `audit` a
-      INNER JOIN customers c ON
-        a.userid = c.contactemail
-      WHERE
-        loginaction = 1 AND datecreation 
-        BETWEEN '$from' AND '$to' AND c.id IN ($idlist) $condition
-      GROUP BY
-        c.contactname ORDER BY COUNT(c.contactemail) DESC LIMIT 3; ";
-    
-    $rs = $db->query($sql);
-    if (!$rs)
-      badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-    $customers = [];
-    while ($row = $rs->fetch_assoc()) {
-      $customers[$row['name']] = (integer)$row['total'];
-      
-    }
-    return $customers;
-}
-else {
-    
-    
-        $sql = "SELECT
-                c.name
-                
-              FROM
-                customers c
-        
-              WHERE
-                c.id = $customerid
-                 ";
-
-        $rs = $db->query($sql);
-        if (!$rs)
-          badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-
-        $row = $rs->fetch_assoc();
-        $customername = $row['name'] ;
-    
-    $sql = "SELECT
-        c.name,
-        COUNT(c.contactemail) total
-      FROM
-        `audit` a
-      INNER JOIN customers c ON
-        a.userid = c.contactemail
-      WHERE
-        loginaction = 1 AND datecreation 
-        BETWEEN '$from' AND '$to' AND c.id = $customerid
-      GROUP BY
-        c.contactname ORDER BY COUNT(c.contactemail) DESC LIMIT 3; ";
-
-    $rs = $db->query($sql);
-    if (!$rs)
-      badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-    $customers = [];
-    $customers[$customername] = 0;
-    while ($row = $rs->fetch_assoc()) {
-      if (empty($row))
-        $customers[$customername] = 0;
-      else
+      $customers = [];
+      while ($row = $rs->fetch_assoc()) {
         $customers[$row['name']] = (integer)$row['total'];
-    }
-        return $customers;  
-}
+        
+      }
+      return $customers;
+  }
+  else {
+      
+      
+          $sql = "SELECT
+                  c.name
+                  
+                FROM
+                  customers c
+          
+                WHERE
+                  c.id = $customerid
+                  ";
+
+          $rs = $db->query($sql);
+          if (!$rs)
+            badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+
+          $row = $rs->fetch_assoc();
+          $customername = $row['name'] ;
+      
+      $sql = "SELECT
+          c.name,
+          COUNT(c.contactemail) total
+        FROM
+          `audit` a
+        INNER JOIN customers c ON
+          a.userid = c.contactemail
+        WHERE
+          loginaction = 1 AND datecreation 
+          BETWEEN '$from' AND '$to' AND c.id = $customerid
+        GROUP BY
+          c.contactname ORDER BY COUNT(c.contactemail) DESC LIMIT 3; ";
+
+      $rs = $db->query($sql);
+      if (!$rs)
+        badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
+      $customers = [];
+      $customers[$customername] = 0;
+      while ($row = $rs->fetch_assoc()) {
+        if (empty($row))
+          $customers[$customername] = 0;
+        else
+          $customers[$row['name']] = (integer)$row['total'];
+      }
+          return $customers;  
+  }
 }
 function traducirMes($n){
   $traductor_meses = [];
@@ -619,6 +618,5 @@ $out->customers = $customers;
 
 header("HTTP/1.1 200");
 echo (json_encode($out));
-setlocale(LC_ALL,NULL);
 die();
 ?>
