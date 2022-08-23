@@ -139,10 +139,10 @@
                                 <div class="blockTblCnt" id="subTblInf">
                                     <div class="subtblHeadCnt">
                                         <div class="cellTbl">Factura</div>
-                                        <div class="cellTbl cellTblRight">Control</div>
+                                        <div class="cellTbl cellTblRight" style="min-width:110px">Control</div>
                                         <div class="cellTbl">N. Débito</div>
                                         <div class="cellTbl">N. Crédito</div>
-                                        <div class="cellTbl">Transaccin</div>
+                                        <div class="cellTbl">Transacción</div>
                                         <div class="cellTbl">Fac. Afectada</div>
                                         <div class="cellTbl">
                                             <div class="subTblCnt">Total</div>
@@ -153,61 +153,61 @@
                                         </div>
                                         <div class="cellTbl">
                                             <div class="subTblCnt">Exentos</div>
-                                            <div class="cellTblCnt cell250px">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="cellTblCnt cell285px">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                         <div class="cellTbl">
                                             <div class="subTblCnt">Exonerados o No Sujetos</div>
-                                            <div class="cellTblCnt cell250px bgCellOpt1">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="cellTblCnt cell285px bgCellOpt1">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                         <div class="cellTbl">
                                             <div class="subTblCnt">Percibidos</div>
-                                            <div class="cellTblCnt cell250px">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="cellTblCnt cell285px">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                         <div class="cellTbl">
-                                            <div class="subTblCnt">Alicuota General</div>
-                                            <div class="cellTblCnt cell250px bgCellOpt1">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="subTblCnt">Alícuota General</div>
+                                            <div class="cellTblCnt cell285px bgCellOpt1">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                         <div class="cellTbl">
-                                            <div class="subTblCnt">Alicuota Reducida</div>
-                                            <div class="cellTblCnt cell250px">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="subTblCnt">Alícuota Reducida</div>
+                                            <div class="cellTblCnt cell285px">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                         <div class="cellTbl">
-                                            <div class="subTblCnt">Alicuota Adicional</div>
-                                            <div class="cellTblCnt cell250px bgCellOpt1">
-                                                <div class="cellEle cellTblRight cell45Mid">Base Imponible</div>
-                                                <div class="cellEle cell15 boderLeft">%</div>
-                                                <div class="cellEle cellTblRight cell45Mid boderLeft">Monto Total</div>
+                                            <div class="subTblCnt">Alícuota Adicional</div>
+                                            <div class="cellTblCnt cell285px bgCellOpt1">
+                                                <div class="cellEle cellTblRight cell40">Base Imponible</div>
+                                                <div class="cellEle cell20 boderLeft">%</div>
+                                                <div class="cellEle cellTblRight cell40 boderLeft">Monto Total</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="regCnt" id="centerSubTable">
                                         <div class="subtblRow" style="display:none">
-                                            <div class="cellTbl">Factura</div>
-                                            <div class="cellTbl cellTblRight">Control</div>
-                                            <div class="cellTbl">N. Débito</div>
-                                            <div class="cellTbl">N. Crédito</div>
-                                            <div class="cellTbl">Transaccin</div>
-                                            <div class="cellTbl">Fac. Afectada</div>
+                                            <div class="cellTbl"></div>
+                                            <div class="cellTbl cellTblRight" style="min-width:110px"></div>
+                                            <div class="cellTbl"></div>
+                                            <div class="cellTbl"></div>
+                                            <div class="cellTbl"></div>
+                                            <div class="cellTbl"></div>
                                             <div class="cellTbl bgCellOpt1">
                                                 <div class="cellTblCnt cell220px">
                                                     <div class="cellEle cellTblRight cell50">1.000,00</div>
@@ -215,45 +215,45 @@
                                                 </div>
                                             </div>
                                             <div class="cellTbl">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">950,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">12</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.150,25</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">950,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">12</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.150,25</div>
                                                 </div>
                                             </div>
                                             <div class="cellTbl bgCellOpt1">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">800,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">16</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.200,50</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">800,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">16</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.200,50</div>
                                                 </div>
                                             </div>
                                             <div class="cellTbl">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">1.200,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">18</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.300,50</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">1.200,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">18</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.300,50</div>
                                                 </div>
                                             </div>
                                             <div class="cellTbl bgCellOpt1">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">1.200,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">18</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.300,50</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">1.200,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">18</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.300,50</div>
                                                 </div>
                                             </div>
                                             <div class="cellTbl">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">1.200,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">18</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.300,50</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">1.200,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">18</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.300,50</div>
                                                 </div>
                                             </div>
                                             <div class="cellTbl bgCellOpt1">
-                                                <div class="cellTblCnt cell250px">
-                                                    <div class="cellEle cellTblRight cell45Mid">1.200,00</div>                                                    
-                                                    <div class="cellEle cell15 boderLeft">18</div>
-                                                    <div class="cellEle cellTblRight cell45Mid boderLeft">1.300,50</div>
+                                                <div class="cellTblCnt cell285px">
+                                                    <div class="cellEle cellTblRight cell40">1.200,00</div>                                                    
+                                                    <div class="cellEle cell20 boderLeft">18</div>
+                                                    <div class="cellEle cellTblRight cell40 boderLeft">1.300,50</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -275,27 +275,48 @@
                                 <div class="subTblCnt">Débito Fiscal</div>
                                 <div class="cellTblCnt cell220px bgCellOpt1">
                                     <div class="cellEle cellTblRight cell50">Base Imponible</div>
-                                    <div class="cellEle cellTblRight cell50 boderLeft">Monto Total</div>
+                                    <div class="cellEle cellTblRight cell50 boderLeft">IVA</div>
                                 </div>
                             </div>
                             <div class="cellTbl">
                                 <div class="subTblCnt">Crédito Fiscal</div>
                                 <div class="cellTblCnt cell220px">
                                     <div class="cellEle cellTblRight cell50">Base Imponible</div>
-                                    <div class="cellEle cellTblRight cell50 boderLeft">Monto Total</div>
+                                    <div class="cellEle cellTblRight cell50 boderLeft">IVA</div>
                                 </div>
                             </div>
                             <div class="cellTbl">
                                 <div class="subTblCnt">Total</div>
                                 <div class="cellTblCnt cell220px bgCellOpt1">
                                     <div class="cellEle cellTblRight cell50">Base Imponible</div>
-                                    <div class="cellEle cellTblRight cell50 boderLeft">Monto Total</div>
+                                    <div class="cellEle cellTblRight cell50 boderLeft">IVA</div>
                                 </div>
                             </div>
                         </div>
                         <div class="regCnt" id="botCenterTable">
-                            <div class="subtblRow bottomTblRow">
+                            <div class="subtblRow bottomTblRow" id="notax">
                                 <div class="cellNo">Total ventas no gravadas, no sujetas y/o sin derecho débito fiscal</div>
+                                <div class="cellTbl bgCellOpt1" >
+                                    <div class="cellTblCnt cell220px">
+                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
+                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
+                                    </div>
+                                </div>
+                                <div class="cellTbl">
+                                    <div class="cellTblCnt cell220px">
+                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
+                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
+                                    </div>
+                                </div>
+                                <div class="cellTbl bgCellOpt1">
+                                    <div class="cellTblCnt cell220px">
+                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
+                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subtblRow bottomTblRow" id="generaltax">
+                                <div class="cellNo">Total ventas internas afectadas sólo alícuota general </div>
                                 <div class="cellTbl bgCellOpt1">
                                     <div class="cellTblCnt cell220px">
                                         <div class="cellEle cellTblRight cell50">1.000,00</div>
@@ -315,49 +336,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="subtblRow bottomTblRow">
-                                <div class="cellNo">Total ventas no gravadas, no sujetas y/o sin derecho débito fiscal</div>
-                                <div class="cellTbl bgCellOpt1">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                                <div class="cellTbl">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                                <div class="cellTbl bgCellOpt1">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subtblRow bottomTblRow">
-                                <div class="cellNo">Total ventas internas afectadas sólo alícuota general (16,00) </div>
-                                <div class="cellTbl bgCellOpt1">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                                <div class="cellTbl">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                                <div class="cellTbl bgCellOpt1">
-                                    <div class="cellTblCnt cell220px">
-                                        <div class="cellEle cellTblRight cell50">1.000,00</div>
-                                        <div class="cellEle cellTblRight cell50 boderLeft">1.100,50</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subtblRow bottomTblRow">
+                            <div class="subtblRow bottomTblRow" id="addedtax">
                                 <div class="cellNo">Total ventas internas afectadas sólo alícuota adicional</div>
                                 <div class="cellTbl bgCellOpt1">
                                     <div class="cellTblCnt cell220px">
@@ -378,7 +357,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="subtblRow bottomTblRow">
+                            <div class="subtblRow bottomTblRow" id="reducedtax">
                                 <div class="cellNo">Total ventas internas afectadas sólo alícuota reducida</div>
                                 <div class="cellTbl bgCellOpt1">
                                     <div class="cellTblCnt cell220px">
@@ -399,7 +378,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="subtblRow bottomTblRow totRow" >
+                            <div class="subtblRow bottomTblRow totRow" id="totalstax">
                                 <div class="cellNo">Totales</div>
                                 <div class="cellTbl bgCellOpt1">
                                     <div class="cellTblCnt cell220px">

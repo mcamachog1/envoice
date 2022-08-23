@@ -135,19 +135,11 @@ function downloadReport(){
 
       par.datefrom = desde == "" ? now : desde;
       par.dateto = hasta == "" ? now : hasta;
-      var checks = document.getElementsByClassName("checkstatus");
-      var status = "";
-      for(var i=0;i<checks.length;i++){
-        if(checks[i].checked){
-            status += checks[i].getAttribute("sid")+"-";
-        }
-      }
-      if(status!=="")par.status = status.substring(0, status.length - 1);
       par.offset = offset;
       par.order = order;
       par.numofrec = document.getElementById("numofrecFilt").value
       par.sessionid = sessid;
-      callWS("GET", "invoices/list", par, BCLoadInvoices, offset );
+      callWS("GET", "reports/salesbook", par, BCLoadInvoices, offset );
       return;
   }
   function BCLoadInvoices(status, respText, offset){
@@ -157,7 +149,7 @@ function downloadReport(){
           case 200:
               jsonResp = JSON.parse(respText);
               console.log('jsonResp', jsonResp);
-              drawInvoices(jsonResp.records);
+              drawInvoices(jsonResp);
               drawPagination(offset, jsonResp.numofrecords);
               
               break;
@@ -192,78 +184,137 @@ function downloadReport(){
     var subTable = document.getElementById("centerSubTable");
     var clone = subTable.firstElementChild.cloneNode(true);
     subTable.innerHTML = "";
+    var rsp = data;
+    data = rsp.records;
     if(data.length>0){    
       var cn = 0;  
-      data.length + 1;
+      data.length;
       for(navLink of data){
-        cn = cn+1;
-        if(cn!=data.length){
-          line = document.createElement("tr");
-          line.classList.add('userLine');
-          line.id = navLink.id;
+        cn = cn+1;        
+        line = document.createElement("tr");
+        line.classList.add('userLine');
+        line.id = navLink.id;
 
-          celda = document.createElement("td");
-          celda.classList.add("cellNo","cell5");
-          celda.innerHTML = '<span>'+navLink.id+'</span>';
-          line.appendChild(celda);
-                  
-          celda = document.createElement("td");
-          celda.classList.add("cellDate","cell10");
-          celda.id="date-"+navLink.id;
-          celda.innerHTML = '<span>'+navLink.issuedate.formatted+'</span>';
-          line.appendChild(celda);
+        celda = document.createElement("td");
+        celda.classList.add("cellNo","cell5");
+        celda.innerHTML = '<span>'+navLink.id+'</span>';
+        line.appendChild(celda);
+                
+        celda = document.createElement("td");
+        celda.classList.add("cellDate","cell10");
+        celda.id="date-"+navLink.id;
+        celda.innerHTML = '<span>'+navLink.issuedate.formatted+'</span>';
+        line.appendChild(celda);
 
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell10");
-          celda.innerHTML = '<span>'+navLink.client.rif+'</span>';
-          line.appendChild(celda);
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell10");
+        celda.innerHTML = '<span>'+navLink.client.rif+'</span>';
+        line.appendChild(celda);
 
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell20");
-          celda.innerHTML = '<span>'+navLink.client.name+'</span>';
-          line.appendChild(celda);
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell20");
+        celda.innerHTML = '<span>'+navLink.client.name+'</span>';
+        line.appendChild(celda);
 
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell55");
-          line.appendChild(celda);
-      
-          table.appendChild(line);
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell55");
+        line.appendChild(celda);
+    
+        table.appendChild(line);
 
-          var altclone = clone.cloneNode(true);
-          altclone.style.display = "";
-          subTable.appendChild(altclone);
-        }else{
-          line = document.createElement("tr");
-          line.classList.add('userLine');
-          line.style.backgroundColor = "rgb(232, 232, 232,0.7)";
-
-          celda = document.createElement("td");
-          celda.classList.add("cellNo","cell5");
-          line.appendChild(celda);
-                  
-          celda = document.createElement("td");
-          celda.classList.add("cellDate","cell10");
-          line.appendChild(celda);
-
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell10");
-          line.appendChild(celda);
-
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell20");
-          line.appendChild(celda);
-
-          celda = document.createElement("td");
-          celda.classList.add("cellRif","cell55");
-          line.appendChild(celda);
-      
-          table.appendChild(line);
-
-          var altclone = clone.cloneNode(true);
-          altclone.style.display = "";
-          subTable.appendChild(altclone);
+        var altclone = clone.cloneNode(true);
+        altclone.style.display = "";
+        //Sección sub interna del lado derecho. Se cambian los valores del clone y se reinserta          
+        altclone.getElementsByClassName("cellTbl")[1].innerHTML = formatRefctr(navLink.ctrnumber);
+        var type= navLink.type.id;
+        if(type=='FAC'){
+          altclone.getElementsByClassName("cellTbl")[0].innerHTML = navLink.refnumber;
+          altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
+          altclone.getElementsByClassName("cellTbl")[3].innerHTML =  "";
+        }else if(type=='NCR'){
+          altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
+          altclone.getElementsByClassName("cellTbl")[2].innerHTML = navLink.refnumber;
+          altclone.getElementsByClassName("cellTbl")[3].innerHTML =  "";
+        }else if(type=='NDB'){
+          altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
+          altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
+          altclone.getElementsByClassName("cellTbl")[3].innerHTML =  navLink.refnumber;
         }
+
+        altclone.getElementsByClassName("cellTbl")[4].innerHTML =  navLink.transactiontype;
+        altclone.getElementsByClassName("cellTbl")[5].innerHTML =  navLink.refnumber;
+        
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[0].innerHTML =  navLink.amounts.totals.taxbase.formatted;
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[1].innerHTML =  navLink.amounts.totals.total.formatted;
+
+        const setthreecols = (ele,keyname) =>{
+          ele.lastElementChild.children[0].innerHTML =  navLink.amounts[keyname].taxbase.formatted;
+          ele.lastElementChild.children[1].innerHTML =  navLink.amounts[keyname].taxpct.number;
+          ele.lastElementChild.children[2].innerHTML =  navLink.amounts[keyname].taxtotal.formatted;
+        }
+        var keys = ['exempt','notaxable','perceived','generaliva','reducediva','addediva'];
+        for(var x = 7; x<13; x++){
+          setthreecols(altclone.getElementsByClassName("cellTbl")[x],keys[x-7]);
+        }
+        
+        subTable.appendChild(altclone);
+
+        
       }
+      if(cn==data.length){
+        line = document.createElement("tr");
+        line.classList.add('userLine');
+        line.style.backgroundColor = "rgb(232, 232, 232,0.7)";
+
+        celda = document.createElement("td");
+        celda.classList.add("cellNo","cell5");
+        line.appendChild(celda);
+                
+        celda = document.createElement("td");
+        celda.classList.add("cellDate","cell10");
+        line.appendChild(celda);
+
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell10");
+        line.appendChild(celda);
+
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell20");
+        line.appendChild(celda);
+
+        celda = document.createElement("td");
+        celda.classList.add("cellRif","cell55");
+        line.appendChild(celda);
+    
+        table.appendChild(line);
+
+        var altclone = clone.cloneNode(true);
+        altclone.style.display = "";
+
+        altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
+        altclone.getElementsByClassName("cellTbl")[1].innerHTML = "";
+        altclone.getElementsByClassName("cellTbl")[2].innerHTML =  "";
+        altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
+        altclone.getElementsByClassName("cellTbl")[3].innerHTML = "";
+        altclone.getElementsByClassName("cellTbl")[4].innerHTML =  "";
+        altclone.getElementsByClassName("cellTbl")[5].innerHTML = "";
+      
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[0].innerHTML =  navLink.amounts.totals.taxbase.formatted;
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[1].innerHTML =  navLink.amounts.totals.total.formatted;
+
+        const setthreecolsTot = (ele,keyname) =>{
+          ele.lastElementChild.children[0].innerHTML =  rsp.totals[keyname].taxbase.formatted;
+          ele.lastElementChild.children[1].innerHTML =  rsp.totals[keyname].taxpct.number;
+          ele.lastElementChild.children[2].innerHTML =  rsp.totals[keyname].taxtotal.formatted;
+        }
+        var keys = ['exempt','notaxable','perceived','generaliva','reducediva','addediva'];
+        for(var x = 7; x<13; x++){
+          setthreecolsTot(altclone.getElementsByClassName("cellTbl")[x],keys[x-7]);
+        }
+
+        subTable.appendChild(altclone);
+      }
+      
     }else{
       var html = '';
       html += '<div class="blankTblCell">';
@@ -272,6 +323,54 @@ function downloadReport(){
       html += '</div>';
       table.innerHTML = html;
     }
+
+    //Datos tabla inferior
+    var debit = {'taxbase':0,'taxtotal':0},credit={'taxbase':0,'taxtotal':0},total={'taxbase':0,'taxtotal':0};
+    const setlowtbl = (ele,row,keyname) =>{
+      if(row=='totalstax'){
+        switch(keyname){
+          case 'debits':
+            ele.lastElementChild.children[0].innerHTML = number_format(debit.taxbase,2);
+            ele.lastElementChild.children[1].innerHTML =  number_format(debit.taxtotal,2);
+          break;
+          case 'credits':
+            ele.lastElementChild.children[0].innerHTML = number_format(credit.taxbase,2);
+            ele.lastElementChild.children[1].innerHTML =  number_format(credit.taxtotal,2);
+          break;
+          case 'totals':
+            ele.lastElementChild.children[0].innerHTML = number_format(total.taxbase,2);
+            ele.lastElementChild.children[1].innerHTML =  number_format(total.taxtotal,2);
+          break;
+        }
+      }else{
+        switch(row){
+          case 'debits':
+            debit.taxbase = debit.taxbase+rsp.resume[row][keyname].taxbase.number;
+            debit.taxtotal = debit.taxtotal+rsp.resume[row][keyname].taxtotal.number;
+          break;
+          case 'credits':
+            credit.taxbase = credit.taxbase+rsp.resume[row][keyname].taxbase.number;
+            credit.taxtotal = credit.taxtotal+rsp.resume[row][keyname].taxtotal.number;
+          break;
+          case 'totals':
+            total.taxbase = total.taxbase+rsp.resume[row][keyname].taxbase.number;
+            total.taxtotal = total.taxtotal+rsp.resume[row][keyname].taxtotal.number;
+          break;
+        }
+        ele.lastElementChild.children[0].innerHTML =  rsp.resume[row][keyname].taxbase.formatted;
+        ele.lastElementChild.children[1].innerHTML =  rsp.resume[row][keyname].taxtotal.formatted;
+      }
+    }
+    var keys = ['debits','credits','totals'];
+    for(let key in rsp.resume){
+      for(var x = 0; x<3; x++){
+        setlowtbl(document.getElementById(key).getElementsByClassName("cellTbl")[x],key,keys[x]);
+      }
+    }
+    for(var x = 0; x<3; x++){
+      setlowtbl(document.getElementById("totalstax").getElementsByClassName("cellTbl")[x],"totalstax",keys[x]);
+    }
+    
     
     document.getElementById("subTblInf").style.height = document.getElementsByClassName("centerTable")[0].offsetHeight+4+"px";
   }

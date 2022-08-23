@@ -1076,7 +1076,7 @@ input[type=number]{
 .cell45 {
   width: 45%;
 }
-.cell45Mid{
+.cell42Mid{
   width: 42.5%;
 }
 .cell50 {
@@ -1894,12 +1894,14 @@ input[type=number]{
   display: table;
   overflow: visible;
   border-bottom: 2px solid transparent;
+  padding-left:10px;
 }
 .subtblRow{
   width: auto;
   display: table;
   overflow: visible;
   height: 35px;
+  padding-left: 10px;
 }
 .bottomTblRow{
   font-size:85%;
@@ -1988,6 +1990,9 @@ input[type=number]{
 }
 .cell250px{
   width:250px;
+}
+.cell285px{
+  width:285px;
 }
 /*Formato scroll lista de error*/
 .blockTblCnt::-webkit-scrollbar {
