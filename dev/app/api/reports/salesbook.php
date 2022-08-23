@@ -84,6 +84,7 @@ if (!parametrosValidos($_GET, $parmsob))
 $from = $_REQUEST["datefrom"];
 $to = $_REQUEST["dateto"];
 //Validar user session
+
 //$customerid = 105;
 $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
 
