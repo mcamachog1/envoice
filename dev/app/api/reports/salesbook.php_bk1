@@ -6,75 +6,98 @@ include_once("../../../settings/dbconn.php");
 include_once("../../../settings/utils.php");
 
 function getTotalsData($from,$to,$customerid,$db){
-  $sql = "SELECT ROUND(SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100) ELSE qty * unitprice *(1 - itemdiscount / 100) END),2) taxbase
-            ,ROUND(SUM(CASE WHEN itemtax < 0 THEN qty * unitprice *(1 - itemdiscount / 100) WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100)*(1 + itemtax / 100) ELSE qty * unitprice *(1 - itemdiscount / 100)*(1 + itemtax / 100) END),2) total
-            ,ROUND(SUM(CASE WHEN itemtax = 0 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END),2) exempt_taxbase
-            ,ROUND(SUM(CASE WHEN itemtax = -2 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END),2) notaxable_taxbase
-            ,ROUND(SUM(CASE WHEN itemtax = -1 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END),2) perceived_taxbase
-            ,ROUND(SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN  `type` = 'NCR'  THEN (-1)*qty*unitprice*(1 - itemdiscount / 100) ELSE 0 END),2) credit_taxbase
-          FROM invoicedetails d
-          INNER JOIN invoiceheader h
-          ON h.id = d.invoiceid
-          WHERE h.issuedate BETWEEN '$from' AND '$to'
-          AND customerid = $customerid";
+  $sql = "SELECT
+    ROUND(SUM(qty * unitprice *(1 - itemdiscount / 100)),2) taxbase,
+    ROUND(SUM(qty * unitprice *(1 - itemdiscount / 100) *(1 + itemtax / 100)),2) total,
+    ROUND(SUM(CASE WHEN itemtax = 0 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END),2) exempt_taxbase,
+    ROUND(SUM(CASE WHEN itemtax > 0 THEN qty * unitprice *(1 - itemdiscount / 100) * itemtax / 100 ELSE 0 END),2) exempt_taxtotal,
+    ROUND(SUM(CASE WHEN itemtax = -2 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END),2) notaxable_taxbase 
+    FROM invoicedetails d
+    INNER JOIN invoiceheader h ON h.id = d.invoiceid 
+    WHERE h.creationdate BETWEEN '$from' AND '$to' AND customerid = $customerid ";
       
   $rs = $db->query($sql);
   if (!$rs)
     badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
   return $rs;  
 }
+
 function getRecordsetData($from,$to,$customerid,$offset,$numofrec,$db){
-  $sql = "SELECT  h.issuedate
-            ,clientrif
-            ,clientname
-            ,refnumber
-            ,ctrnumber
-            ,`type`
-            ,ctrref
-            ,D.taxbase
-            ,D.total
-            ,D.taxtotal
-            ,D.notaxable_taxbase
-            ,D.perceived_taxbase
-            ,A.tot16
-            ,A.tot8
-            ,A.tot27
+  $sql = "SELECT h.id, h.issuedate, clientrif, clientname,
+        refnumber, ctrnumber, `type`, ctrref, D.taxbase,
+        D.total, D.ivas, D.taxtotal, D.notaxable_taxbase,
+        D.perceived_taxbase, A.tot16, A.tot8, A.tot27
         FROM invoiceheader h
         INNER JOIN
         (
-          SELECT  invoiceid
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty*unitprice*(1 - itemdiscount/100) ELSE qty * unitprice *(1 - itemdiscount / 100) END) taxbase
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty*unitprice*(1 - itemdiscount/100)*(1 + itemtax / 100) WHEN itemtax < 0 THEN qty * unitprice *(1 - itemdiscount/100) ELSE qty * unitprice *(1 - itemdiscount / 100)*(1 + itemtax / 100) END) total
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100) WHEN itemtax = 0 THEN qty * unitprice *(1 - itemdiscount / 100)  ELSE 0 END) exempt_taxbase
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100)*itemtax/100 WHEN itemtax > 0 THEN qty * unitprice *(1 - itemdiscount / 100)*itemtax/100  ELSE 0 END) taxtotal
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100) WHEN itemtax = -2 THEN qty * unitprice *(1 - itemdiscount / 100)  ELSE 0 END) notaxable_taxbase
-                ,SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 WHEN `type` = 'NCR' THEN (-1)*qty * unitprice *(1 - itemdiscount / 100) WHEN itemtax = -1 THEN qty * unitprice *(1 - itemdiscount / 100)  ELSE 0 END) perceived_taxbase
-          FROM invoicedetails d
-          INNER JOIN invoiceheader h
-          ON h.id = d.invoiceid
-          WHERE h.issuedate BETWEEN '$from' AND '$to'
-          AND customerid = $customerid
-          GROUP BY  invoiceid
+          SELECT
+              invoiceid,
+              SUM(CASE WHEN canceldate > '1900-01-01' THEN 0 ELSE qty * unitprice *(1 - itemdiscount / 100) END) taxbase,
+              SUM(
+                  CASE WHEN itemtax < 0 THEN qty * unitprice *(1 - itemdiscount / 100)
+                  WHEN canceldate > '1900-01-01' THEN 0 ELSE qty * unitprice *(1 - itemdiscount / 100)*(1 + itemtax / 100)
+                  END) total,
+              SUM(CASE WHEN itemtax = 0 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END) exempt_taxbase,
+              GROUP_CONCAT(itemtax) ivas,
+              SUM(CASE WHEN itemtax > 0 THEN qty * unitprice *(1 - itemdiscount / 100)*itemtax/100 ELSE 0 END) taxtotal,
+              SUM(CASE WHEN itemtax = -2 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END) notaxable_taxbase,
+              SUM(CASE WHEN itemtax = -1 THEN qty * unitprice *(1 - itemdiscount / 100) ELSE 0 END) perceived_taxbase
+
+          FROM
+              invoicedetails d INNER JOIN invoiceheader h
+              ON h.id = d.invoiceid 
+          WHERE
+              h.issuedate BETWEEN '$from' AND '$to' 
+              AND customerid = $customerid
+          GROUP BY
+              invoiceid
         ) D
-        ON D.invoiceid = h.id
-        LEFT JOIN
-        (
-          SELECT  E.id
-                ,ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(16),(-1)*D.qty * D.unitprice,0) ELSE IF(D.itemtax IN(16),D.qty * D.unitprice,0) END),2 ) tot16
-                ,ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(8),(-1)*D.qty * D.unitprice,0) ELSE IF(D.itemtax IN(8),D.qty * D.unitprice,0) END),2) tot8
-                ,ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(27),(-1)*D.qty * D.unitprice,0) ELSE IF(D.itemtax IN(27),D.qty * D.unitprice,0) END),2) tot27
-          FROM invoiceheader E
-          INNER JOIN invoicedetails D
-          ON E.id = D.invoiceid
-          WHERE E.issuedate BETWEEN '$from' AND '$to'
-          AND customerid = $customerid
-          GROUP BY  E.id
-        ) A
+        ON D.invoiceid=h.id
+        LEFT JOIN 
+        
+        (SELECT
+        E.id,
+        ROUND (
+          SUM(
+            CASE WHEN E.canceldate > '1900-01-01' THEN 0 ELSE IF(
+                D.itemtax IN(16),
+                D.qty * D.unitprice,
+                0
+            )
+            END
+          ),
+          2
+        ) tot16,
+        ROUND(          SUM(
+            CASE WHEN E.canceldate > '1900-01-01' THEN 0 ELSE IF(
+                D.itemtax IN(8),
+                D.qty * D.unitprice,
+                0
+            )
+            END
+          ),2) tot8,
+        ROUND(          SUM(
+            CASE WHEN E.canceldate > '1900-01-01' THEN 0 ELSE IF(
+                D.itemtax IN(27),
+                D.qty * D.unitprice,
+                0
+            )
+            END
+          ),2) tot27
+      FROM
+        invoiceheader E 
+      INNER JOIN invoicedetails D ON
+        E.id = D.invoiceid
+      WHERE E.issuedate BETWEEN '$from' AND '$to' 
+              AND customerid = $customerid
+              
+      GROUP BY
+        E.id) A
         ON A.id = h.id
-        WHERE h.issuedate BETWEEN '$from' AND '$to'
-        AND customerid = $customerid
-        ORDER BY h.issuedate
-        LIMIT $offset, $numofrec";
+
+        WHERE h.issuedate  
+        BETWEEN '$from' AND '$to' AND customerid = $customerid ORDER BY h.issuedate
+        LIMIT $offset, $numofrec ";
       
   $rs = $db->query($sql);
   if (!$rs)
@@ -83,10 +106,9 @@ function getRecordsetData($from,$to,$customerid,$offset,$numofrec,$db){
   return $rs;  
 }
 function getTotalRecords($from,$to,$customerid,$db){
-  $sql = "SELECT  COUNT(*) Cnt
-          FROM invoiceheader
-          WHERE issuedate BETWEEN '$from' AND '$to'
-          AND customerid = $customerid ";
+  $sql = "SELECT COUNT(*) Cnt FROM invoiceheader 
+        WHERE creationdate 
+        BETWEEN '$from' AND '$to' AND customerid = $customerid ";
   $rs = $db->query($sql);
   if (!$rs)
     badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
@@ -101,22 +123,7 @@ function formatListIvas($list){
   }
   return implode(",",$formatted);
 }
-function getTotalsAlicuotas($from,$to,$customerid,$db){
-  $sql = "SELECT
-                 ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(16),(-1)*D.qty*D.unitprice,0) ELSE IF(D.itemtax IN(16),D.qty*D.unitprice,0) END),2) totgeneral
-                ,ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(8),(-1)*D.qty*D.unitprice,0) ELSE IF(D.itemtax IN(8),D.qty*D.unitprice,0) END),2) totreducido
-                ,ROUND(SUM(CASE WHEN E.canceldate > '1900-01-01' THEN 0 WHEN E.type = 'NCR' THEN IF(D.itemtax IN(27),(-1)*D.qty*D.unitprice,0) ELSE IF(D.itemtax IN(27),D.qty*D.unitprice,0) END),2) totadicional
-          FROM invoiceheader E
-          INNER JOIN invoicedetails D
-          ON E.id = D.invoiceid
-          WHERE E.issuedate BETWEEN '$from' AND '$to'
-          AND customerid = $customerid ";
-  //print_r($sql);    
-  $rs = $db->query($sql);
-  if (!$rs)
-    badEnd("500", array("sql"=>$sql,"msg"=>$db->error));
-  return $rs;  
-}
+
 $parmsob = array("datefrom","dateto","offset","numofrec","sessionid");
 if (!parametrosValidos($_GET, $parmsob))
     badEnd("400", array("msg"=>"Parametros obligatorios " . implode(", ", $parmsob)));
@@ -130,10 +137,9 @@ $customerid = isSessionValid($db, $_REQUEST["sessionid"]);
 //Llenar el arreglo de records
   $records = [];
   $rs = getRecordsetData($from,$to,$customerid,$_REQUEST["offset"],$_REQUEST["numofrec"],$db);
-  $count = $_REQUEST["offset"]+1;
   while ($row = $rs->fetch_assoc()) {
     $record = new stdClass();
-    $record->id = $count++;
+    $record->id = (integer)$row['id'];
     $record->issuedate = new stdClass();
     $record->issuedate->date = $row['issuedate'];
     $record->issuedate->formatted = date_format(date_create($row['issuedate']),'d/m/Y');
@@ -242,13 +248,11 @@ $out = new stdClass();
 $out->numofrecords = (integer)getTotalRecords($from,$to,$customerid,$db);
 $out->records = $records;
 
-$out->totals = new stdClass();
 
+$out->totals = new stdClass();
   $rs = getTotalsData($from,$to,$customerid,$db);
   $row = $rs->fetch_assoc();
-  $resumenTotalNotax = (float)($row['exempt_taxbase'] + $row['notaxable_taxbase'] + $row['perceived_taxbase']);
-  $resumenTotalNotaxCredit = (float)$row['credit_taxbase'];
-  
+
   $out->totals->totals = new stdClass();
   $out->totals->totals->taxbase = new stdClass();
   $out->totals->totals->taxbase->number = (float)$row['taxbase'];
@@ -258,60 +262,57 @@ $out->totals = new stdClass();
 
   $out->totals->exempt = new stdClass();
   $out->totals->exempt->taxbase = new stdClass();
-  $out->totals->exempt->taxbase->number = (float)$row['exempt_taxbase'];
-  $out->totals->exempt->taxbase->formatted = number_format($row['exempt_taxbase'],2, ",", ".");
-  $out->totals->exempt->taxpct->number = 0;
-  $out->totals->exempt->taxpct->formatted = "0,00";
-  $out->totals->exempt->taxtotal->number = (float)$row['exempt_taxbase'];
-  $out->totals->exempt->taxtotal->formatted = number_format($row['exempt_taxbase'],2, ",", ".");
+  $out->totals->exempt->taxbase->number = $totals_exempt_taxbase_number;
+  $out->totals->exempt->taxbase->formatted = number_format($totals_exempt_taxbase_number,2, ",", ".");
+  $out->totals->exempt->taxpct->number = $totals_exempt_taxpct_number;
+  $out->totals->exempt->taxpct->formatted = number_format($totals_exempt_taxpct_number,2, ",", ".");
+  $out->totals->exempt->taxtotal->number = $totals_exempt_taxtotal_number;
+  $out->totals->exempt->taxtotal->formatted = number_format($totals_exempt_taxtotal_number,2, ",", ".");
 
   $out->totals->notaxable = new stdClass();
   $out->totals->notaxable->taxbase = new stdClass();
-  $out->totals->notaxable->taxbase->number = (float)$row['notaxable_taxbase'];
-  $out->totals->notaxable->taxbase->formatted = number_format($row['notaxable_taxbase'],2, ",", ".");
-  $out->totals->notaxable->taxpct->number = 0;
-  $out->totals->notaxable->taxpct->formatted = "0,00";
-  $out->totals->notaxable->taxtotal->number = $row['notaxable_taxbase'];
-  $out->totals->notaxable->taxtotal->formatted = number_format($row['notaxable_taxbase'],2, ",", ".");
+  $out->totals->notaxable->taxbase->number = $totals_notaxable_taxbase_number;
+  $out->totals->notaxable->taxbase->formatted = number_format($totals_notaxable_taxbase_number,2, ",", ".");
+  $out->totals->notaxable->taxpct->number = $totals_notaxable_taxpct_number;
+  $out->totals->notaxable->taxpct->formatted = number_format($totals_notaxable_taxpct_number,2, ",", ".");
+  $out->totals->notaxable->taxtotal->number = $totals_notaxable_taxtotal_number;
+  $out->totals->notaxable->taxtotal->formatted = number_format($totals_notaxable_taxtotal_number,2, ",", ".");
 
   $out->totals->perceived = new stdClass();
   $out->totals->perceived->taxbase = new stdClass();
-  $out->totals->perceived->taxbase->number = (float)$row['perceived_taxbase'];
-  $out->totals->perceived->taxbase->formatted = number_format($row['perceived_taxbase'],2, ",", ".");
-  $out->totals->perceived->taxpct->number = 0;
-  $out->totals->perceived->taxpct->formatted = "0,00";
-  $out->totals->perceived->taxtotal->number = (float)$row['perceived_taxbase'];
-  $out->totals->perceived->taxtotal->formatted = number_format($row['perceived_taxbase'],2, ",", ".");
-
-  $rs = getTotalsAlicuotas($from,$to,$customerid,$db);
-  $row = $rs->fetch_assoc();
+  $out->totals->perceived->taxbase->number = $totals_perceived_taxbase_number;
+  $out->totals->perceived->taxbase->formatted = number_format($totals_perceived_taxbase_number,2, ",", ".");
+  $out->totals->perceived->taxpct->number = $totals_perceived_taxpct_number;
+  $out->totals->perceived->taxpct->formatted = number_format($totals_perceived_taxpct_number,2, ",", ".");
+  $out->totals->perceived->taxtotal->number = $totals_perceived_taxtotal_number;
+  $out->totals->perceived->taxtotal->formatted = number_format($totals_perceived_taxtotal_number,2, ",", ".");
 
   $out->totals->generaliva = new stdClass();
   $out->totals->generaliva->taxbase = new stdClass();
-  $out->totals->generaliva->taxbase->number =(float)$row['totgeneral'];
-  $out->totals->generaliva->taxbase->formatted = number_format($row['totgeneral'],2, ",", ".");
-  $out->totals->generaliva->taxpct->number = 16;
-  $out->totals->generaliva->taxpct->formatted = number_format(16,2, ",", ".");
-  $out->totals->generaliva->taxtotal->number = (float)$row['totgeneral']*(1+16/100);
-  $out->totals->generaliva->taxtotal->formatted = number_format($row['totgeneral']*(1+16/100),2, ",", ".");
+  $out->totals->generaliva->taxbase->number = $totals_generaliva_taxbase_number;
+  $out->totals->generaliva->taxbase->formatted = number_format($totals_generaliva_taxbase_number,2, ",", ".");
+  $out->totals->generaliva->taxpct->number = $totals_generaliva_taxpct_number;
+  $out->totals->generaliva->taxpct->formatted = number_format($totals_generaliva_taxpct_number,2, ",", ".");
+  $out->totals->generaliva->taxtotal->number = $totals_generaliva_taxtotal_number;
+  $out->totals->generaliva->taxtotal->formatted = number_format($totals_generaliva_taxtotal_number,2, ",", ".");
 
   $out->totals->reducediva = new stdClass();
   $out->totals->reducediva->taxbase = new stdClass();
-  $out->totals->reducediva->taxbase->number = (float)$row['totreducido'];
-  $out->totals->reducediva->taxbase->formatted = number_format($row['totreducido'],2, ",", ".");
-  $out->totals->reducediva->taxpct->number = 8;
-  $out->totals->reducediva->taxpct->formatted = number_format(8,2, ",", ".");
-  $out->totals->reducediva->taxtotal->number = (float)$row['totreducido']*(1+8/100);
-  $out->totals->reducediva->taxtotal->formatted = number_format($row['totreducido'],2, ",", ".");
+  $out->totals->reducediva->taxbase->number = $totals_reducediva_taxbase_number;
+  $out->totals->reducediva->taxbase->formatted = number_format($totals_reducediva_taxbase_number,2, ",", ".");
+  $out->totals->reducediva->taxpct->number = $totals_reducediva_taxpct_number;
+  $out->totals->reducediva->taxpct->formatted = number_format($totals_reducediva_taxpct_number,2, ",", ".");
+  $out->totals->reducediva->taxtotal->number = $totals_reducediva_taxtotal_number;
+  $out->totals->reducediva->taxtotal->formatted = number_format($totals_reducediva_taxtotal_number,2, ",", ".");
 
   $out->totals->addediva = new stdClass();
   $out->totals->addediva->taxbase = new stdClass();
-  $out->totals->addediva->taxbase->number = (float)$row['totadicional'];
-  $out->totals->addediva->taxbase->formatted = number_format($row['totadicional'],2, ",", ".");
-  $out->totals->addediva->taxpct->number = 27;
-  $out->totals->addediva->taxpct->formatted = number_format(27,2, ",", ".");
-  $out->totals->addediva->taxtotal->number = (float)$row['totadicional']*(1+27/100);
-  $out->totals->addediva->taxtotal->formatted = number_format($row['totadicional']*(1+27/100),2, ",", ".");
+  $out->totals->addediva->taxbase->number = $totals_addediva_taxbase_number;
+  $out->totals->addediva->taxbase->formatted = number_format($totals_addediva_taxbase_number,2, ",", ".");
+  $out->totals->addediva->taxpct->number = $totals_addediva_taxpct_number;
+  $out->totals->addediva->taxpct->formatted = number_format($totals_addediva_taxpct_number,2, ",", ".");
+  $out->totals->addediva->taxtotal->number = $totals_addediva_taxtotal_number;
+  $out->totals->addediva->taxtotal->formatted = number_format($totals_addediva_taxtotal_number,2, ",", ".");
 
 $out->resume = new stdClass();
 //notax
@@ -319,31 +320,31 @@ $out->resume = new stdClass();
   
   $out->resume->notax->debits = new stdClass();
   $out->resume->notax->debits->taxbase = new stdClass();
-
-  $out->resume->notax->debits->taxbase->number = $resumenTotalNotax;
-  $out->resume->notax->debits->taxbase->formatted = number_format($resumenTotalNotax,2,",",".");
+  $out->resume->notax->debits->taxbase->number = $resume_notax_debits_taxbase_number;
+  $out->resume->notax->debits->taxbase->formatted = number_format($resume_notax_debits_taxbase_number,2,",",".");
   $out->resume->notax->debits->taxtotal = new stdClass();
-  $out->resume->notax->debits->taxtotal->number = 0;
-  $out->resume->notax->debits->taxtotal->formatted = number_format(0,2,",",".");
+  $out->resume->notax->debits->taxtotal->number = $resume_notax_debits_taxtotal_number;
+  $out->resume->notax->debits->taxtotal->formatted = number_format($resume_notax_debits_taxtotal_number,2,",",".");
 
   $out->resume->notax->credits = new stdClass();
   $out->resume->notax->credits->taxbase = new stdClass();
-  $out->resume->notax->credits->taxbase->number = $resumenTotalNotaxCredit;
-  $out->resume->notax->credits->taxbase->formatted = number_format($resumenTotalNotaxCredit ,2,",",".");
+  $out->resume->notax->credits->taxbase->number = $resume_notax_credits_taxbase_number;
+  $out->resume->notax->credits->taxbase->formatted = number_format($resume_notax_credits_taxbase_number,2,",",".");
   $out->resume->notax->credits->taxtotal = new stdClass();
-  $out->resume->notax->credits->taxtotal->number = 0;
-  $out->resume->notax->credits->taxtotal->formatted = number_format(0,2,",",".");
+  $out->resume->notax->credits->taxtotal->number = $resume_notax_credits_taxtotal_number;
+  $out->resume->notax->credits->taxtotal->formatted = number_format($resume_notax_credits_taxtotal_number,2,",",".");
 
   $out->resume->notax->totals = new stdClass();
   $out->resume->notax->totals->taxbase = new stdClass();
-  $out->resume->notax->totals->taxbase->number =  $resumenTotalNotax + $resumenTotalNotaxCredit;
-  $out->resume->notax->totals->taxbase->formatted = number_format($out->resume->notax->totals->taxbase->number,2,",",".");
+  $out->resume->notax->totals->taxbase->number = $resume_notax_totals_taxbase_number;
+  $out->resume->notax->totals->taxbase->formatted = number_format($resume_notax_totals_taxbase_number,2,",",".");
   $out->resume->notax->totals->taxtotal = new stdClass();
-  $out->resume->notax->totals->taxtotal->number = 0;
-  $out->resume->notax->totals->taxtotal->formatted = number_format(0,2,",",".");
+  $out->resume->notax->totals->taxtotal->number = $resume_notax_totals_taxtotal_number;
+  $out->resume->notax->totals->taxtotal->formatted = number_format($resume_notax_totals_taxtotal_number,2,",",".");
 
 //generaltax
   $out->resume->generaltax = new stdClass();
+  
   $out->resume->generaltax->debits = new stdClass();
   $out->resume->generaltax->debits->taxbase = new stdClass();
   $out->resume->generaltax->debits->taxbase->number = $resume_generaltax_debits_taxbase_number;
@@ -423,4 +424,6 @@ $out->resume = new stdClass();
 header("HTTP/1.1 200");
 echo (json_encode($out));
 die();
+
+
 ?>

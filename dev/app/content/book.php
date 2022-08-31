@@ -143,7 +143,7 @@
                                         <div class="cellTbl">N. Débito</div>
                                         <div class="cellTbl">N. Crédito</div>
                                         <div class="cellTbl">Transacción</div>
-                                        <div class="cellTbl">Fac. Afectada</div>
+                                        <div class="cellTbl" style="min-width:110px">Fac. Afectada</div>
                                         <div class="cellTbl">
                                             <div class="subTblCnt">Total</div>
                                             <div class="cellTblCnt cell220px bgCellOpt1">
@@ -207,7 +207,7 @@
                                             <div class="cellTbl"></div>
                                             <div class="cellTbl"></div>
                                             <div class="cellTbl"></div>
-                                            <div class="cellTbl"></div>
+                                            <div class="cellTbl" style="min-width:110px"></div>
                                             <div class="cellTbl bgCellOpt1">
                                                 <div class="cellTblCnt cell220px">
                                                     <div class="cellEle cellTblRight cell50">1.000,00</div>

@@ -1886,7 +1886,8 @@ input[type=number]{
   top:5px;
   width:100%;
   display:block;
-  overflow-x:auto;
+  overflow-x:auto;  
+  scrollbar-width: thin;
 }
 .subtblHeadCnt {
   padding-top: 25px;
@@ -1995,6 +1996,37 @@ input[type=number]{
   width:285px;
 }
 /*Formato scroll lista de error*/
+.blockTblCnt:-webkit-scrollbar {
+  width: 7px;     /* TamaÃ±o del scroll en vertical */
+  height: 8px;    /* TamaÃ±o del scroll en horizontal */
+  display: block;  /* Ocultar scroll */
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
+.blockTblCnt:-webkit-scrollbar-thumb {
+  background: #D8D8D8;
+  border-radius: 4px;
+}
+/* Cambiamos el fondo y agregamos una sombra cuando estÃ© en hover */
+.blockTblCnt:-webkit-scrollbar-thumb:hover{
+  background: #D8D8D8;
+}
+
+/* Cambiamos el fondo cuando estÃ© en active */
+.blockTblCnt:-webkit-scrollbar-thumb:active {
+  background-color: #D8D8D8;
+}
+/* Ponemos un color de fondo y redondeamos las esquinas del track */
+.blockTblCnt:-webkit-scrollbar-track{
+  background: #FFFFFF;
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo cuando estÃ© en active o hover */
+.blockTblCnt::-webkit-scrollbar-track:hover,
+.blockTblCnt::-webkit-scrollbar-track:active{
+  background: #FFFFFF;
+}
+/*Formato scroll lista de error*/
 .blockTblCnt::-webkit-scrollbar {
   width: 7px;     /* TamaÃ±o del scroll en vertical */
   height: 8px;    /* TamaÃ±o del scroll en horizontal */
@@ -2006,7 +2038,7 @@ input[type=number]{
   border-radius: 4px;
 }
 /* Cambiamos el fondo y agregamos una sombra cuando estÃ© en hover */
-.blockTblCnt::-webkit-scrollbar-thumb:hover {
+.blockTblCnt::-webkit-scrollbar-thumb:hover{
   background: #D8D8D8;
 }
 
@@ -2015,14 +2047,14 @@ input[type=number]{
   background-color: #D8D8D8;
 }
 /* Ponemos un color de fondo y redondeamos las esquinas del track */
-.blockTblCnt::-webkit-scrollbar-track {
+.blockTblCnt::-webkit-scrollbar-track{
   background: #FFFFFF;
   border-radius: 4px;
 }
 
 /* Cambiamos el fondo cuando estÃ© en active o hover */
 .blockTblCnt::-webkit-scrollbar-track:hover,
-.blockTblCnt::-webkit-scrollbar-track:active {
+.blockTblCnt::-webkit-scrollbar-track:active{
   background: #FFFFFF;
 }
 .bgCellOpt1{

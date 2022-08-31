@@ -7,6 +7,7 @@
         $sql = "SELECT COUNT(*) Cnt, MAX(id) as id FROM invoiceheader WHERE emailhash='$hash' ";
         if (!$rs = $db->query($sql))
             die("Factura no encontrada");     
+
         $row = $rs->fetch_assoc();
         if ($row["Cnt"]>0)
             return $row["id"];
@@ -261,12 +262,7 @@
         $urllogo = "../../cms/uploads/";
         $iddir = str_pad($record->customer->id,5,"0", STR_PAD_LEFT);
         $nro = rand(5,getrandmax());
-        //Lo primero que debemos hacer es construir la url con la plantilla almacenada en la tabla
-        if ($printformat=="") $printformat="000";
-        $customerview = "../../../formats/customers/".$iddir."/".$pre.$printformat.".php";
-        //Si no existe validamos que exista ese formato en el directorio default 00000
-        $defaultview = "../../../formats/customers/00000/".$pre.$printformat.".php";
-
+        
         //Si todo ok hasta acá validamos la fecha de lectura y actualizamos
         $sql = "SELECT viewdate FROM invoiceheader WHERE id=".$id;
         if ($rs = $db->query($sql)){
@@ -279,11 +275,16 @@
             }
         }
 
-
+        //Lo primero que debemos hacer es construir la url con la plantilla almacenada en la tabla
+        if ($printformat=="") $printformat="000";
+        $customerview = "../../formats/customers/".$iddir."/".$pre.$printformat.".php";
+        //Si no existe validamos que exista ese formato en el directorio default 00000
+        $defaultview = "../../formats/customers/00000/".$pre.$printformat.".php";
         if(file_exists($customerview)){            
-            include_once($customerview);   
+            //Si existe se imprime la plantilla customizada  
+            include($customerview);
         }else if(file_exists($defaultview)){
-            include_once($defaultview);   
+            include($defaultview);
         }
        
     }else{

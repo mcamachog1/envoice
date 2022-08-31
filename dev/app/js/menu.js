@@ -1080,11 +1080,11 @@ function downloadReport(){
   function removeAllErr(){
     var inptserr = document.getElementsByClassName("inptErr");
     for(var i=(inptserr.length-1);i>=0;i=(inptserr.length-1)){
-      var msgerrcnt = inptserr[i].parentElement;
+      var msgerrcnt = inptserr[i].parentElement;      
+      inptserr[i].classList.remove("inptErr");
       if(msgerrcnt.getElementsByClassName("msgErrInpt").length>0){
         msgerrcnt.removeChild(msgerrcnt.getElementsByClassName("msgErrInpt")[0]);
       }
-      inptserr[i].classList.remove("inptErr");
     }
   }
   //Actualizar / crear una nueva factura

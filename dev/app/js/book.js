@@ -132,13 +132,24 @@ function downloadReport(){
 
       let desde = document.getElementById('dateDesde').value;
       let hasta = document.getElementById('dateHasta').value;
+      
 
       par.datefrom = desde == "" ? now : desde;
       par.dateto = hasta == "" ? now : hasta;
+
+      var fdate = "";
+      fdarr =  (par.datefrom).split("-");
+      fdate = fdarr[2]+"/"+fdarr[1]+"/"+fdarr[0];
+      var sdate = "";
+      sdarr =  (par.dateto).split("-");
+      sdate = sdarr[2]+"/"+sdarr[1]+"/"+sdarr[0];
+      document.getElementById("periodDates").innerHTML = fdate+" al "+sdate;
       par.offset = offset;
       par.order = order;
       par.numofrec = document.getElementById("numofrecFilt").value
       par.sessionid = sessid;
+      
+      //alert("Offset="+offset+"  Numofrec="+par.numofrec);
       callWS("GET", "reports/salesbook", par, BCLoadInvoices, offset );
       return;
   }
@@ -183,10 +194,11 @@ function downloadReport(){
     
     var subTable = document.getElementById("centerSubTable");
     var clone = subTable.firstElementChild.cloneNode(true);
-    subTable.innerHTML = "";
     var rsp = data;
     data = rsp.records;
-    if(data.length>0){    
+    if(data.length>0){   
+      
+      subTable.innerHTML = ""; 
       var cn = 0;  
       data.length;
       for(navLink of data){
@@ -231,18 +243,20 @@ function downloadReport(){
           altclone.getElementsByClassName("cellTbl")[0].innerHTML = navLink.refnumber;
           altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
           altclone.getElementsByClassName("cellTbl")[3].innerHTML =  "";
+          altclone.getElementsByClassName("cellTbl")[5].innerHTML =  "";
         }else if(type=='NCR'){
-          altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
-          altclone.getElementsByClassName("cellTbl")[2].innerHTML = navLink.refnumber;
-          altclone.getElementsByClassName("cellTbl")[3].innerHTML =  "";
-        }else if(type=='NDB'){
           altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
           altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
           altclone.getElementsByClassName("cellTbl")[3].innerHTML =  navLink.refnumber;
+          altclone.getElementsByClassName("cellTbl")[5].innerHTML =  formatRefctr(navLink.ctrref);
+        }else if(type=='NDB'){
+          altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
+          altclone.getElementsByClassName("cellTbl")[2].innerHTML = navLink.refnumber;
+          altclone.getElementsByClassName("cellTbl")[3].innerHTML =  "";
+          altclone.getElementsByClassName("cellTbl")[5].innerHTML =  formatRefctr(navLink.ctrref);
         }
 
         altclone.getElementsByClassName("cellTbl")[4].innerHTML =  navLink.transactiontype;
-        altclone.getElementsByClassName("cellTbl")[5].innerHTML =  navLink.refnumber;
         
         altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[0].innerHTML =  navLink.amounts.totals.taxbase.formatted;
         altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[1].innerHTML =  navLink.amounts.totals.total.formatted;
@@ -294,13 +308,12 @@ function downloadReport(){
         altclone.getElementsByClassName("cellTbl")[0].innerHTML = "";
         altclone.getElementsByClassName("cellTbl")[1].innerHTML = "";
         altclone.getElementsByClassName("cellTbl")[2].innerHTML =  "";
-        altclone.getElementsByClassName("cellTbl")[2].innerHTML = "";
         altclone.getElementsByClassName("cellTbl")[3].innerHTML = "";
         altclone.getElementsByClassName("cellTbl")[4].innerHTML =  "";
         altclone.getElementsByClassName("cellTbl")[5].innerHTML = "";
       
-        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[0].innerHTML =  navLink.amounts.totals.taxbase.formatted;
-        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[1].innerHTML =  navLink.amounts.totals.total.formatted;
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[0].innerHTML =  rsp.totals.totals.taxbase.formatted;
+        altclone.getElementsByClassName("cellTbl")[6].lastElementChild.children[1].innerHTML =  rsp.totals.totals.total.formatted;
 
         const setthreecolsTot = (ele,keyname) =>{
           ele.lastElementChild.children[0].innerHTML =  rsp.totals[keyname].taxbase.formatted;
@@ -316,6 +329,10 @@ function downloadReport(){
       }
       
     }else{
+      subTable.innerHTML = ""; 
+      var altclone = clone.cloneNode(true);
+      altclone.style.display = "none";
+      subTable.appendChild(altclone);
       var html = '';
       html += '<div class="blankTblCell">';
       html += '<div class="blankTblImg"></div>';
@@ -372,7 +389,7 @@ function downloadReport(){
     }
     
     
-    document.getElementById("subTblInf").style.height = document.getElementsByClassName("centerTable")[0].offsetHeight+4+"px";
+    document.getElementById("subTblInf").style.height = document.getElementsByClassName("centerTable")[0].offsetHeight+5+"px";
   }
 
 
@@ -539,13 +556,7 @@ function downloadReport(){
     }
     desde.value = fechas[0].toISOString().split('T')[0];
     hasta.value =  fechas[1].toISOString().split('T')[0];
-    var fdate = "";
-    fdarr =  (desde.value).split("-");
-    fdate = fdarr[2]+"/"+fdarr[1]+"/"+fdarr[0];
-    var sdate = "";
-    sdarr =  (hasta.value).split("-");
-    sdate = sdarr[2]+"/"+sdarr[1]+"/"+sdarr[0];
-    document.getElementById("periodDates").innerHTML = fdate+" al "+sdate;
+    
   })
   document.getElementById('periodoSelect').dispatchEvent(new Event('change'));
   loadInvoices();
